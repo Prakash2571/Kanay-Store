@@ -1,17 +1,45 @@
-export default function HomePage() {
+import type { Metadata } from "next";
+
+import { StoreShell } from "@/components/layout/StoreShell";
+import { BestSellers } from "@/components/home/BestSellers";
+import { CategoryRail } from "@/components/home/CategoryRail";
+import { EditorialPromotions } from "@/components/home/EditorialPromotions";
+import { Hero } from "@/components/home/Hero";
+import { LifestyleFeature } from "@/components/home/LifestyleFeature";
+import { Testimonials } from "@/components/home/Testimonials";
+import { TrustStrip } from "@/components/home/TrustStrip";
+import { getCatalog } from "@/lib/storefront/catalog";
+import { getCollections } from "@/lib/storefront/collections";
+
+export const metadata: Metadata = {
+  title: "Modern fashion and lifestyle",
+  description: "Shop considered fashion, accessories and everyday essentials from Kanay Store.",
+  alternates: { canonical: "/" },
+};
+
+export default async function HomePage() {
+  const [catalogResult, collectionsResult] = await Promise.all([
+    getCatalog({ availability: "SELLABLE", first: 8, sort: "FEATURED" }),
+    getCollections(),
+  ]);
+  const products = catalogResult.ok ? catalogResult.data.products : [];
+  const collections = collectionsResult.ok
+    ? collectionsResult.data
+    : catalogResult.ok
+      ? catalogResult.data.filters.collections
+      : [];
+
   return (
-    <main className="mx-auto flex min-h-[100dvh] max-w-[1400px] items-center px-5 py-16 sm:px-8 lg:px-12">
-      <div className="max-w-2xl">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.14em] text-accent">
-          Kanay Store
-        </p>
-        <h1 className="font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] sm:text-7xl">
-          The storefront is taking shape.
-        </h1>
-        <p className="mt-6 max-w-[48ch] text-base leading-7 text-ink-muted">
-          Product discovery, secure guest checkout and Shopify-backed order tracking are being built as one focused retail experience.
-        </p>
-      </div>
-    </main>
+    <StoreShell collections={collections}>
+      <main>
+        <Hero collections={collections} />
+        <CategoryRail collections={collections} />
+        <EditorialPromotions collections={collections} />
+        <BestSellers loadFailed={!catalogResult.ok} products={products} />
+        <LifestyleFeature />
+        <TrustStrip />
+        <Testimonials />
+      </main>
+    </StoreShell>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 
+import { CartProvider } from "@/components/cart/CartProvider";
+
 import "./globals.css";
 
 const sans = Manrope({
@@ -44,7 +46,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-IN" className={`${sans.variable} ${editorial.variable}`}>
-      <body>{children}</body>
+      <body>
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }
