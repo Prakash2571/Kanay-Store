@@ -1,0 +1,103 @@
+name: CI
+
+# Runs on every push and PR.
+#
+# This repository shipped without CI, so nothing had ever verified that it
+# typechecks, lints, tests or builds. The build step matters most: Next only
+# reports type errors and bad imports at build time, so a broken import could
+# reach main unnoticed and then fail in the Docker image instead.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Matches the Dockerfile, which builds on node:24-alpine. Testing on a
+      # different major to the one that ships is how a runtime-only failure hides.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # `npm ci` ONLY - never `npm install`. package-lock.json is committed
+      # (lockfileVersion 3, every entry carrying an integrity hash), so this
+      # installs the exact resolved tree and fails loudly if the lockfile and
+      # package.json disagree.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      # Deliberately built with NO backend URL configured. The storefront must
+      # build without one - pages fall back to a "temporarily unavailable" state
+      # rather than throwing - and this proves that holds. A build that silently
+      # required production configuration would only fail once deployed.
+      - name: Build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: npm run build
+
+      # output: 'standalone' is what the Docker runner stage copies. If a config
+      # change silently drops it, the image builds and then fails to start, which
+      # is a far more expensive way to find out.
+      - name: Assert standalone output was produced
+        run: |
+          test -f .next/standalone/server.js \
+            || { echo "::error title=No standalone output::.next/standalone/server.js is missing. next.config.ts must set output: 'standalone' for the Docker image to work."; exit 1; }
+          echo "standalone output present"
+
+  docker:
+    name: docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build only - nothing is pushed. Catches a Dockerfile that has drifted
+      # from the source layout, which the Node job above cannot see.
+      - name: Build storefront image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runner
+          push: false
+          load: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+# ---------------------------------------------------------------------------
+# Branch protection (manual step - a workflow cannot grant itself authority)
+#
+# Settings -> Branches -> add a rule for `main`:
+#   - Require a pull request before merging
+#   - Require status checks to pass:
+#       "typecheck, lint, test, build"
+#       "docker image"
+#   - Require branches to be up to date before merging
+#
+# Without this, a red CI run does not actually block the merge button.
+# ---------------------------------------------------------------------------
