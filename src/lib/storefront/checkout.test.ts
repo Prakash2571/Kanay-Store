@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { customerCheckoutMessage, guestCheckoutSchema } from "./checkout";
+import {
+  createCheckoutSession,
+  customerCheckoutMessage,
+  guestCheckoutSchema,
+} from "./checkout";
 
 const valid = {
   fullName: "Aarav Mehta",
@@ -33,5 +37,133 @@ describe("guest checkout validation", () => {
     expect(customerCheckoutMessage("UNKNOWN", "internal stack trace".repeat(20))).not.toContain(
       "stack trace",
     );
+  });
+
+  it("maps all error codes to customer-safe messages", () => {
+    expect(customerCheckoutMessage("PRODUCT_UNAVAILABLE")).toContain("no longer available");
+    expect(customerCheckoutMessage("VARIANT_UNAVAILABLE")).toContain("sold out");
+    expect(customerCheckoutMessage("PAYMENT_FAILED")).toContain("not completed");
+    expect(customerCheckoutMessage("PAYMENT_PENDING")).toContain("confirming");
+    expect(customerCheckoutMessage("ORDER_CREATION_PENDING")).toContain("preparing your order");
+  });
+});
+
+describe("createCheckoutSession", () => {
+  const originalEnv = process.env.NEXT_PUBLIC_TRADEMART_API_URL;
+
+  beforeEach(() => {
+    process.env.NEXT_PUBLIC_TRADEMART_API_URL = "http://localhost:4000";
+  });
+
+  afterEach(() => {
+    process.env.NEXT_PUBLIC_TRADEMART_API_URL = originalEnv;
+    vi.restoreAllMocks();
+  });
+
+  it("includes expectedUnitPricePaise in cartLines from the local cart price", async () => {
+    const cartLines = [
+      {
+        shopifyProductId: "gid://shopify/Product/1",
+        shopifyVariantId: "gid://shopify/ProductVariant/1",
+        handle: "test-product",
+        title: "Test Product",
+        variantTitle: "Default",
+        selectedOptions: [{ name: "Size", value: "M" }],
+        image: null,
+        unitPricePaise: 149900,
+        currencyCode: "INR" as const,
+        availableForSale: true,
+        quantity: 2,
+      },
+    ];
+
+    let capturedBody: unknown;
+    const mockFetch = vi.fn().mockImplementation(async (_url: unknown, init: RequestInit) => {
+      capturedBody = JSON.parse(init.body as string);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: {
+            checkoutSessionId: "cs_test123",
+            statusToken: "a".repeat(32),
+            razorpayOrderId: "order_test123",
+            amountPaise: 299800,
+            currency: "INR",
+            keyId: "rzp_test_key",
+            summary: {
+              items: [
+                {
+                  title: "Test Product",
+                  variantTitle: "Default",
+                  quantity: 2,
+                  unitPricePaise: 149900,
+                  lineTotalPaise: 299800,
+                  image: null,
+                },
+              ],
+              subtotalPaise: 299800,
+              shippingPaise: 0,
+              discountPaise: 0,
+              taxPaise: 0,
+              totalPaise: 299800,
+            },
+          },
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    const parsedValues = guestCheckoutSchema.parse(valid);
+    const result = await createCheckoutSession(cartLines, parsedValues, "idem-key-1");
+
+    expect(result.ok).toBe(true);
+    expect(mockFetch).toHaveBeenCalledOnce();
+
+    const body = capturedBody as {
+      cartLines: Array<{ expectedUnitPricePaise: number }>;
+    };
+    expect(body.cartLines[0].expectedUnitPricePaise).toBe(149900);
+  });
+
+  it("returns PRICE_CHANGED error with customer-safe message when backend detects stale price", async () => {
+    const cartLines = [
+      {
+        shopifyProductId: "gid://shopify/Product/1",
+        shopifyVariantId: "gid://shopify/ProductVariant/1",
+        handle: "test-product",
+        title: "Test Product",
+        variantTitle: "Default",
+        selectedOptions: [],
+        image: null,
+        unitPricePaise: 99900,
+        currencyCode: "INR" as const,
+        availableForSale: true,
+        quantity: 1,
+      },
+    ];
+
+    const mockFetch = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          success: false,
+          code: "PRICE_CHANGED",
+          message: "Price mismatch detected",
+          details: { newPricePaise: 119900 },
+        }),
+        { status: 409, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const parsedValues = guestCheckoutSchema.parse(valid);
+    const result = await createCheckoutSession(cartLines, parsedValues, "idem-key-2");
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.code).toBe("PRICE_CHANGED");
+      expect(result.error.message).toContain("price changed");
+      expect(result.error.message).toContain("cart");
+    }
   });
 });

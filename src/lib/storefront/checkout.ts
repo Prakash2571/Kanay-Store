@@ -191,6 +191,13 @@ export async function createCheckoutSession(
         shopifyProductId: item.shopifyProductId,
         shopifyVariantId: item.shopifyVariantId,
         quantity: item.quantity,
+        // expectedUnitPricePaise is the price the customer saw in their cart at
+        // the time of checkout. It is NOT trusted as the charge amount — the
+        // backend always recomputes the authoritative price from Shopify. This
+        // field exists solely so the backend can detect a stale-price situation
+        // and return PRICE_CHANGED, letting the customer review updated pricing
+        // before paying.
+        expectedUnitPricePaise: item.unitPricePaise,
       })),
       customer: {
         fullName: values.fullName,
