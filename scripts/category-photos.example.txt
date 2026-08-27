@@ -1,0 +1,18 @@
+# Category photographs: one "<key> <url-or-file>" per line.
+#
+# Run:  ./scripts/add-category-photos.sh this-file.txt
+#
+# Every entry is checked for HTTP status, content-type and file size before it is written, so a
+# dead link fails loudly instead of leaving a 404 in the dev log. What no script can check is
+# whether the picture shows the right SUBJECT - open the folder afterwards and look.
+#
+# Local files work too:  tools /home/you/Pictures/wrench-set.jpg
+
+electronics    https://example.com/replace-me-headphones.jpg
+home-kitchen   https://example.com/replace-me-cookware.jpg
+accessories    https://example.com/replace-me-watches.jpg
+beauty         https://example.com/replace-me-skincare.jpg
+tools          https://example.com/replace-me-handtools.jpg
+office         https://example.com/replace-me-stationery.jpg
+fitness        https://example.com/replace-me-fitness.jpg
+fashion        https://example.com/replace-me-apparel.jpg

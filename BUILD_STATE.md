@@ -191,13 +191,20 @@ public/categories/<department-key>.<ext>, discovered by reading the directory in
 (3) the committed public/categories/<key>.svg illustration, (4) a colour-coded DepartmentVisual card
 (tint + department icon + faint oversized glyph).
 
-EIGHT RENDERED PRODUCT SHOTS ARE COMMITTED (public/categories/<key>.svg) plus public/brand-story.svg,
-so no card is ever empty. Studio backdrop + gradient-shaded product + specular highlights + contact
-shadow + grain overlay. Colours are read from the tint tokens BY THE GENERATOR so artwork cannot
-drift from the CSS. Drawn not photographed because the build environment has no outbound network -
-verified: every product mid-tone clears 1.8:1 against its own backdrop so the subject always reads.
-Use scripts/add-category-photo.sh to swap in a real photo; it checks HTTP status, content type and
-file size, which is the verification that was missing when stock URLs shipped a 404. RASTER BEATS SVG - precedence is
+NO DRAWN ARTWORK IS SHIPPED. DO NOT ADD ANY. Two attempts were made and both were rejected by the
+client as cartoonish: (1) flat vector product shapes, (2) gradient-shaded ones with specular
+highlights, contact shadows and grain. Vector illustration of a physical product reads as clip art on
+a commerce page regardless of shading effort - this is settled, do not try a third time.
+
+A department with no photograph renders a RESTRAINED STUDIO PLACEHOLDER instead: Tint.sweep
+(bg-gradient-to-br from-white to-tint-X, a lit surface rather than a colour block) plus the
+department icon as a 7% watermark and a hairline inset ring. It reads as a catalogue slot awaiting
+photography, which is what it is.
+
+To add real photos: scripts/add-category-photo.sh <key> <url-or-file>, or add-category-photos.sh with
+a manifest (see scripts/category-photos.example.txt). Both verify HTTP status, content type and file
+size - the verification that was missing when stock URLs shipped a 404 and a miscaptioned image.
+Neither can verify SUBJECT; that step is human. RASTER BEATS SVG - precedence is
 the order of IMAGE_EXTENSIONS in categoryMedia.ts (jpg,jpeg,png,webp,avif,svg), so dropping a
 photograph in wins with nothing to delete. SVG is passed to next/image with `unoptimized`, which
 avoids enabling dangerouslyAllowSVG for the whole app.

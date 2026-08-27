@@ -16,30 +16,34 @@ import type { Tint } from "@/lib/storefront/showcase";
 import type { StorefrontImage } from "@/lib/storefront/types";
 
 /**
- * A department's visual: its photograph if one exists, otherwise a tinted card.
+ * A department's visual: its photograph if one exists, otherwise a restrained studio placeholder.
  *
- * WHY THE FALLBACK IS A DESIGNED STATE, NOT A PLACEHOLDER
- * ------------------------------------------------------
- * There is no guaranteed photograph for a department. Real product imagery arrives from Shopify on
- * a configured store, and a store owner can drop files into `public/categories/`, but a fresh
- * checkout has neither — and the previous answer to that, hard-coded stock URLs, produced a 404 and
- * a miscaptioned photograph in production.
+ * WHY THERE IS NO DRAWN PRODUCT HERE ANY MORE
+ * ------------------------------------------
+ * Two attempts were made at supplying artwork instead of photography: flat vector product shapes,
+ * then gradient-shaded ones with highlights and contact shadows. Both were rejected for the same
+ * reason, and it was the right call — vector illustration of a physical product reads as a cartoon
+ * on a commerce page no matter how much shading is piled onto it. A wholesale buyer sizing up a
+ * supplier does not want clip art of a saucepan.
  *
- * So the no-image case is drawn properly rather than apologised for: the department's soft tint, its
- * icon at a large size in the tint's ink colour, and a faint oversized glyph behind it for depth.
- * It reads as a colour-coded category card, which is what the design calls for anyway.
+ * So this no longer pretends. The placeholder is what a product photograph would be shot ON: a lit
+ * studio sweep in the department's colour, a faint watermark of the department's icon, and nothing
+ * else. It reads as a catalogue slot awaiting its photograph, which is exactly what it is, and it
+ * cannot be mistaken for an illustration of merchandise.
  *
- * This is NOT the icon grid that was removed earlier. That was six equal boxes of thin grey glyphs
- * with nothing else in them. These carry the category's own colour, sit in an asymmetric layout, and
- * are labelled by the caller.
+ * The honest constraint behind all of this: the environment this was built in has no outbound
+ * network, so a photograph can be neither downloaded nor verified. See categoryMedia.ts, and
+ * scripts/add-category-photo.sh for adding a real one in a single command.
  *
- * The image, when present, is layered ON TOP of the tint, so a file that fails to decode still
- * leaves a coloured card rather than a grey rectangle.
+ * The image, when present, is layered ON TOP of the sweep, so a file that fails to decode still
+ * leaves a lit surface rather than a grey rectangle.
  */
 
 /**
- * One icon per department key. Kept here rather than in `showcase.ts` so that module stays pure and
- * its tests do not have to import a React icon library to check a keyword table.
+ * One icon per department key, used only as a low-contrast watermark.
+ *
+ * Kept here rather than in `showcase.ts` so that module stays pure and its tests do not have to
+ * import a React icon library to check a keyword table.
  */
 const DEPARTMENT_ICONS: Record<string, typeof Package> = {
   electronics: Headphones,
@@ -61,7 +65,7 @@ export function DepartmentVisual({
   priority = false,
   className = "",
 }: {
-  /** Department key, used to pick the icon. Unknown keys get a neutral parcel icon. */
+  /** Department key, used to pick the watermark icon. Unknown keys get a neutral parcel icon. */
   departmentKey?: string;
   label: string;
   tint: Tint;
@@ -73,18 +77,24 @@ export function DepartmentVisual({
   const Icon = (departmentKey && DEPARTMENT_ICONS[departmentKey]) || Package;
 
   return (
-    <span className={`relative block overflow-hidden ${tint.surface} ${className}`}>
-      {/* Oversized, very low-contrast glyph: gives the empty card depth without adding an asset. */}
+    <span className={`relative block overflow-hidden ${tint.sweep} ${className}`}>
+      {/*
+        A single faint watermark, centred and large. Deliberately NOT a depiction of a product:
+        at 7% it reads as a subtle mark on a lit surface rather than as a picture of an object,
+        which is the whole difference between "awaiting photography" and "cartoon".
+      */}
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute -bottom-6 -right-4 opacity-[0.14] ${tint.ink}`}
+        className={`pointer-events-none absolute inset-0 grid place-items-center opacity-[0.07] ${tint.ink}`}
       >
-        <Icon size={132} strokeWidth={1.1} />
+        <Icon size={96} strokeWidth={1} />
       </span>
 
-      <span aria-hidden="true" className={`absolute inset-0 grid place-items-center ${tint.ink}`}>
-        <Icon size={34} strokeWidth={1.5} />
-      </span>
+      {/* Hairline inset edge, so the sweep reads as a surface with a boundary. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/[0.04]"
+      />
 
       {image ? (
         <Image
@@ -96,8 +106,8 @@ export function DepartmentVisual({
           src={image.url}
           /*
             SVG is passed through untouched. Next's optimiser refuses SVG unless the global
-            `dangerouslyAllowSVG` flag is set, and granting that for the whole app to serve eight
-            first-party 1KB illustrations is a bad trade - `unoptimized` is the targeted version.
+            `dangerouslyAllowSVG` flag is set, and granting that for the whole app to serve
+            first-party artwork is a bad trade - `unoptimized` is the targeted version.
           */
           unoptimized={isVectorAsset(image.url)}
         />

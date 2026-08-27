@@ -17,46 +17,38 @@ and, when the catalog has no products of its own, in the hero collage.
 `.jpg`, `.jpeg`, `.png`, `.webp` and `.avif` all work. Square or 5:4 crops suit the card best;
 around 800px on the long edge is plenty, since the cards render under 300px.
 
-`public/brand-story.jpg` backs the wide trust banner in the same way.
+`../brand-story.jpg` backs the wide trust banner in the same way.
 
-## A rendered product shot ships for every department
-
-`<key>.svg` is committed for all eight, so no card is ever empty. Each is a product on a studio
-backdrop, drawn with gradient shading, specular highlights, a contact shadow and a film-grain
-overlay — the look of a catalogue product shot rather than a flat icon. `../brand-story.svg` does the
-same for the wide trust banner.
-
-Backdrop and product tones are read out of that department's tint tokens in `src/app/globals.css` by
-the generator, so the artwork can never drift from the palette.
-
-**They are drawn, not photographed**, because the environment they were made in has no outbound
-network: a real photograph can be neither downloaded nor verified there. That is not a preference,
-and a genuine photograph is better — see below.
-
-**A raster file beats the SVG.** Drop `electronics.jpg` in and it wins over `electronics.svg`
-automatically — nothing needs deleting. Precedence is the order of `IMAGE_EXTENSIONS` in
-`src/lib/storefront/categoryMedia.ts`: jpg, jpeg, png, webp, avif, then svg last.
-
-The helper checks the things that went wrong before — HTTP status, content type, file size:
+## Use the helper — it checks the things that broke before
 
 ```sh
+# one at a time
 ./scripts/add-category-photo.sh electronics https://example.com/headphones.jpg
 ./scripts/add-category-photo.sh tools ~/Pictures/our-wrench-set.jpg
+
+# or all eight from a manifest
+cp scripts/category-photos.example.txt photos.txt   # edit it
+./scripts/add-category-photos.sh photos.txt
 ```
 
-It refuses to write anything that is not a real image, so a 404 or an error page can never land in
-here. What it cannot check is whether the picture shows the right *subject* — that step is yours.
+It verifies HTTP status, sniffs the content type and enforces a minimum file size, so a dead link or
+an HTML error page can never land in here. What it *cannot* check is whether the picture shows the
+right subject — open the folder afterwards and look.
 
-Real product photography from Shopify takes priority over both.
+The dev server picks new files up on the next refresh; no restart needed.
 
-## Why these are local files and not stock URLs
+## There is no artwork in this folder, on purpose
 
-They used to be hard-coded `images.unsplash.com` IDs. The build environment has no network access,
-so none could be verified, and two of them failed in production: one 404'd, and another resolved to
-a photograph of coffee beans under alt text describing a kitchen appliance. A broken image is
-obvious; a plausible photograph of the wrong thing silently mislabels a category and lies to screen
-readers.
+Two attempts were made at shipping drawn artwork instead of photographs: flat vector product shapes,
+then gradient-shaded ones with highlights and contact shadows. Both were rejected, and correctly —
+vector illustration of a physical product reads as a cartoon on a commerce page no matter how much
+shading is applied. A wholesale buyer assessing a supplier does not want clip art of a saucepan.
 
-Files are discovered by reading this directory (`src/lib/storefront/categoryMedia.ts`), so the only
-images the app ever references are ones that exist. In development the directory is re-read on each
-render, so adding a file and refreshing is enough — no restart.
+So a department without a photograph now renders a **restrained studio placeholder**: a lit sweep in
+the department's colour with a faint watermark of its icon, and nothing else. It reads as a catalogue
+slot awaiting its photograph, which is what it is, and it cannot be mistaken for a picture of
+merchandise.
+
+The underlying constraint is that the environment this project was built in has no outbound network,
+so a photograph can be neither downloaded nor verified there. **Real product photography from Shopify
+takes priority over everything here** — once the catalog is connected, none of this renders at all.

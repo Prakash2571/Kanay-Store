@@ -122,6 +122,15 @@ describe("tint class names", () => {
       expect(tint.ink).toBe(`text-tint-${name}-ink`);
       expect(tint.mark).toBe(`bg-tint-${name}-mark`);
       expect(tint.border.startsWith(`border-tint-${name}-mark/`)).toBe(true);
+      expect(tint.sweep).toBe(`bg-gradient-to-br from-white to-tint-${name}`);
+    }
+  });
+
+  it("sweeps from white so the placeholder reads as a lit surface, not a colour block", () => {
+    // A flat tint behind a category card reads as a swatch. The gradient is what makes it read as
+    // something a product would be photographed against.
+    for (const tint of Object.values(TINTS)) {
+      expect(tint.sweep).toContain("from-white");
     }
   });
 

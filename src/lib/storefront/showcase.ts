@@ -51,6 +51,13 @@ export interface Tint {
   mark: string;
   /** Border for a card whose surface is this tint. */
   border: string;
+  /**
+   * Studio sweep: white top-left falling to the tint bottom-right.
+   *
+   * Used behind a category card that has no photograph. A flat tint reads as a coloured block; a
+   * gradient reads as a lit surface, which is what a product would actually be shot against.
+   */
+  sweep: string;
 }
 
 export const TINTS: Record<TintName, Tint> = {
@@ -59,48 +66,56 @@ export const TINTS: Record<TintName, Tint> = {
     ink: "text-tint-blue-ink",
     mark: "bg-tint-blue-mark",
     border: "border-tint-blue-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-blue",
   },
   teal: {
     surface: "bg-tint-teal",
     ink: "text-tint-teal-ink",
     mark: "bg-tint-teal-mark",
     border: "border-tint-teal-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-teal",
   },
   yellow: {
     surface: "bg-tint-yellow",
     ink: "text-tint-yellow-ink",
     mark: "bg-tint-yellow-mark",
     border: "border-tint-yellow-mark/30",
+    sweep: "bg-gradient-to-br from-white to-tint-yellow",
   },
   lavender: {
     surface: "bg-tint-lavender",
     ink: "text-tint-lavender-ink",
     mark: "bg-tint-lavender-mark",
     border: "border-tint-lavender-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-lavender",
   },
   green: {
     surface: "bg-tint-green",
     ink: "text-tint-green-ink",
     mark: "bg-tint-green-mark",
     border: "border-tint-green-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-green",
   },
   rose: {
     surface: "bg-tint-rose",
     ink: "text-tint-rose-ink",
     mark: "bg-tint-rose-mark",
     border: "border-tint-rose-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-rose",
   },
   slate: {
     surface: "bg-tint-slate",
     ink: "text-tint-slate-ink",
     mark: "bg-tint-slate-mark",
     border: "border-tint-slate-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-slate",
   },
   orange: {
     surface: "bg-tint-orange",
     ink: "text-tint-orange-ink",
     mark: "bg-tint-orange-mark",
     border: "border-tint-orange-mark/25",
+    sweep: "bg-gradient-to-br from-white to-tint-orange",
   },
 };
 
