@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/**
+ * Never prerendered, never cached.
+ *
+ * Reading `searchParams` already forces this to render per request, so this is
+ * belt-and-braces - but the thing it guards against is severe enough to be explicit
+ * about: a cached render of this page is one customer's order details (name, address,
+ * items) served to whoever asks next. `force-dynamic` states that intent at the top of
+ * the file rather than leaving it as a side effect of which props are read.
+ */
+export const dynamic = "force-dynamic";
+
 type SuccessPageProps = {
   searchParams: Promise<{ session?: string; token?: string; tracking?: string }>;
 };

@@ -8,6 +8,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/**
+ * Never prerendered, never cached: this page IS an order, addressed by a token in the
+ * path. A cached render would serve one customer's name, address and items to the next
+ * request for the same URL - and the URL is the credential, so anything that stores a
+ * response keyed by it is a leak. The upstream fetch is `cache: "no-store"` for the same
+ * reason; this makes the page-level intent explicit too.
+ */
+export const dynamic = "force-dynamic";
+
 export default async function TrackedOrderPage({
   params,
 }: {
