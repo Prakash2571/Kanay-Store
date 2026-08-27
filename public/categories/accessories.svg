@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Accessories">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop accessories.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#e4dcff"/>
+  <circle cx="400" cy="300" r="212" fill="#a596ea" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#a596ea" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#a596ea" opacity="0.22"/>
+  <rect x="368" y="176" width="64" height="116" rx="20" fill="#a596ea"/>
+  <rect x="368" y="352" width="64" height="116" rx="20" fill="#a596ea"/>
+  <circle cx="400" cy="322" r="96" fill="#4c3fa8"/>
+  <circle cx="400" cy="322" r="66" fill="#e4dcff"/>
+  <path d="M400 322V274" stroke="#4c3fa8" stroke-width="11" stroke-linecap="round"/>
+  <path d="M400 322l38 18" stroke="#4c3fa8" stroke-width="11" stroke-linecap="round"/>
+</svg>

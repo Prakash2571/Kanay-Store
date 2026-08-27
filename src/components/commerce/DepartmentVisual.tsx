@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import { isVectorAsset } from "@/lib/storefront/categoryMedia";
 import type { Tint } from "@/lib/storefront/showcase";
 import type { StorefrontImage } from "@/lib/storefront/types";
 
@@ -93,6 +94,12 @@ export function DepartmentVisual({
           priority={priority}
           sizes={sizes}
           src={image.url}
+          /*
+            SVG is passed through untouched. Next's optimiser refuses SVG unless the global
+            `dangerouslyAllowSVG` flag is set, and granting that for the whole app to serve eight
+            first-party 1KB illustrations is a bad trade - `unoptimized` is the targeted version.
+          */
+          unoptimized={isVectorAsset(image.url)}
         />
       ) : null}
     </span>

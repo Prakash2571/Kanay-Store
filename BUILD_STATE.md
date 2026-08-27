@@ -122,11 +122,17 @@ Superseded three times. (1) Peach/cream + orange #F28C5B read as beauty/skincare
 trustworthy but cold and its hero fell back to an icon grid, which read as a wireframe. (3) Blue +
 orange only was still visually flat.
 
-Palette: white #FFFFFF on #F8FAFC, light blue #EEF6FF, blue #3B82F6 (decor) / #2563EB (button
-fill), orange #F5824A (hover #EA6F33, soft #FFF0E6, ink #9A4A16), teal #E8F7F4/#149A8A/#0B6B5F,
-yellow #FFF8D9/#E9A900/#855C00, lavender #F2EEFF/#7567D8/#4C3FA8, green #EDF8EE/#4D9A58/#2F6B38,
-rose #FFF1EC/#D9705C/#9C4A3C, slate #F1F5F9/#64748B/#475569. Quote surface #F2F7FF, newsletter
-#FFF2E8, footer #182230. Target ~55-60% white / 15-20% light blue / 8-10% soft orange / 5-8% soft
+Palette: white #FFFFFF cards on #EFF3F9 canvas, light blue #DBEAFE, blue #3B82F6 (decor) / #2563EB
+(button fill), orange #F5824A (hover #EA6F33, soft #FFDFC9, ink #9A4A16), teal #CFECE5/#149A8A/
+#0B6B5F, yellow #FCEFB4/#E9A900/#855C00, lavender #E4DCFF/#7567D8/#4C3FA8, green #D6F0DC/#4D9A58/
+#2F6B38, rose #FBDFD4/#D9705C/#9C4A3C, slate #E2E8F0/#64748B/#475569. Border #D8E0EA, ink-subtle
+#67707C. Quote surface #DFEAFC, newsletter #FFE2CD, footer #182230.
+
+TINTS WERE DEEPENED ONCE ALREADY - DO NOT LIGHTEN THEM BACK. The first pass (#F8FAFC canvas,
+#EEF6FF blue etc) sat at 1.03-1.09:1 against white, invisible on most screens, and the whole page
+read as flat white with the category coding doing nothing. ink-subtle was also raised from #8A94A3
+(2.75:1 on canvas, below AA) to #67707C (4.51:1). All eight -ink/-soft pairings were re-measured
+after deepening and clear 4.8:1 or better. Target ~55-60% white / 15-20% light blue / 8-10% soft orange / 5-8% soft
 teal-green / traces of yellow+lavender / rest photography.
 
 THREE VALUES PER FAMILY, NOT INTERCHANGEABLE:
@@ -182,7 +188,14 @@ exactly at both breakpoints). Category rail is image-backed tinted cards, 2/4/6 
 
 Resolution order for every tile: (1) live Shopify product image, (2) a file the owner put in
 public/categories/<department-key>.<ext>, discovered by reading the directory in categoryMedia.ts,
-(3) a colour-coded DepartmentVisual card (tint + department icon + faint oversized glyph).
+(3) the committed public/categories/<key>.svg illustration, (4) a colour-coded DepartmentVisual card
+(tint + department icon + faint oversized glyph).
+
+EIGHT SVG ILLUSTRATIONS ARE COMMITTED so no card is ever empty. Flat vector, colours read from the
+tint tokens by the generator so artwork cannot drift from the CSS. RASTER BEATS SVG - precedence is
+the order of IMAGE_EXTENSIONS in categoryMedia.ts (jpg,jpeg,png,webp,avif,svg), so dropping a
+photograph in wins with nothing to delete. SVG is passed to next/image with `unoptimized`, which
+avoids enabling dangerouslyAllowSVG for the whole app.
 
 NO HARD-CODED THIRD-PARTY IMAGE URLS, EVER. The previous version shipped eight images.unsplash.com
 IDs. The build environment has no outbound network so none could be verified, and two failed in

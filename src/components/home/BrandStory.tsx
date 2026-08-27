@@ -2,7 +2,7 @@ import { ArrowRight, BadgeCheck, Boxes, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { brandStoryMedia } from "@/lib/storefront/categoryMedia";
+import { brandStoryMedia, isVectorAsset } from "@/lib/storefront/categoryMedia";
 
 /**
  * The full-width brand story / trust banner.
@@ -61,6 +61,7 @@ export function BrandStory() {
             fill
             sizes="(max-width: 1023px) 100vw, 1680px"
             src={image.url}
+            unoptimized={isVectorAsset(image.url)}
           />
         ) : null}
 

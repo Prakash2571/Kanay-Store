@@ -19,11 +19,16 @@ around 800px on the long edge is plenty, since the cards render under 300px.
 
 `public/brand-story.jpg` backs the wide trust banner in the same way.
 
-## Nothing here is required
+## An illustration ships for every department
 
-Any department without a file renders as a colour-coded card with its icon, which is a deliberate
-part of the design rather than a placeholder. Real product photography from Shopify always takes
-priority over both.
+`<key>.svg` is committed for all eight, so no card is ever empty. They are flat vector artwork drawn
+from each department's tint tokens, so they match the palette exactly and cannot drift from it.
+
+**A raster file beats the SVG.** Drop `electronics.jpg` in and it wins over `electronics.svg`
+automatically — nothing needs deleting. Precedence is the order of `IMAGE_EXTENSIONS` in
+`src/lib/storefront/categoryMedia.ts`: jpg, jpeg, png, webp, avif, then svg last.
+
+Real product photography from Shopify takes priority over both.
 
 ## Why these are local files and not stock URLs
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Sports and fitness">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop fitness.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#cfece5"/>
+  <circle cx="400" cy="300" r="212" fill="#6cc4b6" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#6cc4b6" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#6cc4b6" opacity="0.22"/>
+  <rect x="332" y="306" width="136" height="32" rx="16" fill="#0b6b5f"/>
+  <rect x="278" y="268" width="34" height="108" rx="15" fill="#0b6b5f"/>
+  <rect x="244" y="288" width="28" height="68" rx="13" fill="#6cc4b6"/>
+  <rect x="488" y="268" width="34" height="108" rx="15" fill="#0b6b5f"/>
+  <rect x="528" y="288" width="28" height="68" rx="13" fill="#6cc4b6"/>
+</svg>

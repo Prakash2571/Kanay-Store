@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Fashion">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop fashion.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#ffdfc9"/>
+  <circle cx="400" cy="300" r="212" fill="#f09a68" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#f09a68" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#f09a68" opacity="0.22"/>
+  <path d="M362 214 L288 250 L316 332 L350 316 V472 A16 16 0 0 0 366 488 H434 A16 16 0 0 0 450 472 V316 L484 332 L512 250 L438 214 A40 40 0 0 1 362 214 Z" fill="#9a4a16"/>
+  <path d="M362 214 A40 40 0 0 0 438 214" fill="none" stroke="#f09a68" stroke-width="13"/>
+</svg>

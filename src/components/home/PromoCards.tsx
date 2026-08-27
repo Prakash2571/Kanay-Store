@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { CategoryTile } from "@/lib/storefront/merchandising";
-import { departmentImageFor } from "@/lib/storefront/categoryMedia";
+import { departmentImageFor, isVectorAsset } from "@/lib/storefront/categoryMedia";
 import type { StorefrontImage } from "@/lib/storefront/types";
 
 /**
@@ -92,6 +92,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
                 fill
                 sizes="(max-width: 1023px) 92vw, 46vw"
                 src={feature.image.url}
+                unoptimized={isVectorAsset(feature.image.url)}
               />
             ) : null}
           </span>
@@ -166,6 +167,7 @@ function CardVisual({ image, title }: { image: StorefrontImage | null; title: st
         fill
         sizes="144px"
         src={image.url}
+        unoptimized={isVectorAsset(image.url)}
       />
     </span>
   );
