@@ -49,14 +49,21 @@ export function StatsStrip({
   const categories =
     categoryCount > 0 ? `${categoryCount}` : `${STATED_CATEGORIES_FLOOR}+`;
 
+  /**
+   * One colour per stat, as a dot and a short rule. Four hues, a few square pixels each.
+   *
+   * The brief is explicit that this must not become four giant coloured cards, and it is right:
+   * the surface stays white and the colour is the smallest mark that still differentiates. Saturated
+   * `mark` tokens are safe here because nothing sits on top of them - they are pure decoration.
+   */
   const stats = [
-    { value: STATED_DAILY_BUYERS, label: "Typical daily buyers", accent: false },
-    { value: STATED_WHOLESALE_PRODUCTS, label: "Wholesale products", accent: false },
-    { value: categories, label: "Categories", accent: true },
+    { value: STATED_DAILY_BUYERS, label: "Typical daily buyers", mark: "bg-tint-blue-mark" },
+    { value: STATED_WHOLESALE_PRODUCTS, label: "Wholesale products", mark: "bg-tint-orange-mark" },
+    { value: categories, label: "Categories", mark: "bg-tint-teal-mark" },
     {
       value: lowestPrice ? formatMoney(lowestPrice) : "India-wide",
       label: lowestPrice ? "Lowest unit price" : "Delivery support",
-      accent: false,
+      mark: "bg-tint-green-mark",
     },
   ];
 
@@ -77,14 +84,14 @@ export function StatsStrip({
           >
             <dt className="sr-only">{stat.label}</dt>
             <dd>
+              <span
+                aria-hidden="true"
+                className={`mb-3 block size-1.5 rounded-full ${stat.mark}`}
+              />
               <span className="block text-[1.7rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[2rem]">
                 {stat.value}
               </span>
-              {/* One tiny orange rule, on one cell only. Any more and it becomes a pattern. */}
-              <span
-                aria-hidden="true"
-                className={`mt-3 block h-0.5 w-7 rounded-full ${stat.accent ? "bg-accent" : "bg-line-strong"}`}
-              />
+              <span aria-hidden="true" className={`mt-3 block h-0.5 w-7 rounded-full ${stat.mark}`} />
               <span className="mt-3 block text-[0.8rem] font-semibold leading-5 text-ink-muted">
                 {stat.label}
               </span>

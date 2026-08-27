@@ -52,7 +52,7 @@ export function TrackOrderForm() {
           />
           <button
             type="submit"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand px-6 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand-solid px-6 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
           >
             <Search aria-hidden="true" size={17} strokeWidth={1.75} />
             View order

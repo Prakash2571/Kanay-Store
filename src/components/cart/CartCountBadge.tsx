@@ -21,7 +21,7 @@ export function CartCountBadge() {
   return (
     <span
       aria-hidden="true"
-      className="absolute -right-0.5 -top-0.5 grid min-w-[1.15rem] place-items-center rounded-[var(--radius-pill)] bg-brand px-1 text-[0.65rem] font-bold leading-[1.15rem] text-white"
+      className="absolute -right-0.5 -top-0.5 grid min-w-[1.15rem] place-items-center rounded-[var(--radius-pill)] bg-brand-solid px-1 text-[0.65rem] font-bold leading-[1.15rem] text-white"
     >
       {itemCount > 99 ? "99+" : itemCount}
     </span>

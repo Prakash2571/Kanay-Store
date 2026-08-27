@@ -19,7 +19,7 @@ export function CatalogEmpty({
         <h2 className="mt-4 text-xl font-extrabold">{title}</h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-ink-muted">{message}</p>
         <Link
-          className="mt-6 inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+          className="mt-6 inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] bg-brand-solid px-6 text-sm font-bold text-white transition-colors hover:bg-brand-solid-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
           href="/shop"
         >
           Browse all products

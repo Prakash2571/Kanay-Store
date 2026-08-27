@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BrandQuote } from "@/components/home/BrandQuote";
+import { BrandStory } from "@/components/home/BrandStory";
 import { CategoryCircles } from "@/components/home/CategoryCircles";
 import { Hero } from "@/components/home/Hero";
 import { Newsletter } from "@/components/home/Newsletter";
@@ -96,6 +97,9 @@ export default async function HomePage() {
         <PromoCards tiles={categoryTiles} />
 
         <ProductSection
+          // "Featured", not "Best seller": FEATURED is the merchant's manual merchandising order,
+          // and nothing in this system records units sold.
+          badge="featured"
           description="Popular products across the Kanay marketplace, priced per unit in INR."
           id="best-sellers"
           loadFailed={!featuredResult.ok}
@@ -127,6 +131,7 @@ export default async function HomePage() {
 
         {trending.length > 0 || !newestResult.ok ? (
           <ProductSection
+            badge="new"
             description="Recently added across electronics, home, tools, office, lifestyle and more."
             id="trending"
             loadFailed={!newestResult.ok}
@@ -150,6 +155,12 @@ export default async function HomePage() {
         ) : null}
 
         <WhyKanay />
+        {/*
+          The brand-story banner goes here: lower-middle, after the benefits and before the quote.
+          It is the one dark, photographic block on the page, so it breaks up a long run of light
+          sections at the point where they start to blur together.
+        */}
+        <BrandStory />
         <BrandQuote />
         {/*
           The services strip sits between the quote and the newsletter rather than above the

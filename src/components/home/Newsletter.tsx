@@ -36,10 +36,10 @@ export function Newsletter() {
 
   return (
     <section aria-labelledby="newsletter-heading" className="shell section-y">
-      <div className="grid items-center gap-6 rounded-[var(--radius-card)] bg-surface-blue p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:gap-10 lg:p-10">
+      <div className="grid items-center gap-6 rounded-[var(--radius-card)] border border-accent/20 bg-newsletter-bg p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:gap-10 lg:p-10">
         <div className="flex items-start gap-4">
           <span className="hidden size-11 shrink-0 place-items-center rounded-[var(--radius-pill)] bg-surface sm:grid">
-            <Mail aria-hidden="true" className="text-brand-ink" size={20} strokeWidth={1.8} />
+            <Mail aria-hidden="true" className="text-accent-ink" size={20} strokeWidth={1.8} />
           </span>
           <div>
             <h2 className="text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id="newsletter-heading">
@@ -74,7 +74,7 @@ export function Newsletter() {
               value={email}
             />
             <button
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold whitespace-nowrap text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold whitespace-nowrap text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               type="submit"
             >
               Subscribe

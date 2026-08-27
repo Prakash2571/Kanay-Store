@@ -1,0 +1,134 @@
+import { ArrowRight, BadgeCheck, Boxes, Truck } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { BRAND_STORY_IMAGE } from "@/lib/storefront/showcase";
+
+/**
+ * The full-width brand story / trust banner.
+ *
+ * WHAT IT IS FOR
+ * --------------
+ * The homepage is a run of light sections and product grids, and by the fourth row they stop
+ * registering as separate things. This is one branded moment that breaks that rhythm and says
+ * what Kanay is for — sourcing confidence, practical minimums, dependable fulfilment — rather
+ * than selling a specific product.
+ *
+ * WHY THE IMAGE IS CARTONS AND NOT A PERSON
+ * -----------------------------------------
+ * A person as the focus is what turns a trust banner into a lifestyle campaign, which is the
+ * failure mode this section has to avoid. Stacked shipping cartons is the most legible shorthand
+ * for "a real wholesale operation that dispatches orders", and it reads correctly at a glance and
+ * at any crop.
+ *
+ * THE OVERLAY IS SLATE-NAVY, NOT BLACK, AT 52%
+ * -------------------------------------------
+ * Black flattens a photograph into a grey smear, which defeats the point of having one. Navy at
+ * roughly half strength keeps the cartons legible as cartons while holding white text well clear
+ * of AA. There is a second, stronger gradient on the content side only — a flat overlay heavy
+ * enough for text everywhere makes the whole image muddy, whereas a directional one keeps the
+ * far side of the photograph bright.
+ *
+ * IT DEGRADES INTO A DESIGNED STATE
+ * ---------------------------------
+ * The navy gradient is painted by the container, not by the image, so the banner is a deep navy
+ * panel with readable white text even if the photograph fails to load. No layout shift, no broken
+ * image icon, no unreadable text — which matters because the image URL could not be verified from
+ * the environment this was built in.
+ *
+ * NOT FULL-BLEED
+ * --------------
+ * It sits inside `shell` with the same card radius as every other block. Genuinely edge-to-edge
+ * would be wider than the header, the footer and every product row, and would read as an embedded
+ * advert rather than part of the page. "Expansive" here comes from height and from the image, not
+ * from breaking the grid.
+ */
+export function BrandStory() {
+  return (
+    <section aria-labelledby="brand-story-heading" className="shell section-y">
+      <div className="relative isolate overflow-hidden rounded-[var(--radius-card)] bg-[#0f172a]">
+        <Image
+          alt={BRAND_STORY_IMAGE.alt}
+          className="absolute inset-0 -z-10 h-full w-full object-cover"
+          height={BRAND_STORY_IMAGE.height ?? 1080}
+          sizes="(max-width: 1023px) 100vw, 1360px"
+          src={BRAND_STORY_IMAGE.url}
+          width={BRAND_STORY_IMAGE.width ?? 1920}
+        />
+
+        {/* Flat base overlay: readability floor across the whole image. */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[var(--overlay)]"
+        />
+        {/*
+          Directional overlay, content side only. Left-weighted on desktop so the copy sits on the
+          darkest part and the right of the photograph stays bright; top-to-bottom on mobile, where
+          the content stacks over the middle of the crop.
+        */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--overlay-strong)] via-transparent to-[var(--overlay-strong)] lg:bg-gradient-to-r lg:from-[var(--overlay-strong)] lg:via-[var(--overlay)] lg:to-transparent"
+        />
+
+        <div className="flex min-h-[22rem] flex-col justify-center px-6 py-14 sm:min-h-[25rem] sm:px-10 sm:py-16 lg:min-h-[28rem] lg:px-14 lg:py-20">
+          <div className="max-w-[46ch]">
+            {/* Orange eyebrow — the small warm accent that ties this to the rest of the page. */}
+            <p className="flex items-center gap-2 text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[#ffb185]">
+              <Boxes aria-hidden="true" size={15} strokeWidth={2} />
+              Wholesale sourcing
+            </p>
+
+            <h2
+              className="mt-4 text-[1.75rem] font-extrabold leading-[1.15] tracking-[-0.025em] text-white sm:text-[2.15rem] lg:text-[2.5rem]"
+              id="brand-story-heading"
+            >
+              Built for better bulk buying
+            </h2>
+
+            <p className="mt-4 max-w-[52ch] text-sm leading-7 text-white/85 sm:text-base">
+              Kanay helps businesses source products across categories with practical minimum order
+              quantities, reliable fulfilment support, and a marketplace designed for smarter
+              wholesale buying.
+            </p>
+
+            {/*
+              Three short proof points rather than a second paragraph. Each one is something the
+              system genuinely does: minimums are enforced at checkout, the catalog is the same one
+              retail buys from, and delivery is quoted before payment. No numbers, because none of
+              these would survive being quantified from a frontend.
+            */}
+            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
+              {[
+                { icon: Boxes, text: "Minimums shown up front" },
+                { icon: BadgeCheck, text: "One approved catalog" },
+                { icon: Truck, text: "Delivery across India" },
+              ].map(({ icon: Icon, text }) => (
+                <li className="flex items-center gap-2 text-xs font-semibold text-white/90" key={text}>
+                  <Icon aria-hidden="true" className="text-[#7db3ff]" size={15} strokeWidth={2} />
+                  {text}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+                href="/shop"
+              >
+                Explore wholesale
+                <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
+              </Link>
+              <Link
+                className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-white/35 px-7 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+                href="/#categories"
+              >
+                Browse categories
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

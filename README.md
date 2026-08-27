@@ -6,21 +6,42 @@ It is a **general-purpose retail and wholesale marketplace**, not a single-categ
 
 ## Design system
 
-White carries the page, blue carries structure and trust, and orange is the accent. One clean sans (Manrope) at compact ecommerce sizes. Tokens live in `src/app/globals.css`; the `shell`, `section-y` and `no-scrollbar` utilities defined there set the centred column (1360px) and the section rhythm, so every page lines up without repeating gutter classes.
+White carries the page, blue carries structure and trust, orange is the action accent, and six soft tint families give categories and badges individual personality. One clean sans (Manrope). Tokens live in `src/app/globals.css`; `shell`, `section-y` and `no-scrollbar` set the 1360px centred column and the section rhythm.
 
-Target balance: roughly two thirds white, a fifth pale blue (`#EEF6FF`), and orange in single-digit percentages.
+Target balance: ~55–60% white, 15–20% light blue, 8–10% soft orange, 5–8% soft teal/green, small amounts of yellow and lavender, and the rest product photography. **Colour through details, not through large solid blocks.**
 
-The palette used to be peach on cream with an orange accent. It was clean, and it read as a beauty or skincare brand — warm blush *surfaces* plus a coral CTA is the visual grammar of cosmetics retail, which mis-sells a marketplace whose catalog is mostly electronics, appliances, tools and office supplies. The fix was not to remove warmth but to move it: blue owns the surfaces and the structure, orange owns a small, fixed set of jobs.
+### The three-value rule
 
-Rules that are load-bearing rather than stylistic:
+Every hue family has three values and they are not interchangeable:
 
-- **Orange (`--accent`) is confined to a list**: the single most important CTA in a section, offer/sale/discount badges, small accent marks (a rule, a quote glyph, a nav underline), and eyebrow labels. Not section backgrounds, not every button, not headings. There is no separate amber family any more — discounts used to be amber while the accent was teal, which put three warm hues in competition for one job.
-- **There is one theme, and it is light.** No `.dark` block, no `prefers-color-scheme` inversion, no toggle. `color-scheme: light` is declared so the browser paints form controls, scrollbars and autofill to match. A dark variant was built and removed; the four contrast bugs it introduced (navy text on near-black, white CTA labels on a near-white `--ink` fill, a white tick on light green, white on amber) are why one verified palette beats two.
-- **Fills and text are separate tokens.** `--brand` and `--accent` sit behind white text; `--brand-ink` and `--accent-ink` are the same hues dark enough to *be* text on white. `--accent` is 2.3:1 on white, so an orange label written with the fill token is unreadable — the easiest mistake to make in this palette.
-- **No filter, opacity or blend mode is ever applied to product imagery.** A dimmed or tinted photograph misrepresents merchandise a wholesale buyer is judging from it.
-- **The homepage visual is photography, not icons.** Hero and category imagery come from live catalog images first. When the catalog cannot fill them, `src/lib/storefront/showcase.ts` supplies curated *category* photographs — see the note in that file for why category illustration is acceptable where a fabricated product card would not be. On a configured store with product images, none of it renders.
-- **No fabricated content.** No testimonials (there is no review backend), no star ratings, no wishlist, no payment-method badges, no hard-coded discount percentage, no invented bulk tier pricing. The hero's "up to X% off" badge is computed from real `compareAtPrice` data and is not rendered when nothing is discounted; the Deals row appears only when products genuinely carry a saving; the Wholesale Deals row appears only when products genuinely carry an MOQ.
-- **The stats strip mixes two kinds of figure and labels them differently.** Categories is *derived* from live catalog facets. Daily buyers and product count are *static business figures* stated by the store owner, written as conservative floors ("25+", "120+") and never described as live, current or real-time — there is no analytics pipeline and the catalog API is cursor-paginated with no total. See the comment in `StatsStrip.tsx` before changing them.
+| | purpose | contrast |
+|---|---|---|
+| `--tint-X` | soft background — the value that gets **area** | — |
+| `--tint-X-mark` | saturated — dots, rules, 2px bars. **Never behind text** | 2.0–3.5:1 on white |
+| `--tint-X-ink` | dark — text and meaningful icons | ≥5.5:1 on white *and* on its own soft |
+
+The same split applies to the two primaries, and in both cases it exists because the specified colour cannot do both jobs:
+
+- **`--brand` (`#3B82F6`) vs `--brand-solid` (`#2563EB`).** White on `#3B82F6` is 3.68:1, which fails AA for the 14px bold labels every button uses. `--brand` decorates; `--brand-solid` is the button fill.
+- **Orange buttons carry dark text.** White on `#F5824A` is 2.57:1. Darkening the orange enough to carry white text turns it rust and loses the warmth that is the point of having it. Dark ink on `#F5824A` is 6.79:1.
+
+Badges follow the same logic: soft fill + dark ink, never saturated fill + white text.
+
+### Category colour coding
+
+Electronics blue · Home & Kitchen green · Accessories lavender · Beauty rose · Tools yellow · Office blue-grey · Fitness teal · Fashion orange. Unrecognised labels get neutral slate rather than a wrong colour.
+
+The mapping lives in **one** table (`categoryTintFor` in `src/lib/storefront/showcase.ts`) because the entire value of colour coding is consistency — two components disagreeing about the colour of "Home" would destroy it. Colour lands on the card body and a 2px bar; typography stays dark. That is the line between colour-coded and childish.
+
+> **Tailwind gotcha:** tint classes are written out in full (`bg-tint-blue`, not `` bg-tint-${name} ``). Tailwind v4 generates utilities by scanning source text, so a composed class name produces **no CSS at all**, renders unstyled, and throws nothing. `showcase.test.ts` asserts the class shapes for exactly this reason.
+
+### Other load-bearing rules
+
+- **One theme, light.** No `.dark` block, no `prefers-color-scheme` inversion, no toggle. `color-scheme: light` is declared so the browser paints form controls, scrollbars and autofill to match. A dark variant was built and removed; the four contrast bugs it introduced are why one verified palette beats two.
+- **No filter, opacity or blend mode on product imagery.** A tinted photograph misrepresents merchandise a buyer is judging from it.
+- **Homepage visuals are photography.** Live catalog images first; `src/lib/storefront/showcase.ts` supplies curated *category* photographs only when the catalog cannot fill them. Every consumer layers the photo over a tinted, labelled surface, so a bad URL degrades into a designed card rather than a broken image — the URLs could not be verified from the build environment.
+- **No fabricated content.** No testimonials (no review backend), no star ratings, no wishlist, no payment-method badges, no hard-coded discount percentage, no invented tier pricing. There is deliberately **no "Best seller" badge** — Shopify's FEATURED sort is manual merchandising order and nothing records units sold, so the badge says "Featured", which is true.
+- **Stats mix two kinds of figure.** Categories is *derived* from live catalog facets. Daily buyers and product count are *static business figures* stated by the owner, written as conservative floors, and never labelled live/current/today. See the comment in `StatsStrip.tsx`.
 
 ## Wholesale minimums (MOQ)
 

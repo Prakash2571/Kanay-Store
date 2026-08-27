@@ -38,7 +38,7 @@ export function Header() {
           {/* Blue mark, dark wordmark: the brand signal sits in the symbol, not in the type. */}
           <span
             aria-hidden="true"
-            className="grid size-9 place-items-center rounded-[var(--radius-control)] bg-brand text-base font-extrabold leading-none text-white"
+            className="grid size-9 place-items-center rounded-[var(--radius-control)] bg-brand-solid text-base font-extrabold leading-none text-white"
           >
             K
           </span>
@@ -175,7 +175,7 @@ function SearchField({ className = "", id }: { className?: string; id: string })
         type="search"
       />
       <button
-        className="my-1.5 hidden shrink-0 rounded-[var(--radius-pill)] bg-brand px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline focus-visible:outline-2 sm:block"
+        className="my-1.5 hidden shrink-0 rounded-[var(--radius-pill)] bg-brand-solid px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-brand-solid-hover focus-visible:outline focus-visible:outline-2 sm:block"
         type="submit"
       >
         Search
