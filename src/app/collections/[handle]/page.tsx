@@ -47,12 +47,12 @@ export default async function CollectionPage({
 
   return (
     <StoreShell collections={collections}>
-      <main className="mx-auto max-w-[1400px] px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
+      <main className="shell section-y">
         {result.ok ? (
           <>
             <div className="max-w-3xl">
               <nav aria-label="Breadcrumb" className="mb-5 text-xs text-ink-muted"><Link className="hover:text-ink" href="/shop">Shop</Link> / {result.data.collection.title}</nav>
-              <h1 className="font-serif text-5xl font-semibold tracking-[-0.035em] sm:text-6xl">{result.data.collection.title}</h1>
+              <h1 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">{result.data.collection.title}</h1>
               {result.data.collection.description ? <p className="mt-4 max-w-[60ch] text-sm leading-6 text-ink-muted">{result.data.collection.description}</p> : null}
             </div>
             <form className="my-8 flex items-end justify-end border-y border-line py-4" method="get">
@@ -64,7 +64,7 @@ export default async function CollectionPage({
                   <option value="PRICE_DESC">Price high-low</option>
                 </select>
               </label>
-              <button className="ml-3 min-h-11 bg-ink px-5 text-sm font-bold text-canvas" type="submit">Sort</button>
+              <button className="ml-3 min-h-11 rounded-[var(--radius-control)] bg-ink px-5 text-sm font-bold text-white" type="submit">Sort</button>
             </form>
             {result.data.products.length ? <ProductGrid priorityCount={4} products={result.data.products} /> : <CatalogEmpty title="This collection is empty" message="No approved products are available in this collection right now." />}
           </>

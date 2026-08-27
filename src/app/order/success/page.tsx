@@ -45,7 +45,7 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
         <OrderStatusView order={result.data} success />
       ) : (
         <section className="mx-auto max-w-2xl rounded-[var(--radius-card)] bg-surface-muted p-7 sm:p-10">
-          <h1 className="font-serif text-5xl font-semibold tracking-[-0.03em]">
+          <h1 className="text-2xl font-semibold tracking-[-0.03em]">
             We are checking your order.
           </h1>
           <p className="mt-4 text-sm leading-6 text-ink-muted">
@@ -54,7 +54,7 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
               href="/track-order"
-              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-canvas"
+              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-white"
             >
               Track order
             </Link>

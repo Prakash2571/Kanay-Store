@@ -1,58 +1,90 @@
 @import "tailwindcss";
 
+/**
+ * Kanay Store design tokens — light warm multi-category marketplace.
+ *
+ * WHY THESE VALUES
+ * ----------------
+ * Kanay sells electronics, home and kitchen, beauty, toys, fitness, office supplies,
+ * automotive accessories, fashion and wholesale lots. The previous palette (near-black
+ * page, dark brown surfaces, editorial serif) read as a single-brand fashion label,
+ * which mis-sells everything that is not clothing. This palette is bright off-white with
+ * white cards and soft peach accents: it stays neutral behind product photography from
+ * any category, and reads as a high-trust general store rather than a lookbook.
+ *
+ * NO DARK-MODE INVERSION
+ * ----------------------
+ * There is deliberately no `prefers-color-scheme: dark` block. There used to be one, and
+ * it turned the storefront black on any device set to dark mode — which is the single
+ * thing this design must never look like. A warm-light identity that silently becomes a
+ * dark identity on half of all phones is not one identity, it is two, and only one of
+ * them was designed.
+ *
+ * TOKEN NAMES
+ * -----------
+ * The semantic names (`canvas`, `surface`, `ink`, `line`, `accent`) are kept from the
+ * previous system because ~30 files reference them; only the VALUES changed. New names
+ * were added for the peach surfaces the reference layout needs.
+ */
 :root {
-  --canvas: #fffaf5;
+  /* Page and card surfaces, lightest to warmest. */
+  --canvas: #fffdfc;
   --surface: #ffffff;
-  --surface-muted: #f8f2ed;
-  --surface-strong: #eee3db;
-  --ink: #191919;
-  --ink-muted: #625d59;
-  --line: #ded4cd;
-  --accent: #d77858;
-  --accent-soft: #f5c6b4;
-  --accent-ink: #5d2415;
-  --danger: #a33a32;
-  --success: #386746;
-  --focus: #b84f30;
-  --radius-card: 0.75rem;
-  --radius-control: 0.5rem;
-  --shadow-soft: 0 18px 50px rgba(91, 58, 44, 0.08);
-}
+  --surface-muted: #fff7f1;
+  --surface-peach-soft: #fff0e6;
+  --surface-peach: #fce4d4;
+  /* Retained alias: `surface-strong` predates the peach scale and is used for disabled
+     fills and image placeholders, where the mid peach is exactly right. */
+  --surface-strong: #fce4d4;
+  --line: #eae5e1;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --canvas: #171514;
-    --surface: #201d1b;
-    --surface-muted: #292421;
-    --surface-strong: #382f2b;
-    --ink: #f8f0ea;
-    --ink-muted: #c8bbb3;
-    --line: #4d423c;
-    --accent: #ed9475;
-    --accent-soft: #6e3e2f;
-    --accent-ink: #ffe1d5;
-    --danger: #ef9289;
-    --success: #8fbe9a;
-    --focus: #f1a083;
-    --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.22);
-  }
+  /* Text. Three steps only - a fourth grey always ends up used inconsistently. */
+  --ink: #171717;
+  --ink-muted: #66615d;
+  --ink-subtle: #938c86;
+
+  /* Accent. `accent` is for fills and icons, `accent-ink` for text ON peach surfaces,
+     where the raw accent would fail contrast. */
+  --accent: #f28c5b;
+  --accent-hover: #e97745;
+  --accent-soft: #fbd8c5;
+  --accent-ink: #8f4318;
+
+  --danger: #b23b30;
+  --success: #2f6b45;
+  --star: #f2a93b;
+  --focus: #c8571f;
+
+  --radius-card: 1rem;
+  --radius-control: 0.625rem;
+  --radius-pill: 999px;
+  --shadow-soft: 0 10px 30px rgba(120, 78, 52, 0.06);
+  --shadow-card: 0 2px 10px rgba(120, 78, 52, 0.05);
+
+  /* One place that defines page gutters and the centred content width, so every
+     section lines up. 1320px matches the reference's density at 1440px. */
+  --content-width: 1320px;
 }
 
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
+  --color-surface-peach: var(--surface-peach);
+  --color-surface-peach-soft: var(--surface-peach-soft);
   --color-surface-strong: var(--surface-strong);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
   --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-ink: var(--accent-ink);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --color-star: var(--star);
   --font-sans: var(--font-manrope);
-  --font-serif: var(--font-cormorant);
 }
 
 * {
@@ -62,14 +94,17 @@
 html {
   scroll-behavior: smooth;
   background: var(--canvas);
+  /* Anchor links from the header land below the sticky bar rather than under it. */
+  scroll-padding-top: 6.5rem;
 }
 
 body {
   margin: 0;
   background: var(--canvas);
   color: var(--ink);
-  font-family: var(--font-manrope), sans-serif;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -78,7 +113,7 @@ input,
 select,
 textarea {
   outline-color: var(--focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 button,
@@ -89,6 +124,42 @@ a {
 ::selection {
   background: var(--accent-soft);
   color: var(--accent-ink);
+}
+
+@utility shell {
+  /* The centred content column. Used by every section so nothing drifts. */
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--content-width);
+  padding-inline: 1rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility section-y {
+  /* Vertical rhythm: 64px mobile, 88px desktop, per the reference's density. */
+  padding-block: 2.5rem;
+
+  @media (width >= 64rem) {
+    padding-block: 3.5rem;
+  }
+}
+
+@utility no-scrollbar {
+  /* Horizontal category and product rails on mobile: the row still scrolls, the bar
+     just does not sit on top of the content. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -43,7 +43,7 @@ export function CatalogControls({
         </select>
       </Field>
       <div className="flex items-end">
-        <button className="min-h-11 w-full bg-ink px-5 text-sm font-bold text-canvas transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 active:translate-y-px" type="submit">Apply filters</button>
+        <button className="min-h-11 w-full rounded-[var(--radius-control)] bg-ink px-5 text-sm font-bold text-white transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 active:translate-y-px" type="submit">Apply filters</button>
       </div>
     </form>
   );

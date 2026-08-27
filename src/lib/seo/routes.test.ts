@@ -99,6 +99,7 @@ describe("sitemap.xml", () => {
 
     expect(urls).toContain("https://kanay.example.com/");
     expect(urls).toContain("https://kanay.example.com/shop");
+    expect(urls).toContain("https://kanay.example.com/about");
   });
 
   it("lists products and collections", async () => {
@@ -137,10 +138,13 @@ describe("sitemap.xml", () => {
     const { default: sitemap } = await import("@/app/sitemap");
     const entries = await sitemap();
 
-    expect(entries).toHaveLength(2);
+    expect(entries).toHaveLength(3);
     expect(entries.map((entry) => entry.url)).toEqual([
       "https://kanay.example.com/",
       "https://kanay.example.com/shop",
+      // Static information page: no backend needed to serve it, so it survives an
+      // outage along with the other two.
+      "https://kanay.example.com/about",
     ]);
   });
 

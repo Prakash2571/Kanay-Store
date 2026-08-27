@@ -21,7 +21,7 @@ export function CartSummary({ subtotalPaise, checkoutEnabled = true }: CartSumma
 
   return (
     <aside className="rounded-[var(--radius-card)] bg-surface-muted p-5 sm:p-6">
-      <h2 className="font-serif text-3xl font-semibold">Order summary</h2>
+      <h2 className="text-3xl font-semibold">Order summary</h2>
       <dl className="mt-6 space-y-3 text-sm">
         <div className="flex justify-between gap-4">
           <dt className="text-ink-muted">Subtotal</dt>
@@ -45,7 +45,7 @@ export function CartSummary({ subtotalPaise, checkoutEnabled = true }: CartSumma
         {checkoutEnabled && (
           <Link
             href="/checkout"
-            className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] bg-ink px-5 font-semibold whitespace-nowrap text-canvas transition-transform active:scale-[0.98]"
+            className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] bg-ink px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
           >
             Secure checkout
           </Link>

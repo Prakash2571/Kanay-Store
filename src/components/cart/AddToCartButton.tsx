@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBag } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useCart } from "./CartProvider";
@@ -10,9 +10,26 @@ type AddToCartButtonProps = {
   item: CartProductItem;
   quantity?: number;
   className?: string;
+  /**
+   * `card` is the bordered button used inside a product card, where an orange fill would
+   * compete with the discount badge and with every other card in the grid. `primary` is the
+   * solid accent CTA used on a product page, where it is the single most important control.
+   */
+  variant?: "card" | "primary";
 };
 
-export function AddToCartButton({ item, quantity = 1, className = "" }: AddToCartButtonProps) {
+const VARIANTS: Record<"card" | "primary", string> = {
+  card:
+    "border border-line bg-surface-muted text-ink hover:border-accent hover:bg-surface-peach-soft hover:text-accent-ink",
+  primary: "bg-accent text-white hover:bg-accent-hover",
+};
+
+export function AddToCartButton({
+  item,
+  quantity = 1,
+  className = "",
+  variant = "card",
+}: AddToCartButtonProps) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
 
@@ -24,16 +41,16 @@ export function AddToCartButton({ item, quantity = 1, className = "" }: AddToCar
 
   return (
     <button
-      type="button"
+      aria-live="polite"
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-control)] px-4 text-xs font-bold whitespace-nowrap transition-[transform,background-color,border-color,color] duration-200 focus-visible:outline focus-visible:outline-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-line disabled:bg-surface-muted disabled:text-ink-subtle sm:text-sm ${VARIANTS[variant]} ${className}`}
       disabled={!item.availableForSale}
       onClick={() => {
         addItem(item, quantity);
         setAdded(true);
       }}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-4 text-sm font-semibold whitespace-nowrap text-canvas transition-[transform,background-color] duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-surface-strong disabled:text-ink-muted ${className}`}
-      aria-live="polite"
+      type="button"
     >
-      <ShoppingBag aria-hidden="true" size={17} strokeWidth={1.75} />
+      <ShoppingCart aria-hidden="true" size={16} strokeWidth={2} />
       {added ? "Added" : item.availableForSale ? "Add to cart" : "Unavailable"}
     </button>
   );

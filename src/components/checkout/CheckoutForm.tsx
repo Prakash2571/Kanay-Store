@@ -254,11 +254,11 @@ export function CheckoutForm() {
   if (items.length === 0) {
     return (
       <section className="rounded-[var(--radius-card)] bg-surface-muted p-8 text-center">
-        <h2 className="font-serif text-4xl font-semibold">Your cart is empty.</h2>
+        <h2 className="text-4xl font-semibold">Your cart is empty.</h2>
         <p className="mt-3 text-sm text-ink-muted">Choose an available product before checkout.</p>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-ink px-6 font-semibold text-canvas"
+          className="mt-6 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-ink px-6 font-semibold text-white"
         >
           Go to shop
         </Link>
@@ -270,7 +270,7 @@ export function CheckoutForm() {
     <form onSubmit={handleSubmit} noValidate className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
       <div>
         <section aria-labelledby="contact-heading">
-          <h2 id="contact-heading" className="font-serif text-3xl font-semibold">
+          <h2 id="contact-heading" className="text-3xl font-semibold">
             Contact
           </h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -295,7 +295,7 @@ export function CheckoutForm() {
         </section>
 
         <section aria-labelledby="shipping-heading" className="mt-10 border-t border-line pt-8">
-          <h2 id="shipping-heading" className="font-serif text-3xl font-semibold">
+          <h2 id="shipping-heading" className="text-3xl font-semibold">
             Shipping address
           </h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -335,7 +335,7 @@ export function CheckoutForm() {
       </div>
 
       <aside className="h-fit rounded-[var(--radius-card)] bg-surface-muted p-5 sm:p-6 lg:sticky lg:top-28">
-        <h2 className="font-serif text-3xl font-semibold">Review</h2>
+        <h2 className="text-3xl font-semibold">Review</h2>
         <div className="mt-5 space-y-4">
           {items.map((item) => (
             <div key={item.shopifyVariantId} className="flex justify-between gap-4 text-sm">
@@ -374,7 +374,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-5 font-semibold whitespace-nowrap text-canvas transition-transform active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
+          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
         >
           <CreditCard aria-hidden="true" size={18} strokeWidth={1.75} />
           {busy ? "Preparing secure payment" : "Pay securely"}

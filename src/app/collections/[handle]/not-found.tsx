@@ -3,5 +3,5 @@ import Link from "next/link";
 import { StoreShell } from "@/components/layout/StoreShell";
 
 export default function CollectionNotFound() {
-  return <StoreShell><main className="mx-auto grid min-h-[55dvh] max-w-[1400px] place-items-center px-5 py-16 text-center"><div><h1 className="font-serif text-5xl font-semibold">Collection not found</h1><p className="mt-3 text-sm text-ink-muted">This collection is unavailable or no longer published.</p><Link className="mt-7 inline-flex min-h-11 items-center bg-ink px-6 text-sm font-bold text-canvas" href="/shop">Browse the shop</Link></div></main></StoreShell>;
+  return <StoreShell><main className="shell grid min-h-[55dvh] place-items-center py-16 text-center"><div><h1 className="text-2xl font-semibold">Collection not found</h1><p className="mt-3 text-sm text-ink-muted">This collection is unavailable or no longer published.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover" href="/shop">Browse the shop</Link></div></main></StoreShell>;
 }

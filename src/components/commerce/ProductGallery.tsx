@@ -10,7 +10,7 @@ export function ProductGallery({ images, title }: { images: StorefrontImage[]; t
   const selected = images[selectedIndex] ?? null;
 
   if (!selected) {
-    return <div className="grid aspect-[4/5] place-items-center bg-surface-muted px-8 text-center font-serif text-3xl text-ink-muted">{title}</div>;
+    return <div className="grid aspect-[4/5] place-items-center bg-surface-muted px-8 text-center text-3xl text-ink-muted">{title}</div>;
   }
 
   return (

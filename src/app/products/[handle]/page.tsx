@@ -41,8 +41,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   if (!productResult.ok) {
     return (
       <StoreShell collections={collections}>
-        <main className="mx-auto grid min-h-[55dvh] max-w-[1400px] place-items-center px-5 py-16 text-center">
-          <div><h1 className="font-serif text-5xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center bg-ink px-6 text-sm font-bold text-canvas" href="/shop">Back to shop</Link></div>
+        <main className="shell grid min-h-[55dvh] place-items-center py-16 text-center">
+          <div><h1 className="text-2xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover" href="/shop">Back to shop</Link></div>
         </main>
       </StoreShell>
     );
@@ -58,13 +58,13 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   return (
     <StoreShell collections={collections}>
       <main>
-        <div className="mx-auto max-w-[1400px] px-5 py-6 sm:px-8 lg:px-12 lg:py-10">
+        <div className="shell px-5 py-6 sm:px-8 lg:px-12 lg:py-10">
           <nav aria-label="Breadcrumb" className="mb-6 text-xs text-ink-muted"><Link className="hover:text-ink" href="/shop">Shop</Link> / {product.title}</nav>
           <div className="grid gap-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-14">
             <ProductGallery images={product.images} title={product.title} />
             <div className="lg:sticky lg:top-28 lg:self-start">
               {product.productType ? <p className="text-xs font-bold uppercase tracking-[0.12em] text-accent-ink">{product.productType}</p> : null}
-              <h1 className="mt-3 font-serif text-4xl font-semibold leading-[1] tracking-[-0.025em] sm:text-5xl">{product.title}</h1>
+              <h1 className="mt-3 text-4xl font-semibold leading-[1] tracking-[-0.025em] sm:text-2xl">{product.title}</h1>
               {product.vendorPublicName ? <p className="mt-2 text-xs text-ink-muted">By {product.vendorPublicName}</p> : null}
               <div className="mt-5">
                 <ProductPrice compareAtPrice={product.compareAtPriceRange?.min} prefix={product.priceRange.min.amount !== product.priceRange.max.amount ? "From " : undefined} price={product.priceRange.min} size="large" />
@@ -89,8 +89,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         </div>
         {recommendations.length ? (
           <section aria-labelledby="recommended-heading" className="border-t border-line bg-surface py-14 lg:py-20">
-            <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
-              <h2 className="mb-7 font-serif text-4xl font-semibold tracking-[-0.025em]" id="recommended-heading">You may also like</h2>
+            <div className="shell">
+              <h2 className="mb-7 text-4xl font-semibold tracking-[-0.025em]" id="recommended-heading">You may also like</h2>
               <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">{recommendations.map((item) => <ProductCard key={item.id} product={item} />)}</div>
             </div>
           </section>

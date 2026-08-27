@@ -52,7 +52,7 @@ export function TrackOrderForm() {
           />
           <button
             type="submit"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-6 font-semibold whitespace-nowrap text-canvas transition-transform active:scale-[0.98]"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-6 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
           >
             <Search aria-hidden="true" size={17} strokeWidth={1.75} />
             View order
@@ -71,7 +71,7 @@ export function TrackOrderForm() {
         <button
           type="button"
           onClick={resumeRecentCheckout}
-          className="min-h-11 rounded-[var(--radius-control)] border border-ink px-5 text-sm font-semibold transition-[transform,background-color,color] active:scale-[0.98] hover:bg-ink hover:text-canvas"
+          className="min-h-11 rounded-[var(--radius-control)] border border-ink px-5 text-sm font-semibold transition-[transform,background-color,color] active:scale-[0.98] hover:bg-ink hover:text-white"
         >
           Resume checkout in this tab
         </button>

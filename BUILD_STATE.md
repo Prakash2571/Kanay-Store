@@ -112,9 +112,24 @@ Approved dials remain, and are NOT to be re-asked:
 `MOTION_INTENSITY: 4`
 `VISUAL_DENSITY: 7`
 
-Direction: premium fashion/lifestyle ecommerce, warm cream/off-white, restrained peach,
-black typography, editorial serif headlines (Cormorant Garamond), clean sans UI (Manrope),
-dense but ordered composition, real product imagery only.
+Direction (revised — supersedes the earlier "premium fashion/lifestyle" direction, which
+mis-sold a multi-category catalog as an apparel label):
+
+General-purpose retail + wholesale marketplace. Bright off-white page (`#FFFDFC`), white
+cards, soft peach surfaces (`#FFF0E6` / `#FCE4D4`), warm-grey borders, orange accent
+(`#F28C5B`), near-black text. ONE clean sans (Manrope) at compact ecommerce sizes — hero
+40–52px, section headings 24–30px, product titles 14–16px. No editorial serif, no dark page
+background, no dark-mode inversion. Category-neutral imagery: the homepage hero and category
+rail are built from live catalog images rather than stock photography, so the page shows what
+the store actually sells.
+
+Homepage order: service strip → header → hero → category circles → 3 promo cards → best
+sellers → wholesale → new arrivals → deals (only when genuinely discounted) → services →
+newsletter. Max content width 1320px.
+
+No fabricated content anywhere: no testimonials (no review backend), no star ratings, no
+wishlist, no payment-method badges, no invented discount percentage, no fake newsletter
+confirmation.
 
 Final Design Audit: STILL PENDING. Must not be marked PASS until rendered responsive pages
 are actually inspected at 375 / 390 / 430 / 768 / 1024 / 1440.

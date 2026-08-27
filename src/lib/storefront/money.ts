@@ -39,10 +39,21 @@ export function formatMoney(money: Money): string {
   return paise === null ? "Price unavailable" : formatPaise(paise);
 }
 
+/**
+ * Whole-percent saving against a compare-at price, or null when there is no saving.
+ *
+ * Rounds DOWN, deliberately. This number is a public claim about price: it is printed on
+ * product cards and drives the "up to X% off" badge in the hero. `Math.round` turned a
+ * 49.6% saving into "50% off", which advertises a better price than anything in the catalog
+ * actually has - a small overstatement, but on the one figure a shopper checks against a
+ * competitor. Flooring can only ever understate by less than a percent.
+ */
 export function calculateDiscountPercent(price: Money, compareAtPrice?: Money | null): number | null {
   if (!compareAtPrice) return null;
   const current = moneyToPaise(price);
   const original = moneyToPaise(compareAtPrice);
   if (current === null || original === null || current >= original || original === 0) return null;
-  return Math.round(((original - current) / original) * 100);
+  const percent = Math.floor(((original - current) / original) * 100);
+  // A saving smaller than 1% floors to 0, and "0% off" is not a discount worth a badge.
+  return percent > 0 ? percent : null;
 }

@@ -81,7 +81,7 @@ export function ProductPurchasePanel({ product }: { product: StorefrontProduct }
                   disabled={!exists}
                   aria-pressed={selected}
                   onClick={() => setSelection(nextSelection)}
-                  className="min-h-11 min-w-12 rounded-[var(--radius-control)] border border-line bg-surface px-4 text-sm font-semibold transition-[transform,border-color,background-color] active:scale-[0.98] enabled:hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-canvas disabled:cursor-not-allowed disabled:opacity-40"
+                  className="min-h-11 min-w-12 rounded-[var(--radius-control)] border border-line bg-surface px-4 text-sm font-semibold transition-[transform,border-color,background-color] active:scale-[0.98] enabled:hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {value}
                 </button>
@@ -124,7 +124,7 @@ export function ProductPurchasePanel({ product }: { product: StorefrontProduct }
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {item ? (
-          <AddToCartButton item={item} quantity={quantity} className="w-full" />
+          <AddToCartButton className="w-full" item={item} quantity={quantity} variant="primary" />
         ) : (
           <button
             type="button"
@@ -142,7 +142,7 @@ export function ProductPurchasePanel({ product }: { product: StorefrontProduct }
             addItem(item, quantity);
             router.push("/checkout");
           }}
-          className="min-h-12 rounded-[var(--radius-control)] border border-ink bg-transparent px-5 font-semibold whitespace-nowrap transition-[transform,background-color,color] active:scale-[0.98] enabled:hover:bg-ink enabled:hover:text-canvas disabled:cursor-not-allowed disabled:border-line disabled:text-ink-muted"
+          className="min-h-12 rounded-[var(--radius-control)] border border-ink bg-transparent px-5 font-semibold whitespace-nowrap transition-[transform,background-color,color] active:scale-[0.98] enabled:hover:bg-ink enabled:hover:text-white disabled:cursor-not-allowed disabled:border-line disabled:text-ink-muted"
         >
           Buy now
         </button>

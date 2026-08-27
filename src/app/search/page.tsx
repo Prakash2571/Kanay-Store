@@ -24,12 +24,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   return (
     <StoreShell collections={collections}>
-      <main className="mx-auto min-h-[60dvh] max-w-[1400px] px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
-        <h1 className="font-serif text-5xl font-semibold tracking-[-0.035em] sm:text-6xl">Search</h1>
+      <main className="shell section-y min-h-[60dvh]">
+        <h1 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">Search</h1>
         <form action="/search" className="mt-7 flex max-w-2xl border border-line bg-surface" method="get">
           <label className="sr-only" htmlFor="catalog-search">Search products</label>
           <input autoFocus className="min-h-12 min-w-0 flex-1 bg-transparent px-4 text-sm placeholder:text-ink-muted" defaultValue={q} id="catalog-search" name="q" placeholder="Search by product name or category" type="search" />
-          <button className="grid min-h-12 w-12 place-items-center bg-ink text-canvas transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2" type="submit"><Search aria-hidden="true" size={20} strokeWidth={1.75} /><span className="sr-only">Search</span></button>
+          <button className="grid min-h-12 w-12 place-items-center bg-ink text-white transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2" type="submit"><Search aria-hidden="true" size={20} strokeWidth={1.75} /><span className="sr-only">Search</span></button>
         </form>
         {!q ? (
           <div className="mt-12 border-t border-line pt-8"><p className="text-sm text-ink-muted">Enter a product name, category or collection.</p></div>
