@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { OrderStatusView } from "@/components/orders/OrderStatusView";
+import { StripSensitiveParams } from "@/components/orders/StripSensitiveParams";
 import { getCheckoutStatus, getTrackedOrder } from "@/lib/storefront/orders";
 
 export const metadata: Metadata = {
@@ -23,6 +24,12 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
 
   return (
     <main className="mx-auto min-h-[75dvh] max-w-[1180px] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
+      {/*
+        The tokens have done their job by the time this renders - the order was read on
+        the server above. Clearing them from the address bar keeps a bearer credential
+        out of history, bookmarks, shared links and proxy logs.
+      */}
+      <StripSensitiveParams params={["token", "tracking", "session"]} />
       {result?.ok ? (
         <OrderStatusView order={result.data} success />
       ) : (

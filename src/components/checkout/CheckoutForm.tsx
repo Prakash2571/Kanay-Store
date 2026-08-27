@@ -14,6 +14,16 @@ import {
   type CheckoutSessionResponse,
   type GuestCheckoutValues,
 } from "@/lib/storefront/checkout";
+import {
+  checkoutFingerprint,
+  clearCheckoutKey,
+  loadCheckoutKey,
+  resolveCheckoutKey,
+  rotateCheckoutKeyAfterConflict,
+  saveCheckoutKey,
+  type CheckoutKeyState,
+} from "@/lib/storefront/checkoutIdempotency";
+import { rememberCheckout } from "@/lib/storefront/recentCheckout";
 
 type FormErrors = Partial<Record<keyof GuestCheckoutValues | "form", string>>;
 
@@ -59,11 +69,6 @@ function valuesFromForm(form: HTMLFormElement): Record<string, string> {
   return Object.fromEntries(Array.from(data.entries()).map(([key, value]) => [key, String(value)]));
 }
 
-function newIdempotencyKey(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
-}
-
 async function loadRazorpay(): Promise<boolean> {
   if (window.Razorpay) return true;
   const existing = document.querySelector<HTMLScriptElement>("script[data-kanay-razorpay]");
@@ -88,7 +93,15 @@ async function loadRazorpay(): Promise<boolean> {
 export function CheckoutForm() {
   const router = useRouter();
   const { hydrated, items, subtotalPaise, clearCart } = useCart();
-  const idempotencyKey = useRef<string | null>(null);
+  /**
+   * The idempotency key for the CURRENT request, plus the fingerprint it belongs to.
+   *
+   * Held in a ref and mirrored into sessionStorage: a retry - including one after a
+   * reload - must send the same key so an existing checkout session is replayed
+   * rather than duplicated, while a materially different request must send a new
+   * one. See lib/storefront/checkoutIdempotency.ts for the full rule.
+   */
+  const keyState = useRef<CheckoutKeyState | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [busy, setBusy] = useState(false);
   const [approvedSummary, setApprovedSummary] = useState<CheckoutSessionResponse["summary"] | null>(
@@ -112,18 +125,57 @@ export function CheckoutForm() {
     }
 
     setBusy(true);
-    idempotencyKey.current ??= newIdempotencyKey();
-    const created = await createCheckoutSession(items, parsed.data, idempotencyKey.current);
+
+    // Same basket, same customer, same address => same key, whatever happened last
+    // time (a timeout, a dismissed modal, a reload). Anything materially different
+    // => a new key, because it is a different order.
+    const fingerprint = checkoutFingerprint(items, parsed.data);
+    const resolved = resolveCheckoutKey(keyState.current ?? loadCheckoutKey(), fingerprint);
+    keyState.current = resolved.state;
+    saveCheckoutKey(resolved.state);
+
+    let created = await createCheckoutSession(items, parsed.data, resolved.state.key);
+
+    // IDEMPOTENCY_CONFLICT means the key is on record against a DIFFERENT request, so
+    // nothing about THIS one was accepted under it and a fresh key cannot duplicate a
+    // charge. Rotate once and retry, rather than showing an error the customer can
+    // only escape by reloading.
+    if (!created.ok && created.error.code === "IDEMPOTENCY_CONFLICT") {
+      const rotated = rotateCheckoutKeyAfterConflict(resolved.state);
+      if (rotated.exhausted) {
+        setErrors({
+          form: "We could not start a new payment for this order. Please reload the page and try again - you have not been charged.",
+        });
+        setBusy(false);
+        return;
+      }
+      keyState.current = rotated.state;
+      saveCheckoutKey(rotated.state);
+      created = await createCheckoutSession(items, parsed.data, rotated.state.key);
+    }
+
     if (!created.ok) {
       setErrors({ form: created.error.message });
+      // The key is deliberately NOT rotated here. A failure with no reply - a timeout,
+      // a dropped connection - may have created the session server-side, so the next
+      // attempt must carry the same key or it would create a second Razorpay order for
+      // one purchase.
       setBusy(false);
       return;
     }
-    setApprovedSummary(created.data.summary);
-    localStorage.setItem(
-      "kanay-last-checkout",
-      JSON.stringify({ id: created.data.checkoutSessionId, token: created.data.statusToken }),
-    );
+
+    // Bound to a const before the Razorpay callbacks close over it: `created` is
+    // reassigned by the conflict retry above, and TypeScript cannot keep a mutable
+    // binding narrowed inside a callback.
+    const session = created.data;
+
+    setApprovedSummary(session.summary);
+    // Tab-scoped, so a status token is not left on the device indefinitely, and only
+    // so an interrupted checkout can be resumed in this tab.
+    rememberCheckout({
+      id: session.checkoutSessionId,
+      token: session.statusToken,
+    });
 
     const loaded = await loadRazorpay();
     if (!loaded || !window.Razorpay) {
@@ -133,12 +185,12 @@ export function CheckoutForm() {
     }
 
     const instance = new window.Razorpay({
-      key: created.data.keyId,
-      amount: created.data.amountPaise,
+      key: session.keyId,
+      amount: session.amountPaise,
       currency: "INR",
       name: process.env.NEXT_PUBLIC_STORE_NAME ?? "Kanay Store",
       description: "Kanay Store order",
-      order_id: created.data.razorpayOrderId,
+      order_id: session.razorpayOrderId,
       prefill: {
         name: parsed.data.fullName,
         email: parsed.data.email,
@@ -156,7 +208,7 @@ export function CheckoutForm() {
       },
       handler: async (response) => {
         const verified = await verifyRazorpayPayment({
-          checkoutSessionId: created.data.checkoutSessionId,
+          checkoutSessionId: session.checkoutSessionId,
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpaySignature: response.razorpay_signature,
@@ -168,12 +220,21 @@ export function CheckoutForm() {
         }
 
         clearCart();
+        // The purchase is done, so the key must not survive it: the same basket to the
+        // same address later in this session is a SECOND order, and reusing this key
+        // would replay the completed one instead of placing it.
+        clearCheckoutKey();
+        keyState.current = null;
+
         const params = new URLSearchParams({
-          session: created.data.checkoutSessionId,
-          token: created.data.statusToken,
+          session: session.checkoutSessionId,
+          token: session.statusToken,
         });
         if (verified.data.trackingToken) params.set("tracking", verified.data.trackingToken);
-        router.push(`/order/success?${params.toString()}`);
+        // replace, not push: the confirmation URL carries a status token, so it should
+        // not be left behind as a back-button entry. The success page also strips the
+        // token from the address bar once it has rendered.
+        router.replace(`/order/success?${params.toString()}`);
       },
     });
 
