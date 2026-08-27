@@ -55,7 +55,7 @@ export function WhyKanay() {
             Built for bulk buyers
           </p>
           <h2
-            className="mt-3 text-xl font-extrabold tracking-[-0.015em] sm:text-2xl"
+            className="display-3 mt-3 font-extrabold"
             id="why-heading"
           >
             Why businesses buy on Kanay

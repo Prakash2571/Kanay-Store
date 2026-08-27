@@ -39,8 +39,8 @@ export default async function HomePage() {
    * their own endpoint so the category rail still works when the catalog request fails.
    */
   const [featuredResult, newestResult, collectionsResult] = await Promise.all([
-    getCatalog({ availability: "SELLABLE", first: 10, sort: "FEATURED" }),
-    getCatalog({ availability: "SELLABLE", first: 10, sort: "NEWEST" }),
+    getCatalog({ availability: "SELLABLE", first: 12, sort: "FEATURED" }),
+    getCatalog({ availability: "SELLABLE", first: 12, sort: "NEWEST" }),
     getCollections(),
   ]);
 
@@ -61,7 +61,7 @@ export default async function HomePage() {
     collections,
     productTypes,
     products: [...featured, ...newest],
-    limit: 10,
+    limit: 12,
   });
 
   /**
@@ -77,16 +77,22 @@ export default async function HomePage() {
     ? (featuredResult.data.filters.priceRange?.min ?? null)
     : null;
 
-  const bestSellers = featured.slice(0, 10);
+  /**
+   * Twelve per row, not ten.
+   *
+   * The grids are 2 / 3 / 4 / 6 columns and twelve divides by every one of them, so no breakpoint
+   * ends in a half-empty row. Ten only ever divided by the old 5-column step.
+   */
+  const bestSellers = featured.slice(0, 12);
   // Trending drops anything already shown above: on a small catalog the two orderings
   // overlap almost completely, and repeating eight products under a second heading makes
   // the store look emptier than it is.
-  const trending = excludeById(newest, bestSellers).slice(0, 10);
+  const trending = excludeById(newest, bestSellers).slice(0, 12);
   // Deals is real or absent. Only products with a genuine compare-at saving qualify.
-  const deals = discountedProducts([...featured, ...newest]).slice(0, 10);
+  const deals = discountedProducts([...featured, ...newest]).slice(0, 12);
   // Bulk lines are the ones the merchant tagged `moq:<n>`. Never inferred, so this row
   // cannot advertise a minimum the checkout will not hold the order to.
-  const bulk = wholesaleProducts([...featured, ...newest]).slice(0, 10);
+  const bulk = wholesaleProducts([...featured, ...newest]).slice(0, 12);
 
   return (
     <StoreShell collections={collections}>
@@ -103,7 +109,9 @@ export default async function HomePage() {
           description="Popular products across the Kanay marketplace, priced per unit in INR."
           id="best-sellers"
           loadFailed={!featuredResult.ok}
-          priorityCount={4}
+          // Six, not four: the first row of the best-sellers grid is six cards wide at 2xl, and a
+          // lazy-loaded image in the first visible row is a Largest-Contentful-Paint regression.
+          priorityCount={6}
           products={bestSellers}
           title="Best sellers"
           tone="surface"

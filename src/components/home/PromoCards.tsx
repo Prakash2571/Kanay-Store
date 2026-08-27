@@ -76,7 +76,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
         Featured departments
       </h2>
 
-      <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr] lg:gap-5">
+      <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr] lg:gap-5 2xl:gap-6">
         {/* The large card. Photograph on top, copy beneath, so the image gets real area. */}
         <Link
           className={`group flex flex-col overflow-hidden rounded-[var(--radius-card)] border transition-[box-shadow,transform] hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 motion-safe:hover:-translate-y-0.5 ${feature.border} ${feature.tone}`}
@@ -97,7 +97,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
             <span className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-ink">
               {feature.eyebrow}
             </span>
-            <span className="mt-2 text-xl font-extrabold leading-tight tracking-[-0.015em] sm:text-2xl">
+            <span className="display-3 mt-2 block font-extrabold">
               {feature.title}
             </span>
             <span className="mt-2.5 max-w-[46ch] text-sm leading-6 text-ink-muted">

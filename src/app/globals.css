@@ -190,7 +190,20 @@
   --footer-ink: #e6ebf1;
   --footer-muted: #8a94a3;
 
-  --content-width: 1360px;
+  /**
+   * Content width.
+   *
+   * 1320 -> 1360 -> 1680. On the 1920px displays this store is actually viewed on, 1360 left
+   * roughly 280px of empty page down each side, and the column read as a document floating on a
+   * desktop rather than as a storefront. 1680 brings that to about 120px a side, which still reads
+   * as an intentional margin rather than a browser window with no layout in it.
+   *
+   * Why not 100%: section headings would run past 100 characters, and a five-column product grid
+   * at 1900px gives cards wider than they are tall. The paragraphs in this design are separately
+   * capped in `ch` units precisely so the CONTAINER can grow without LINE LENGTH growing with it —
+   * that is what makes widening safe here.
+   */
+  --content-width: 1680px;
 }
 
 @theme inline {
@@ -303,6 +316,11 @@ a {
   @media (width >= 64rem) {
     padding-inline: 2rem;
   }
+
+  /* A little more breathing room once the container itself stops growing. */
+  @media (width >= 96rem) {
+    padding-inline: 2.5rem;
+  }
 }
 
 @utility section-y {
@@ -320,6 +338,58 @@ a {
   @media (width >= 64rem) {
     padding-block: 5rem;
   }
+
+  @media (width >= 96rem) {
+    padding-block: 5.5rem;
+  }
+}
+
+/**
+ * DISPLAY TYPE SCALE
+ *
+ * Fluid, via clamp: one declaration covers 360px to 1920px instead of four breakpoint jumps, and
+ * the type keeps growing on wide screens rather than stopping at the `lg` step and leaving a big
+ * heading looking small on a big monitor. That was half of why the page felt like it had too much
+ * empty space - the column was narrow AND the type stopped scaling.
+ *
+ * These live here rather than as arbitrary `text-[clamp(...)]` classes for two reasons: the scale
+ * is then defined in ONE place and tunable, and an arbitrary value Tailwind fails to parse renders
+ * at the default font size with no error, which is a bad way to find out.
+ *
+ * Middle terms are viewport-relative and the max is a rem cap, so nothing scales without limit.
+ */
+@utility display-1 {
+  /* Hero headline. */
+  font-size: clamp(2.1rem, 4vw, 4.15rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+@utility display-2 {
+  /* Banner and statement headings. */
+  font-size: clamp(1.75rem, 2.9vw, 3.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+}
+
+@utility display-3 {
+  /* Section headings: "Best sellers", "Shop by department". */
+  font-size: clamp(1.3rem, 1.75vw, 1.95rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@utility stat-figure {
+  /* The four numbers in the stats strip. */
+  font-size: clamp(1.7rem, 2.3vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+@utility lead {
+  /* Supporting paragraph under a display-1 or display-2 heading. */
+  font-size: clamp(0.95rem, 1vw, 1.15rem);
+  line-height: 1.7;
 }
 
 @utility no-scrollbar {

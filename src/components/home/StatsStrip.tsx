@@ -72,7 +72,7 @@ export function StatsStrip({
       <h2 className="sr-only" id="stats-heading">
         Kanay Store at a glance
       </h2>
-      <dl className="grid grid-cols-2 gap-y-7 rounded-[var(--radius-card)] border border-line bg-surface px-6 py-7 sm:px-8 lg:grid-cols-4 lg:gap-y-0 lg:px-10">
+      <dl className="grid grid-cols-2 gap-y-8 rounded-[var(--radius-card)] border border-line bg-surface px-6 py-8 sm:px-8 lg:grid-cols-4 lg:gap-y-0 lg:px-12 lg:py-10 2xl:px-16">
         {stats.map((stat, index) => (
           <div
             className={`px-1 sm:px-2 lg:px-6 ${
@@ -88,11 +88,11 @@ export function StatsStrip({
                 aria-hidden="true"
                 className={`mb-3 block size-1.5 rounded-full ${stat.mark}`}
               />
-              <span className="block text-[1.7rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[2rem]">
+              <span className="stat-figure block font-extrabold">
                 {stat.value}
               </span>
               <span aria-hidden="true" className={`mt-3 block h-0.5 w-7 rounded-full ${stat.mark}`} />
-              <span className="mt-3 block text-[0.8rem] font-semibold leading-5 text-ink-muted">
+              <span className="mt-3 block text-[0.8rem] font-semibold leading-5 text-ink-muted 2xl:text-[0.9rem]">
                 {stat.label}
               </span>
             </dd>

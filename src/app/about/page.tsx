@@ -54,7 +54,7 @@ export default async function AboutPage() {
           </p>
         </header>
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+        <div className="mt-10 grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
           <Panel id="wholesale" title="Wholesale">
             <p>
               Most of the catalog can be ordered in quantity. Browse for the items you need,

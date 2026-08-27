@@ -36,13 +36,13 @@ export function Newsletter() {
 
   return (
     <section aria-labelledby="newsletter-heading" className="shell section-y">
-      <div className="grid items-center gap-6 rounded-[var(--radius-card)] border border-accent/20 bg-newsletter-bg p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:gap-10 lg:p-10">
+      <div className="grid items-center gap-6 rounded-[var(--radius-card)] border border-accent/20 bg-newsletter-bg p-6 sm:p-9 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:p-12 2xl:p-14">
         <div className="flex items-start gap-4">
           <span className="hidden size-11 shrink-0 place-items-center rounded-[var(--radius-pill)] bg-surface sm:grid">
             <Mail aria-hidden="true" className="text-accent-ink" size={20} strokeWidth={1.8} />
           </span>
           <div>
-            <h2 className="text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id="newsletter-heading">
+            <h2 className="display-3 font-extrabold" id="newsletter-heading">
               Get updates &amp; special deals
             </h2>
             <p className="mt-2 max-w-[52ch] text-sm leading-6 text-ink-muted">

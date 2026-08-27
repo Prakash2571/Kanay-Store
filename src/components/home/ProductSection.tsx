@@ -54,11 +54,11 @@ export function ProductSection({
       <div className="shell section-y">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
           <div>
-            <h2 className="text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id={headingId}>
+            <h2 className="display-3 font-extrabold" id={headingId}>
               {title}
             </h2>
             {description ? (
-              <p className="mt-1.5 max-w-[60ch] text-sm leading-6 text-ink-muted">{description}</p>
+              <p className="mt-2 max-w-[64ch] text-sm leading-6 text-ink-muted 2xl:text-[0.95rem]">{description}</p>
             ) : null}
           </div>
           <Link
@@ -70,8 +70,13 @@ export function ProductSection({
           </Link>
         </div>
 
+        {/*
+          Column counts are 2 / 3 / 4 / 6, and callers cap every row at 12 items — 12 divides by
+          all four, so no breakpoint ends in a half-empty row. The old 5-column step is gone for
+          exactly that reason: nothing sensible divides by both 5 and 6.
+        */}
         {products.length > 0 ? (
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5 2xl:grid-cols-6 2xl:gap-6">
             {products.map((product, index) => (
               <li className="min-w-0" key={product.id}>
                 <ProductCard badge={badge} priority={index < priorityCount} product={product} />
