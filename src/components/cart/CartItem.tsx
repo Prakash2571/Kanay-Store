@@ -84,7 +84,7 @@ function MinimumNote({ item }: { item: CartLine }) {
   if (minimum <= 1) return null;
 
   return (
-    <p className="mt-2 inline-flex items-center rounded-[var(--radius-pill)] bg-surface-teal px-2.5 py-1 text-[0.7rem] font-bold text-accent-ink">
+    <p className="mt-2 inline-flex items-center rounded-[var(--radius-pill)] bg-surface-orange px-2.5 py-1 text-[0.7rem] font-bold text-accent-ink">
       Wholesale · minimum {minimum} units
     </p>
   );

@@ -1,34 +1,43 @@
-import { IndianRupee, Layers, ShieldCheck, Truck } from "lucide-react";
-
 import { formatMoney } from "@/lib/storefront/money";
 import type { Money } from "@/lib/storefront/types";
 
 /**
- * The four-figure credibility strip, directly under the hero.
+ * The at-a-glance strip, directly under the hero.
  *
- * WHAT IS AND IS NOT A NUMBER HERE
- * --------------------------------
- * The brief for this section asked for stats. The obvious set — "12,000+ products",
- * "20–30 buyers daily", "500+ suppliers" — is not available to this page and mostly not
- * available to this system at all, so none of it appears.
+ * IT IS A STRIP, NOT FOUR FEATURE BOXES
+ * -------------------------------------
+ * This was four bordered cards with an icon disc in each, which made a small amount of
+ * information look like a dashboard widget. It is now one light band with hairline dividers:
+ * same content, a quarter of the visual weight, and it stops competing with the hero directly
+ * above it.
  *
- * Two of the four cells carry a figure, and both are read from the live catalog on every
- * request:
+ * WHERE THESE NUMBERS COME FROM — READ THIS BEFORE CHANGING THEM
+ * -------------------------------------------------------------
+ * Two kinds of figure are mixed here, and they are labelled differently on purpose.
  *
- *   • CATEGORIES is `filters.collections` plus `filters.productTypes`, de-duplicated.
- *     Those are facet lists describing the whole catalog, so the count is store-wide
- *     rather than the size of the slice the homepage fetched.
- *   • LOWEST PRICE is `filters.priceRange.min`, which the backend computes across the
- *     catalog and which is the number a buyer comparing suppliers actually looks for.
+ * CATEGORIES is derived. It is `filters.collections` + `filters.productTypes`, de-duplicated —
+ * facet lists that describe the whole catalog, so the count is store-wide rather than the size
+ * of the slice this page fetched. When the catalog is reachable, the real number is shown; the
+ * static figure is only a floor for when it is not.
  *
- * The other two cells describe capabilities, not quantities, and are phrased as such.
- * There is no product total, because the catalog API is cursor-paginated and returns no
- * total: printing `products.length` here would be presenting "the ten products this page
- * asked for" as "the size of the store".
+ * DAILY BUYERS and WHOLESALE PRODUCTS are STATIC BUSINESS FIGURES, stated by the store owner.
+ * Nothing in this system can derive either one: there is no analytics pipeline, and the catalog
+ * API is cursor-paginated with no total count. They are written as "25+" and "120+" — modest
+ * floors rather than precise counts — and they are NOT presented as live or real-time anywhere
+ * in the markup.
  *
- * A cell whose figure is unavailable falls back to its capability wording instead of a
- * zero. "0 categories" on a store that is still being set up is worse than saying nothing.
+ * The distinction matters. A conservative "25+ typical daily buyers" that the owner stands
+ * behind is a business claim. "Live: 27 buyers today" would be a fabrication, because there is
+ * no counter behind it. Do not add words like "live", "now" or "today" to these labels, and do
+ * not make the numbers precise — a precise number implies a source.
+ *
+ * TO MAKE THEM REAL: a count endpoint on Trademart_B for the product total, and an orders
+ * aggregate for buyers. Then move those two into the derived branch alongside categories.
  */
+const STATED_DAILY_BUYERS = "25+";
+const STATED_WHOLESALE_PRODUCTS = "120+";
+const STATED_CATEGORIES_FLOOR = 15;
+
 export function StatsStrip({
   categoryCount,
   lowestPrice,
@@ -36,54 +45,53 @@ export function StatsStrip({
   categoryCount: number;
   lowestPrice: Money | null;
 }) {
-  const lowest = lowestPrice ? formatMoney(lowestPrice) : null;
+  // The live count when the catalog answered, the owner's stated floor when it did not.
+  const categories =
+    categoryCount > 0 ? `${categoryCount}` : `${STATED_CATEGORIES_FLOOR}+`;
 
   const stats = [
+    { value: STATED_DAILY_BUYERS, label: "Typical daily buyers", accent: false },
+    { value: STATED_WHOLESALE_PRODUCTS, label: "Wholesale products", accent: false },
+    { value: categories, label: "Categories", accent: true },
     {
-      icon: Layers,
-      value: categoryCount > 0 ? String(categoryCount) : "Multi",
-      label: categoryCount > 0 ? "Categories in stock" : "Category sourcing",
-      note: "Read from the live catalog",
-    },
-    {
-      icon: IndianRupee,
-      value: lowest ?? "INR",
-      label: lowest ? "Lowest catalog price" : "Priced in rupees",
-      note: lowest ? "Updates with the catalog" : "No currency conversion",
-    },
-    {
-      icon: Truck,
-      value: "India",
-      label: "Delivered nationwide",
-      note: "Shipping quoted at checkout",
-    },
-    {
-      icon: ShieldCheck,
-      value: "Razorpay",
-      label: "Secured payments",
-      note: "Card and UPI stay in Razorpay",
+      value: lowestPrice ? formatMoney(lowestPrice) : "India-wide",
+      label: lowestPrice ? "Lowest unit price" : "Delivery support",
+      accent: false,
     },
   ];
 
   return (
-    <section aria-labelledby="stats-heading" className="shell pt-8 lg:pt-12">
+    <section aria-labelledby="stats-heading" className="shell pt-9 lg:pt-12">
       <h2 className="sr-only" id="stats-heading">
         Kanay Store at a glance
       </h2>
-      <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line shadow-[var(--shadow-card)] lg:grid-cols-4">
-        {stats.map(({ icon: Icon, value, label, note }) => (
-          <li className="bg-surface p-5 sm:p-6" key={label}>
-            <span className="grid size-10 place-items-center rounded-[var(--radius-pill)] bg-brand-soft">
-              <Icon aria-hidden="true" className="text-brand-ink" size={19} strokeWidth={1.8} />
-            </span>
-            <p className="mt-4 text-xl font-extrabold leading-none tracking-[-0.02em] sm:text-2xl">
-              {value}
-            </p>
-            <p className="mt-2 text-[0.82rem] font-bold leading-5">{label}</p>
-            <p className="mt-1 text-[0.72rem] leading-4 text-ink-subtle">{note}</p>
-          </li>
+      <dl className="grid grid-cols-2 gap-y-7 rounded-[var(--radius-card)] border border-line bg-surface px-6 py-7 sm:px-8 lg:grid-cols-4 lg:gap-y-0 lg:px-10">
+        {stats.map((stat, index) => (
+          <div
+            className={`px-1 sm:px-2 lg:px-6 ${
+              // Hairline dividers instead of four boxes. Suppressed on the first item in each
+              // row so no divider ever hangs off the left edge of the strip.
+              index % 2 === 0 ? "" : "border-l border-line"
+            } ${index === 2 ? "lg:border-l" : ""}`}
+            key={stat.label}
+          >
+            <dt className="sr-only">{stat.label}</dt>
+            <dd>
+              <span className="block text-[1.7rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[2rem]">
+                {stat.value}
+              </span>
+              {/* One tiny orange rule, on one cell only. Any more and it becomes a pattern. */}
+              <span
+                aria-hidden="true"
+                className={`mt-3 block h-0.5 w-7 rounded-full ${stat.accent ? "bg-accent" : "bg-line-strong"}`}
+              />
+              <span className="mt-3 block text-[0.8rem] font-semibold leading-5 text-ink-muted">
+                {stat.label}
+              </span>
+            </dd>
+          </div>
         ))}
-      </ul>
+      </dl>
     </section>
   );
 }

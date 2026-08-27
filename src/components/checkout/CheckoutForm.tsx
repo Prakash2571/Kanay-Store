@@ -62,7 +62,7 @@ declare global {
 }
 
 const fieldClass =
-  "min-h-12 w-full rounded-[var(--radius-control)] border border-line bg-surface px-4 text-base text-ink placeholder:text-ink-muted/70 focus:border-focus focus:outline-2";
+  "min-h-12 w-full rounded-[var(--radius-control)] border border-line bg-surface px-4 text-base text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-2";
 
 function valuesFromForm(form: HTMLFormElement): Record<string, string> {
   const data = new FormData(form);

@@ -5,14 +5,13 @@ import type { StorefrontCollectionSummary } from "@/lib/storefront/types";
 /**
  * Multi-column footer, on dark navy.
  *
- * WHY THE FOOTER IS DARK IN BOTH THEMES
- * -------------------------------------
- * It was a light grey panel, which meant the page just ran out at the bottom. A dark navy
- * footer terminates the page and is the one place in this design where the brand's darkest
- * navy gets real surface area. It uses its own token set (`--footer-bg`, `--footer-ink`,
- * `--footer-muted`) precisely so it does NOT invert with the theme: in light mode it is the
- * anchor at the end of a bright page, and in dark mode it deepens slightly rather than
- * lightening into the page it is supposed to close off.
+ * WHY THE FOOTER IS DARK ON A LIGHT PAGE
+ * --------------------------------------
+ * It was a light grey panel, which meant the page just ran out at the bottom rather than
+ * ending. A dark navy footer terminates it. It carries its own token set (`--footer-bg`,
+ * `--footer-ink`, `--footer-muted`) rather than reusing `--ink` and `--canvas`, because those
+ * are defined for dark-on-light and every one of them would need inverting by hand here —
+ * which is how a footer link ends up near-invisible after an unrelated token tweak.
  *
  * WHAT IS NOT HERE
  * ----------------
@@ -59,7 +58,9 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
             On a marketplace whose identity is bulk buying, wholesale links buried under
             "Company" tell a business buyer they are the secondary audience.
           */}
-          <FooterGroup title="Wholesale">
+          {/* The wholesale column carries the footer's one orange mark - it is the column that
+              matters most to the audience this store is for. */}
+          <FooterGroup accent title="Wholesale">
             <FooterLink href="/#wholesale">Bulk orders</FooterLink>
             <FooterLink href="/about#moq">MOQ information</FooterLink>
             <FooterLink href="/about#wholesale">Wholesale enquiry</FooterLink>
@@ -134,11 +135,24 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
   );
 }
 
-function FooterGroup({ title, children }: { title: string; children: React.ReactNode }) {
+function FooterGroup({
+  title,
+  children,
+  accent = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
   return (
     <div>
       <h2 className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white">{title}</h2>
-      <ul className="mt-4 grid gap-2.5 text-sm text-footer-muted">{children}</ul>
+      {accent ? (
+        <span aria-hidden="true" className="mt-2 block h-0.5 w-8 rounded-full bg-accent" />
+      ) : null}
+      <ul className={`grid gap-2.5 text-sm text-footer-muted ${accent ? "mt-3" : "mt-4"}`}>
+        {children}
+      </ul>
     </div>
   );
 }

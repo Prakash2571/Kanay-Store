@@ -74,7 +74,7 @@ export function Newsletter() {
               value={email}
             />
             <button
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold whitespace-nowrap text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold whitespace-nowrap text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               type="submit"
             >
               Subscribe
@@ -85,7 +85,9 @@ export function Newsletter() {
               because none of these are errors the shopper must act on. */}
           <p
             aria-live="polite"
-            className="mt-3 min-h-5 text-xs leading-5 text-brand-ink"
+            // Red for the one message that IS the shopper's to fix, muted grey for the one that
+            // is ours. Both were brand blue, which made a validation error look like a hint.
+            className={`mt-3 min-h-5 text-xs leading-5 ${status === "invalid" ? "font-semibold text-danger" : "text-ink-muted"}`}
             id="newsletter-status"
             role="status"
           >

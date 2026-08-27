@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 
 import { CartProvider } from "@/components/cart/CartProvider";
-import { THEME_INIT_SCRIPT } from "@/components/theme/theme";
 import { siteOrigin, storeName as resolveStoreName } from "@/lib/seo/site";
 
 import "./globals.css";
@@ -51,20 +50,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  /*
+    ONE THEME, SO NO PRE-PAINT SCRIPT AND NO suppressHydrationWarning.
+    Both existed to support a dark variant: the script had to set a class on <html> before
+    first paint to avoid a flash, and that server/client difference is exactly what
+    suppressHydrationWarning was silencing. With a single palette there is nothing to decide
+    at runtime, so the document renders the same on the server and in the browser - and the
+    inline `dangerouslySetInnerHTML` script is gone with it.
+  */
   return (
-    <html className={sans.variable} lang="en-IN" suppressHydrationWarning>
-      <head>
-        {/*
-          Applies the stored (or OS) theme BEFORE first paint, so the page never renders
-          light and then snaps to dark. It has to be inline and it has to be in <head> -
-          anything deferred is, by definition, after the flash.
-
-          dangerouslySetInnerHTML is required to emit a raw script body, and is safe here for
-          one specific reason: THEME_INIT_SCRIPT is a fixed string literal with no
-          interpolation (asserted in theme.test.ts), so there is no input to inject into.
-        */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
+    <html className={sans.variable} lang="en-IN">
       <body>
         <CartProvider>{children}</CartProvider>
       </body>

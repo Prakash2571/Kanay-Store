@@ -1,95 +1,136 @@
-import { ArrowRight, Boxes, Home, Smartphone } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import type { CategoryTile } from "@/lib/storefront/merchandising";
+import { showcaseImageFor } from "@/lib/storefront/showcase";
 import type { StorefrontImage } from "@/lib/storefront/types";
 
 /**
- * Three promotional cards.
+ * Three promotional cards: one large on the left, two stacked on the right.
  *
- * These replace the old "Curated for right now" editorial mosaic, which was three
- * full-bleed fashion photographs with dark gradient overlays and 48px serif titles.
+ * WHY NOT THREE EQUAL CARDS
+ * -------------------------
+ * That is what this was, and three identical boxes in a row read as one wide band — the eye
+ * takes them in as a single element and skips the set. An uneven split gives the section a
+ * primary and two secondaries, which is how a real merchandising block is composed and which
+ * also tells the visitor which one matters most.
  *
- * Each card is a NAVIGATION destination, not an offer. The copy describes a department and
- * links to it; nothing here quotes a price or a saving, because promo cards are rendered
- * before any pricing has been read and a card that says "50% off home" would be inventing
- * that. The third card points at the wholesale section, which is discovery-only for the
- * same reason (quantity pricing is not in the backend contract yet).
- *
- * TONES ALTERNATE ON PURPOSE
+ * EVERY CARD IS PHOTOGRAPHED
  * --------------------------
- * Blue-tinted, cool grey, then teal-tinted. Three identical tinted cards in a row read as
- * one wide band and the eye skips the set; varying the surface makes them read as three
- * choices. Teal lands on the wholesale card because teal is this system's bulk/wholesale
- * signal everywhere else — the MOQ badge, the minimum-order line, the benefits eyebrow.
+ * They previously fell back to an icon in a bordered square whenever the matched collection had
+ * no image, which was most of the time. Imagery now comes from the matched collection, then from
+ * a product in it, then from the curated department photograph — and the icon fallback is gone
+ * entirely, because a card whose whole job is to be visual should not degrade to a glyph.
  *
- * Imagery, where a card has any, comes from the matched collection or from a product in it.
- * Cards fall back to a line icon rather than to stock photography.
+ * STILL NO PRICES HERE
+ * --------------------
+ * Each card is a NAVIGATION destination, not an offer. Nothing quotes a price or a saving,
+ * because promo cards render before any pricing has been read and a card reading "50% off home"
+ * would be inventing it. The Deals card links to the deals row, which only exists when products
+ * genuinely carry a compare-at saving.
  */
 export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
-  // Match by intent so a store WITH a "Home" collection links to it, and a store without
-  // one still gets a usable card pointing at the filtered catalog.
   const home = matchTile(tiles, ["home", "kitchen", "furnish", "decor", "appliance"]);
   const tech = matchTile(tiles, ["electronic", "tech", "mobile", "computer", "gadget", "audio"]);
 
-  const cards = [
-    {
-      key: "home",
-      eyebrow: "Home & living",
-      title: "Home & Kitchen",
-      text: "Stock a shelf or a shop — kitchenware, storage, decor and small appliances.",
-      cta: "Shop home",
-      href: home?.href ?? "/shop",
-      image: home?.image ?? null,
-      icon: Home,
-      tone: "bg-surface-blue",
-    },
+  const feature = {
+    eyebrow: "Home & living",
+    title: "Home Essentials",
+    text: "Wholesale home and kitchen picks — cookware, storage, decor and small appliances, in the quantities a shop or an office actually orders.",
+    cta: "Browse home",
+    href: home?.href ?? "/shop",
+    image: home?.image ?? showcaseImageFor("home"),
+    tone: "bg-surface-blue",
+  };
+
+  const secondary = [
     {
       key: "tech",
       eyebrow: "Tech & gadgets",
       title: "Tech & Accessories",
-      text: "Audio, charging, computing and mobile — the fastest-moving lines in the catalog.",
-      cta: "Shop tech",
+      text: "Audio, charging and mobile — the fastest-moving lines in the catalog.",
+      cta: "Browse tech",
       href: tech?.href ?? "/shop",
-      image: tech?.image ?? null,
-      icon: Smartphone,
-      tone: "bg-surface-muted",
+      image: tech?.image ?? showcaseImageFor("electronics"),
+      tone: "bg-surface",
     },
     {
-      key: "wholesale",
+      key: "deals",
       eyebrow: "Buy in quantity",
-      title: "Bulk & Wholesale",
-      text: "Minimum order quantities are shown up front. Send us the items and volumes you need.",
-      cta: "About wholesale",
-      href: "/#wholesale",
-      image: null,
-      icon: Boxes,
-      tone: "bg-surface-teal",
+      title: "Bulk Deals",
+      text: "Products below their usual price, with minimums shown up front.",
+      cta: "View deals",
+      href: "/#deals",
+      image: showcaseImageFor("tools"),
+      tone: "bg-surface-orange",
     },
-  ] as const;
+  ];
 
   return (
     <section aria-labelledby="promo-heading" className="shell pb-2">
       <h2 className="sr-only" id="promo-heading">
         Featured departments
       </h2>
-      <ul className="grid gap-4 md:grid-cols-3 lg:gap-5">
-        {cards.map((card) => (
-          <li key={card.key}>
+
+      <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr] lg:gap-5">
+        {/* The large card. Photograph on top, copy beneath, so the image gets real area. */}
+        <Link
+          className={`group flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-line transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 ${feature.tone}`}
+          href={feature.href}
+        >
+          <span className="relative block aspect-[16/9] overflow-hidden bg-surface-muted lg:aspect-[2/1]">
+            {feature.image ? (
+              <Image
+                alt={feature.image.alt || feature.title}
+                className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
+                fill
+                sizes="(max-width: 1023px) 92vw, 46vw"
+                src={feature.image.url}
+              />
+            ) : null}
+          </span>
+          <span className="flex flex-1 flex-col p-6 sm:p-7">
+            <span className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-ink">
+              {feature.eyebrow}
+            </span>
+            <span className="mt-2 text-xl font-extrabold leading-tight tracking-[-0.015em] sm:text-2xl">
+              {feature.title}
+            </span>
+            <span className="mt-2.5 max-w-[46ch] text-sm leading-6 text-ink-muted">
+              {feature.text}
+            </span>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-ink">
+              {feature.cta}
+              <ArrowRight
+                aria-hidden="true"
+                className="transition-transform motion-safe:group-hover:translate-x-0.5"
+                size={16}
+                strokeWidth={2}
+              />
+            </span>
+          </span>
+        </Link>
+
+        {/* Two stacked cards, image beside copy so they stay short next to the feature. */}
+        <div className="grid gap-4 lg:gap-5">
+          {secondary.map((card) => (
             <Link
-              className={`group flex h-full items-center gap-4 rounded-[var(--radius-card)] border border-line p-5 transition-colors hover:border-brand focus-visible:outline focus-visible:outline-2 ${card.tone}`}
+              className={`group flex items-stretch gap-0 overflow-hidden rounded-[var(--radius-card)] border border-line transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 ${card.tone}`}
               href={card.href}
+              key={card.key}
             >
-              <span className="min-w-0 flex-1">
-                <span className="block text-[0.68rem] font-bold uppercase tracking-[0.12em] text-brand-ink">
+              <span className="min-w-0 flex-1 p-5 sm:p-6">
+                <span className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-ink">
                   {card.eyebrow}
                 </span>
                 <span className="mt-1.5 block text-lg font-extrabold leading-tight tracking-[-0.01em]">
                   {card.title}
                 </span>
-                <span className="mt-1.5 block text-[0.8rem] leading-5 text-ink-muted">{card.text}</span>
-                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-ink">
+                <span className="mt-1.5 block text-[0.82rem] leading-5 text-ink-muted">
+                  {card.text}
+                </span>
+                <span className="mt-3.5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-ink">
                   {card.cta}
                   <ArrowRight
                     aria-hidden="true"
@@ -99,35 +140,28 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
                   />
                 </span>
               </span>
-              <CardVisual icon={card.icon} image={card.image} title={card.title} />
+              <CardVisual image={card.image} title={card.title} />
             </Link>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
 
-function CardVisual({
-  image,
-  icon: Icon,
-  title,
-}: {
-  image: StorefrontImage | null;
-  icon: typeof Home;
-  title: string;
-}) {
-  if (image) {
-    return (
-      <span className="relative block size-[5.5rem] shrink-0 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface sm:size-24">
-        <Image alt={image.alt || title} className="object-cover" fill sizes="96px" src={image.url} />
-      </span>
-    );
-  }
+/** A photograph filling the full height of the card's right edge. No icon fallback. */
+function CardVisual({ image, title }: { image: StorefrontImage | null; title: string }) {
+  if (!image) return null;
 
   return (
-    <span className="grid size-[5.5rem] shrink-0 place-items-center rounded-[var(--radius-card)] border border-line bg-surface sm:size-24">
-      <Icon aria-hidden="true" className="text-brand-ink" size={30} strokeWidth={1.6} />
+    <span className="relative block w-28 shrink-0 overflow-hidden bg-surface-muted sm:w-36">
+      <Image
+        alt={image.alt || title}
+        className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
+        fill
+        sizes="144px"
+        src={image.url}
+      />
     </span>
   );
 }

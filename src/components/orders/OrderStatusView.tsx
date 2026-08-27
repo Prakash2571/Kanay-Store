@@ -42,11 +42,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
                   <span
                     className={`grid h-7 w-7 place-items-center rounded-full border ${
                       entry.completed
-                        ? // `text-canvas`, not `text-white`: --success lightens to #4ade80 in
-                          // dark mode, where a white tick on it is close to unreadable. The
-                          // canvas token inverts with the theme, so the tick stays dark on a
-                          // light green and light on a dark green.
-                          "border-success bg-success text-canvas"
+                        ? "border-success bg-success text-white"
                         : "border-line bg-surface text-ink-muted"
                     }`}
                   >

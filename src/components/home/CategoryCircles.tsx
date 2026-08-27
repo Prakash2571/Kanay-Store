@@ -1,65 +1,115 @@
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import type { CategoryTile } from "@/lib/storefront/merchandising";
+import { SHOWCASE_CATEGORIES, showcaseImageFor } from "@/lib/storefront/showcase";
 
 /**
- * The circular category rail, directly below the hero.
+ * The category rail, directly below the hero.
  *
- * On a store this broad, the category row is the main navigation — more so than the header
- * nav, which cannot hold twenty departments. Tiles come from live collections first and
- * from Shopify product types second (see buildCategoryTiles), so this row is never a
- * hard-coded list of departments the store may not stock.
+ * On a store this broad the category row is the main navigation — more so than the header nav,
+ * which cannot hold twenty departments. Tiles come from live collections first and Shopify
+ * product types second (see buildCategoryTiles).
  *
- * Horizontally scrollable on mobile, a single spaced row from `sm` up, matching the
- * reference. Renders nothing when there are no categories rather than an empty strip.
+ * PHOTOS LEAD, NOT INITIALS
+ * -------------------------
+ * These were circles, and a circle with no collection image fell back to a single letter on a
+ * tinted disc. A row of lettered discs is indistinguishable from a placeholder. They are now
+ * image-backed cards: the collection's own image if it has one, a keyword-matched department
+ * photograph if it does not, and the initial only as a last resort for a label that matches
+ * nothing (see showcaseImageFor — it deliberately returns null rather than putting a photo of
+ * earbuds on "Monsoon Clearance").
+ *
+ * WHEN THERE ARE NO LIVE CATEGORIES AT ALL
+ * ----------------------------------------
+ * The section used to render nothing, which left a visible gap between the hero and the promo
+ * cards on any store whose catalog request failed. It now falls back to the curated department
+ * list, every entry pointing at /shop — one destination that always resolves, rather than a
+ * filter for a category that may not exist. The heading is honest either way: these are the
+ * departments the store sells into, not a claim about current stock.
  */
 export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
-  if (tiles.length === 0) return null;
+  const cards: CategoryTile[] =
+    tiles.length > 0
+      ? tiles
+      : SHOWCASE_CATEGORIES.map((category) => ({
+          key: `showcase:${category.key}`,
+          label: category.label,
+          href: category.href,
+          image: category.image,
+        }));
 
   return (
     <section aria-labelledby="categories-heading" className="shell section-y" id="categories">
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <h2 className="text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id="categories-heading">
-          Shop by category
-        </h2>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+        <div>
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
+            Shop by department
+          </p>
+          <h2
+            className="mt-2 text-xl font-extrabold tracking-[-0.015em] sm:text-2xl"
+            id="categories-heading"
+          >
+            Source across every category
+          </h2>
+        </div>
         <Link
-          className="shrink-0 rounded text-sm font-bold text-brand-ink transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded text-sm font-bold text-brand-ink transition-colors hover:text-brand focus-visible:outline focus-visible:outline-2"
           href="/shop"
         >
           All categories
+          <ArrowRight aria-hidden="true" size={16} strokeWidth={2} />
         </Link>
       </div>
 
-      <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-5 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-10">
-        {tiles.map((tile) => (
-          <li className="w-[4.75rem] shrink-0 snap-start sm:w-auto" key={tile.key}>
-            <Link
-              className="group grid justify-items-center gap-2 rounded-[var(--radius-card)] py-1 text-center focus-visible:outline focus-visible:outline-2"
-              href={tile.href}
-            >
-              <span className="relative block aspect-square w-full overflow-hidden rounded-[var(--radius-pill)] border border-line bg-surface-blue transition-colors group-hover:border-brand">
-                {tile.image ? (
-                  <Image
-                    alt=""
-                    className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
-                    fill
-                    sizes="112px"
-                    src={tile.image.url}
-                  />
-                ) : (
-                  <span aria-hidden="true" className="grid h-full place-items-center text-lg font-extrabold text-brand-ink">
-                    {tile.label.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </span>
-              <span className="line-clamp-2 text-[0.72rem] font-semibold leading-4 text-ink group-hover:text-brand-ink sm:text-xs">
-                {tile.label}
-              </span>
-            </Link>
+      {/*
+        Four across on tablet and six on desktop, rather than ten. Ten tiles on a 1360px row
+        makes each one about 120px wide, which is too small for a photograph to register - and
+        "lots of tiny tiles" is another thing that reads as filler.
+      */}
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
+        {cards.slice(0, 12).map((tile) => (
+          <li key={tile.key}>
+            <CategoryCard tile={tile} />
           </li>
         ))}
       </ul>
     </section>
+  );
+}
+
+function CategoryCard({ tile }: { tile: CategoryTile }) {
+  const image = tile.image ?? showcaseImageFor(tile.label);
+
+  return (
+    <Link
+      className="group block overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2"
+      href={tile.href}
+    >
+      <span className="relative block aspect-[5/4] overflow-hidden bg-surface-muted">
+        {image ? (
+          <Image
+            alt=""
+            className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
+            fill
+            sizes="(max-width: 639px) 45vw, (max-width: 1023px) 23vw, 16vw"
+            src={image.url}
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="grid h-full place-items-center bg-surface-blue text-2xl font-extrabold text-brand-ink"
+          >
+            {tile.label.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </span>
+      <span className="block px-3 py-2.5">
+        <span className="line-clamp-2 text-[0.78rem] font-bold leading-4 text-ink transition-colors group-hover:text-accent-ink sm:text-[0.82rem]">
+          {tile.label}
+        </span>
+      </span>
+    </Link>
   );
 }

@@ -12,155 +12,126 @@
  * a business buyer sizing up a large order reads that warmth as "consumer lifestyle brand",
  * not "supplier I can place a 500-unit order with".
  *
- * So: navy and cobalt carry the brand, cool grey carries the page, teal marks secondary
- * information, and amber is reserved for discounts and warnings. Blue is the most
- * conventional trust colour in commerce for a reason - it is what payment, logistics and B2B
- * platforms use, and conventional is exactly right for the screen where someone commits
- * money.
+ * So: white carries the page, blue carries structure and trust, and orange is the accent.
+ * Blue is the most conventional trust colour in commerce for a reason - it is what payment,
+ * logistics and B2B platforms use, and conventional is exactly right for the screen where
+ * someone commits money.
  *
- * AMBER IS RATIONED ON PURPOSE
- * ----------------------------
- * `--highlight` is for a discount badge, an offer flag or a warning. Nothing else. The moment
- * it becomes a general-purpose accent the page drifts back towards the warm-retail feel this
- * palette exists to leave behind.
+ * ORANGE IS THE ACCENT, AND IT IS RATIONED
+ * ----------------------------------------
+ * All-blue-and-white is trustworthy and slightly cold; a warm accent is what stops it reading
+ * as a SaaS dashboard. But warmth is also what made the old peach system read as skincare, so
+ * orange is confined to CTAs, offer badges and small accent marks. See `--accent` below for
+ * the exact list.
  *
- * DARK MODE IS CLASS-DRIVEN, NOT MEDIA-DRIVEN
- * -------------------------------------------
- * Tokens are redefined under `.dark`, and the html element gets that class from a tiny
- * pre-hydration script (see ThemeScript). A `prefers-color-scheme` block alone cannot support
- * a toggle, and a toggle that only applies after React hydrates flashes the wrong theme on
- * every page load. The script reads the stored choice, falls back to the OS preference, and
- * sets the class before first paint.
+ * There is no separate amber family any more. Discounts used to be amber while the accent was
+ * teal, which meant three warm-ish hues competing for the same "notice this" job. Orange does
+ * it, once.
+ *
+ * THERE IS ONE THEME, AND IT IS THIS ONE
+ * --------------------------------------
+ * No `.dark` block, no `prefers-color-scheme` inversion, no toggle. `color-scheme: light` is
+ * declared so the browser paints form controls, scrollbars and autofill to match rather than
+ * handing us dark-mode widgets on a light page.
+ *
+ * A second palette is a second design to keep correct, and every token below would need a
+ * counterpart that holds contrast against an inverted background. The failure mode is not
+ * theoretical: the dark variant this replaced silently broke four things at once - navy text
+ * on a near-black canvas, white CTA labels on a near-white `--ink` fill, a white tick on light
+ * green, and white on amber. One palette, verified once.
+ *
+ * FILLS AND TEXT ARE SEPARATE TOKENS
+ * ---------------------------------
+ * `--brand` and `--accent` are FILLS: they sit behind white text. `--brand-ink` and
+ * `--accent-ink` are the same hues dark enough to BE text on white. This is not pedantry -
+ * `--accent` is 2.3:1 on white, so an orange label written with the fill token is unreadable,
+ * and it is the single easiest mistake to make in this palette.
  *
  * TOKEN NAMES
  * -----------
  * The semantic names (`canvas`, `surface`, `ink`, `line`, `accent`) are kept because ~30 files
- * reference them; only their values moved. `accent` is now teal (secondary), `brand` is the
- * primary blue, and `accent-ink`/`accent-soft` are retained as aliases so existing markup
- * keeps working while it is migrated.
+ * reference them; only their values moved.
  */
 :root {
   color-scheme: light;
 
-  /* Page and card surfaces, coolest to most tinted. */
-  --canvas: #f6f8fb;
+  /* Page and card surfaces. White leads; the tints are there to separate sections. */
   --surface: #ffffff;
-  --surface-muted: #eef3f8;
-  --surface-blue: #eaf2ff;
-  --surface-teal: #e8f7f5;
-  /* Retained alias: `surface-strong` is used for disabled fills and image placeholders. */
-  --surface-strong: #dce3ec;
-  --line: #dce3ec;
-  --line-strong: #c8d2df;
+  --canvas: #f8fafc;
+  --surface-muted: #f1f5f9;
+  --surface-blue: #eef6ff;
+  /* The orange counterpart of `surface-blue`, for the one or two blocks that need warmth. */
+  --surface-orange: #fff1e8;
+  /* Disabled fills and image placeholders. */
+  --surface-strong: #e2e8f0;
+
+  --line: #e6ebf1;
+  --line-strong: #d3dbe5;
 
   /* Text. Three steps; a fourth grey always ends up applied inconsistently. */
-  --ink: #111827;
-  --ink-muted: #4b5563;
-  --ink-subtle: #7b8794;
+  --ink: #171a1f;
+  --ink-muted: #55606d;
+  --ink-subtle: #8a94a3;
 
-  /* Primary brand: cobalt. Used for CTAs, links, focus and active navigation. */
-  --brand: #2563eb;
-  --brand-hover: #1d4ed8;
-  --brand-soft: #eaf2ff;
+  /* Primary: blue. Structure, navigation, links, focus, most CTAs. */
+  --brand: #3b82f6;
+  --brand-hover: #2563eb;
+  --brand-soft: #eef6ff;
   /**
-   * `brand-dark` is a FILL, `brand-ink` is TEXT. They are separate tokens because they have
-   * to move in opposite directions between themes.
+   * `brand-ink` is brand-coloured TEXT and icons; `brand` is a FILL.
    *
-   * The deep navy band and the header mark need to stay deep navy in dark mode - a band that
-   * matches the page background is not a band. But navy TEXT on a #0b1220 canvas is
-   * unreadable, so the text token lightens to a pale blue instead. One token doing both jobs
-   * meant every eyebrow and "View all" link on the site failed contrast the moment dark mode
-   * was switched on.
+   * #3b82f6 is 3.1:1 on white - fine behind white button text, and too weak for a 12px bold
+   * eyebrow. The text token is a step darker so small type clears AA. They are separate
+   * because a single value cannot do both jobs.
    */
-  --brand-dark: #163a70;
   --brand-ink: #1d4ed8;
 
-  /* Secondary: teal. Bulk/wholesale indicators, "in stock" style affirmations. */
-  --accent: #0f766e;
-  --accent-hover: #0d635c;
-  --accent-soft: #ddf5f1;
-  /* Text weight that reads on a teal or blue tinted surface. */
-  --accent-ink: #115e59;
-
-  /* Rationed. Discounts, offers, warnings - nothing else. */
-  --highlight: #f59e0b;
-  --highlight-soft: #fef3c7;
-  --highlight-ink: #92400e;
+  /**
+   * Accent: ORANGE. Rationed, and this is the whole list.
+   *
+   *   - the single most important CTA in a section
+   *   - offer, sale and discount badges
+   *   - small accent marks: a rule, a quote glyph, an active underline
+   *   - eyebrow labels that need to read as "notice this"
+   *
+   * NOT section backgrounds, not every button, not headings. The balance this palette is
+   * built for is roughly two thirds white, a fifth pale blue, and orange in single-digit
+   * percentages. The moment orange spreads past that list the page reads as a cosmetics
+   * landing page, which is the exact failure the blue system replaced.
+   */
+  --accent: #f58a4b;
+  --accent-hover: #e97735;
+  --accent-soft: #ffe7d6;
+  /**
+   * Orange TEXT. #f58a4b is 2.3:1 on white and cannot carry a label; this is the same hue
+   * dark enough to read on white and on `--accent-soft`.
+   */
+  --accent-ink: #9a4a16;
 
   --danger: #b42318;
   --success: #067647;
-  --star: #f59e0b;
-  --focus: #2563eb;
+  --focus: #3b82f6;
 
   --radius-card: 0.875rem;
   --radius-control: 0.5rem;
   --radius-pill: 999px;
-  --shadow-soft: 0 12px 32px rgba(17, 24, 39, 0.07);
-  --shadow-card: 0 1px 3px rgba(17, 24, 39, 0.06);
+  --shadow-soft: 0 12px 32px rgba(23, 26, 31, 0.07);
+  --shadow-card: 0 1px 3px rgba(23, 26, 31, 0.06);
 
-  /* Footer is dark in BOTH themes: it anchors the page and is part of the brand. */
-  --footer-bg: #0f172a;
-  --footer-ink: #e2e8f0;
-  --footer-muted: #94a3b8;
+  /* The footer is dark on a light page on purpose: it anchors the bottom and is part of
+     the brand rather than a neutral end to the document. */
+  --footer-bg: #131a26;
+  --footer-ink: #e6ebf1;
+  --footer-muted: #8a94a3;
 
-  --content-width: 1320px;
-}
-
-.dark {
-  color-scheme: dark;
-
-  /* Navy-slate, never pure black: black surfaces make product photography look cut out,
-     and this catalog is mostly photographed-on-white merchandise. */
-  --canvas: #0b1220;
-  --surface: #111827;
-  --surface-muted: #172033;
-  --surface-blue: #15233c;
-  --surface-teal: #102a2a;
-  --surface-strong: #263449;
-  --line: #263449;
-  --line-strong: #34445b;
-
-  --ink: #f8fafc;
-  --ink-muted: #cbd5e1;
-  --ink-subtle: #94a3b8;
-
-  /* Lightened so they carry contrast against a dark surface rather than sinking into it. */
   /**
-   * `--brand` stays cobalt in dark mode rather than lightening to a pastel blue.
+   * Content width.
    *
-   * It is a BUTTON FILL, and every button that uses it carries white text. A #60a5fa fill
-   * with white text is about 2:1 — the label all but disappears. #2563eb keeps white at
-   * roughly 5:1 in both themes, and a cobalt button on a navy-slate canvas is perfectly
-   * legible as a button. Hover lightens instead of darkening, which is the direction that
-   * reads as "raised" on a dark surface.
+   * Was 1320px, which combined with a 6-icon hero panel left the page looking like content
+   * floating in a column with dead space beside it. 1360 plus a hero that actually fills its
+   * half is what fixes that; the number alone never would have.
    */
-  --brand: #2563eb;
-  --brand-hover: #3b82f6;
-  --brand-soft: #15233c;
-  /* Fill stays deep navy; text lightens. See the note on these two tokens above. */
-  --brand-dark: #16304f;
-  --brand-ink: #a9c9f7;
-
-  --accent: #2dd4bf;
-  --accent-hover: #14b8a6;
-  --accent-soft: #153d39;
-  --accent-ink: #5eead4;
-
-  --highlight: #fbbf24;
-  --highlight-soft: #2a2010;
-  --highlight-ink: #fcd34d;
-
-  --danger: #f87171;
-  --success: #4ade80;
-  --star: #fbbf24;
-  --focus: #60a5fa;
-
-  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
-
-  --footer-bg: #080e1a;
-  --footer-ink: #e2e8f0;
-  --footer-muted: #94a3b8;
+  --content-width: 1360px;
 }
 
 @theme inline {
@@ -168,7 +139,6 @@
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-surface-blue: var(--surface-blue);
-  --color-surface-teal: var(--surface-teal);
   --color-surface-strong: var(--surface-strong);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
@@ -177,19 +147,15 @@
   --color-line-strong: var(--line-strong);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
-  --color-brand-dark: var(--brand-dark);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
+  --color-surface-orange: var(--surface-orange);
   --color-accent-ink: var(--accent-ink);
-  --color-highlight: var(--highlight);
-  --color-highlight-soft: var(--highlight-soft);
-  --color-highlight-ink: var(--highlight-ink);
   --color-danger: var(--danger);
   --color-success: var(--success);
-  --color-star: var(--star);
   --color-footer-bg: var(--footer-bg);
   --color-footer-ink: var(--footer-ink);
   --color-footer-muted: var(--footer-muted);
@@ -232,16 +198,6 @@ a {
 ::selection {
   background: var(--brand-soft);
   color: var(--brand-ink);
-}
-
-/**
- * Product imagery keeps its real colours in dark mode.
- *
- * No filter, no opacity, no blend mode on product media. A dimmed photograph
- * misrepresents the merchandise, and a wholesale buyer is judging the goods from it.
- */
-.dark img {
-  filter: none;
 }
 
 @utility shell {
