@@ -38,9 +38,9 @@ export function WholesaleBanner() {
 
   return (
     <section aria-labelledby="wholesale-heading" className="shell section-y" id="wholesale">
-      <div className="grid gap-8 rounded-[var(--radius-card)] border border-line bg-surface-blue p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:items-center lg:p-12">
+      <div className="grid gap-8 rounded-[var(--radius-card)] border border-line bg-surface-blue p-6 sm:p-9 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:p-12">
         <div>
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-brand-ink">Wholesale</p>
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">Wholesale</p>
           <h2
             className="mt-3 max-w-[22ch] text-2xl font-extrabold leading-tight tracking-[-0.015em] sm:text-[1.75rem]"
             id="wholesale-heading"
@@ -74,10 +74,10 @@ export function WholesaleBanner() {
         <ul className="grid gap-3">
           {points.map(({ icon: Icon, title, text }) => (
             <li
-              className="flex items-start gap-3 rounded-[var(--radius-card)] border border-line bg-surface p-4"
+              className="flex items-start gap-3.5 rounded-[var(--radius-card)] bg-surface/80 p-4"
               key={title}
             >
-              <Icon aria-hidden="true" className="mt-0.5 shrink-0 text-brand-ink" size={22} strokeWidth={1.7} />
+              <Icon aria-hidden="true" className="mt-0.5 shrink-0 text-brand" size={22} strokeWidth={1.7} />
               <div>
                 <h3 className="text-sm font-bold">{title}</h3>
                 <p className="mt-1 text-[0.8rem] leading-5 text-ink-muted">{text}</p>

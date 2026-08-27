@@ -47,7 +47,7 @@ export function TrackOrderForm() {
             autoComplete="off"
             aria-invalid={Boolean(error)}
             aria-describedby={error ? "tracking-error" : "tracking-help"}
-            className="min-h-12 min-w-0 flex-1 rounded-[var(--radius-control)] border border-line bg-surface px-4 text-base focus:border-focus focus:outline-2"
+            className="min-h-12 min-w-0 flex-1 rounded-[var(--radius-control)] border border-line bg-surface px-4 text-base focus:border-brand focus:outline-2"
             placeholder="Paste your secure order link"
           />
           <button

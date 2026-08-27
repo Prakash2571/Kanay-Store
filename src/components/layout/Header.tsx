@@ -51,8 +51,14 @@ export function Header() {
           <ul className="flex items-center gap-5 whitespace-nowrap text-[0.82rem] font-semibold">
             {NAV_LINKS.map((link) => (
               <li key={link.label}>
+                {/*
+                  Orange underline on hover. This is the "small accent" slot from the palette
+                  brief: a 2px rule that appears under a nav item is about as little orange as it
+                  is possible to use, and it makes the header feel considered rather than plain.
+                  Built with a border rather than `underline` so the offset is controllable.
+                */}
                 <Link
-                  className="rounded text-ink-muted transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
+                  className="rounded border-b-2 border-transparent pb-0.5 text-ink-muted transition-colors hover:border-accent hover:text-ink focus-visible:outline focus-visible:outline-2"
                   href={link.href}
                 >
                   {link.label}
@@ -99,7 +105,7 @@ export function Header() {
           {NAV_LINKS.map((link) => (
             <li className="shrink-0" key={link.label}>
               <Link
-                className="rounded text-ink-muted transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
+                className="rounded border-b-2 border-transparent pb-0.5 text-ink-muted transition-colors hover:border-accent hover:text-ink focus-visible:outline focus-visible:outline-2"
                 href={link.href}
               >
                 {link.label}

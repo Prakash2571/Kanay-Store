@@ -58,7 +58,9 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
             On a marketplace whose identity is bulk buying, wholesale links buried under
             "Company" tell a business buyer they are the secondary audience.
           */}
-          <FooterGroup title="Wholesale">
+          {/* The wholesale column carries the footer's one orange mark - it is the column that
+              matters most to the audience this store is for. */}
+          <FooterGroup accent title="Wholesale">
             <FooterLink href="/#wholesale">Bulk orders</FooterLink>
             <FooterLink href="/about#moq">MOQ information</FooterLink>
             <FooterLink href="/about#wholesale">Wholesale enquiry</FooterLink>
@@ -133,11 +135,24 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
   );
 }
 
-function FooterGroup({ title, children }: { title: string; children: React.ReactNode }) {
+function FooterGroup({
+  title,
+  children,
+  accent = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  accent?: boolean;
+}) {
   return (
     <div>
       <h2 className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white">{title}</h2>
-      <ul className="mt-4 grid gap-2.5 text-sm text-footer-muted">{children}</ul>
+      {accent ? (
+        <span aria-hidden="true" className="mt-2 block h-0.5 w-8 rounded-full bg-accent" />
+      ) : null}
+      <ul className={`grid gap-2.5 text-sm text-footer-muted ${accent ? "mt-3" : "mt-4"}`}>
+        {children}
+      </ul>
     </div>
   );
 }

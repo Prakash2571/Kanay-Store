@@ -40,7 +40,7 @@ export function ServicesStrip() {
       <h2 className="sr-only" id="services-heading">
         Store services
       </h2>
-      <ul className="grid gap-3 rounded-[var(--radius-card)] border border-line bg-surface p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
+      <ul className="grid gap-x-8 gap-y-6 border-y border-line py-7 sm:grid-cols-2 lg:grid-cols-4">
         {SERVICES.map(({ icon: Icon, title, text }) => (
           <li className="flex items-start gap-3 sm:px-1" key={title}>
             <span className="grid size-10 shrink-0 place-items-center rounded-[var(--radius-pill)] bg-surface-blue">

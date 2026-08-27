@@ -46,7 +46,7 @@ export function WhyKanay() {
   return (
     <section aria-labelledby="why-heading" className="border-y border-line bg-surface">
       <div className="shell section-y">
-        <div className="max-w-[52ch]">
+        <div className="max-w-[56ch]">
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
             Built for bulk buyers
           </p>
@@ -62,16 +62,26 @@ export function WhyKanay() {
           </p>
         </div>
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <li
-              className="rounded-[var(--radius-card)] border border-line bg-canvas p-5 transition-colors hover:border-brand sm:p-6"
-              key={title}
-            >
-              <span className="grid size-11 place-items-center rounded-[var(--radius-card)] border border-brand/20 bg-brand-soft">
-                <Icon aria-hidden="true" className="text-brand-ink" size={21} strokeWidth={1.7} />
-              </span>
-              <h3 className="mt-4 text-base font-extrabold tracking-[-0.01em]">{title}</h3>
+        {/*
+          Four columns separated by a rule, not four bordered cards.
+          The card version made this read as another row of boxes on a page that already had
+          plenty; a top rule per column gives the same grouping with a fraction of the weight.
+          The rule is orange on the first item only — an accent, not a pattern.
+        */}
+        <ul className="mt-9 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+          {BENEFITS.map(({ icon: Icon, title, text }, index) => (
+            <li className="border-t-2 border-line pt-5" key={title}>
+              <span
+                aria-hidden="true"
+                className={`-mt-[calc(1.25rem+2px)] mb-5 block h-0.5 w-12 ${index === 0 ? "bg-accent" : "bg-transparent"}`}
+              />
+              <Icon
+                aria-hidden="true"
+                className="text-brand"
+                size={22}
+                strokeWidth={1.7}
+              />
+              <h3 className="mt-3.5 text-base font-extrabold tracking-[-0.01em]">{title}</h3>
               <p className="mt-2 text-[0.83rem] leading-6 text-ink-muted">{text}</p>
             </li>
           ))}

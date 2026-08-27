@@ -151,6 +151,11 @@ export default async function HomePage() {
 
         <WhyKanay />
         <BrandQuote />
+        {/*
+          The services strip sits between the quote and the newsletter rather than above the
+          quote: it is the lightest block on the page, and putting it directly after a heading
+          block made both look like filler.
+        */}
         <ServicesStrip />
         {/*
           NO TESTIMONIALS SECTION, DELIBERATELY.

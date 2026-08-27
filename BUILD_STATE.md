@@ -115,39 +115,49 @@ Approved dials remain, and are NOT to be re-asked:
 Direction (revised — supersedes the earlier "premium fashion/lifestyle" direction, which
 mis-sold a multi-category catalog as an apparel label):
 
-General-purpose WHOLESALE + retail marketplace, blue-led.
+General-purpose WHOLESALE + retail marketplace. White-led, blue structure, orange accent.
 
-Superseded palette (peach `#FFF0E6` / `#FCE4D4` on cream `#FFFDFC` with an orange `#F28C5B`
-accent) read as a beauty / skincare / women's-lifestyle store. It was clean and it was wrong
-for a catalog of electronics, appliances, tools and office supplies.
+Superseded twice. (1) Peach `#FFF0E6` / `#FCE4D4` on cream with orange `#F28C5B` read as a
+beauty / skincare store. (2) The all-blue replacement was trustworthy but cold, and its hero
+fell back to a 3x2 grid of outline icons, which read as a wireframe.
 
-Current palette — cool grey page (`#F6F8FB`), white cards, cobalt primary (`#2563EB`), deep
-navy for bands and the header mark (`#163A70`), teal secondary for wholesale signals
-(`#0F766E`), amber (`#F59E0B`) RATIONED to discount labels, offer flags and warnings only,
-dark navy footer (`#0F172A`). ONE clean sans (Manrope) at compact ecommerce sizes — hero
-32–50px, section headings 20–24px, product titles 14–16px. No editorial serif.
+Current palette: white `#FFFFFF` surfaces on `#F8FAFC`, hero/section blue `#EEF6FF`, soft orange
+`#FFF1E8`, border `#E6EBF1`, text `#171A1F` / `#55606D` / `#8A94A3`, blue `#3B82F6` (hover
+`#2563EB`), ORANGE ACCENT `#F58A4B` (hover `#E97735`, soft `#FFE7D6`), dark footer `#131A26`.
+Target balance ~65-70% white, 15-20% pale blue, 5-10% orange.
 
-ONE THEME, LIGHT. No `.dark` block, no `prefers-color-scheme` inversion, no toggle, no
-pre-paint theme script, no `suppressHydrationWarning`. `color-scheme: light` is declared so
-browser-painted UI (form controls, scrollbars, autofill) matches. A dark variant was built and
-then removed at the client's request; it is NOT to be re-added. NO filter, opacity or blend
-mode on product imagery, ever.
+Orange is confined to: the single most important CTA in a section, offer/discount badges, small
+accent marks (rule, quote glyph, nav hover underline), eyebrow labels. NOT section backgrounds,
+NOT every button. The amber family is deleted - orange does the "notice this" job once.
 
-Fill and text tokens are separate: `--brand-dark` (fill: quote band, header mark) vs
-`--brand-ink` (brand-coloured text, a step darker than `--brand` for small bold type), and
-`--accent` (teal on light surfaces) vs `--accent-bright` (teal on the navy band, where
-`--accent` is ~1.5:1).
+Fills vs text: `--brand`/`--accent` are fills behind white text; `--brand-ink`/`--accent-ink`
+are the same hues dark enough to be text on white (`--accent` is 2.3:1 on white).
 
-Category-neutral imagery: the homepage hero and category rail are built from live catalog
-images rather than stock photography, so the page shows what the store actually sells.
+ONE THEME, LIGHT. No `.dark` block, no `prefers-color-scheme` inversion, no toggle, no pre-paint
+theme script, no `suppressHydrationWarning`. A dark variant was built and then removed at the
+client's request; it is NOT to be re-added. NO filter, opacity or blend mode on product imagery.
 
-Section rhythm: 56px mobile / 80px desktop (`section-y`), inside the 72–96px band, tight
-enough not to leave dead space. Max content width 1320px.
+Content width 1360px. Section rhythm 56px mobile / 80px desktop (`section-y`).
 
-Homepage order: service strip → header → hero → stats strip → category circles → 3 promo
-cards → best sellers → wholesale deals (only when MOQ products exist) → wholesale banner →
-new arrivals → deals (only when genuinely discounted) → why-Kanay benefits → navy brand quote
-→ services → newsletter.
+HOMEPAGE VISUALS ARE PHOTOGRAPHY. Hero is an asymmetric 4-photo collage (one featured tile
+spanning 2 rows + 3 supporting; tiles exactly, at both breakpoints). Category rail is
+image-backed cards, 2/4/6 across. Live catalog images lead; `lib/storefront/showcase.ts` supplies
+curated CATEGORY photographs (images.unsplash.com, already in next.config remotePatterns and the
+CSP img-src) only when the catalog cannot fill them. `showcaseImageFor` returns null rather than
+guessing for a label it cannot place. Icons are secondary only - the icon-grid fallback is gone.
+
+Homepage order: service strip -> header -> hero -> stats strip -> category cards -> promo
+(1 large left + 2 stacked right) -> best sellers -> wholesale deals (only when MOQ products
+exist) -> wholesale banner -> new arrivals -> deals (only when genuinely discounted) -> why-Kanay
+benefits -> light orange brand quote -> services strip -> newsletter.
+
+Composition rule: sections must NOT all be equal-size bordered boxes. Stats is a divided strip,
+benefits are rule-topped columns, promo is asymmetric, services is a bordered strip.
+
+STATS: categories is DERIVED from live catalog facets. Daily buyers (`25+`) and wholesale
+products (`120+`) are STATIC BUSINESS FIGURES stated by the owner, written as conservative
+floors, and must never be labelled live/current/today or made precise - there is no analytics
+pipeline and no product total in the API. See the comment block in StatsStrip.tsx.
 
 Wholesale MOQ: source of truth is the Shopify product tag `moq:<n>`, parsed by the backend and
 enforced at checkout (`MOQ_NOT_MET`, 409) against freshly read data. Frontend shows the badge,
