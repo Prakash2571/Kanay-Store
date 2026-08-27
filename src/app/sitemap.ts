@@ -47,6 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [
     { url: absoluteUrl("/"), lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: absoluteUrl("/shop"), lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    // /about carries the shipping, returns, payment and wholesale information a shopper
+    // looks for before a first order, and the nav and footer both link to it. Low
+    // frequency because it changes rarely, not because it matters less.
+    { url: absoluteUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   const [products, collections] = await Promise.all([safeProducts(), safeCollections()]);

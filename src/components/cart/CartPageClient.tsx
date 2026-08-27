@@ -28,13 +28,13 @@ export function CartPageClient() {
           strokeWidth={1.5}
           className="mx-auto text-accent"
         />
-        <h2 className="mt-5 font-serif text-4xl font-semibold">Your cart is ready for a first pick.</h2>
+        <h2 className="mt-5 text-4xl font-semibold">Your cart is ready for a first pick.</h2>
         <p className="mx-auto mt-3 max-w-[42ch] text-sm leading-6 text-ink-muted">
           Browse the latest available pieces. Your cart will stay on this device between visits.
         </p>
         <Link
           href="/shop"
-          className="mt-7 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-ink px-6 font-semibold text-canvas"
+          className="mt-7 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-ink px-6 font-semibold text-white"
         >
           Shop the collection
         </Link>

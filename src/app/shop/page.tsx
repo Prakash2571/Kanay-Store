@@ -56,9 +56,9 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   return (
     <StoreShell collections={collections}>
-      <main className="mx-auto max-w-[1400px] px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
+      <main className="shell section-y">
         <div className="max-w-2xl">
-          <h1 className="font-serif text-5xl font-semibold tracking-[-0.035em] sm:text-6xl">Shop all</h1>
+          <h1 className="text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">Shop all</h1>
           <p className="mt-3 text-sm leading-6 text-ink-muted">Browse products currently approved for the Kanay Store catalog.</p>
         </div>
         {result.ok ? (
@@ -89,7 +89,7 @@ function NextPageLink({ basePath, cursor, params }: { basePath: string; cursor: 
   next.set("after", cursor);
   return (
     <div className="flex justify-center">
-      <Link className="inline-flex min-h-11 items-center justify-center border border-ink px-7 text-sm font-bold transition-colors hover:bg-ink hover:text-canvas focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={`${basePath}?${next.toString()}`}>Load more</Link>
+      <Link className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-ink bg-surface px-7 text-sm font-bold transition-colors hover:bg-ink hover:text-white focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={`${basePath}?${next.toString()}`}>Load more</Link>
     </div>
   );
 }

@@ -2,6 +2,17 @@
 
 Kanay Store is the customer-facing ecommerce application for the Trademart commerce system. It is a separate Next.js application and does not contain operator tools or Shopify Admin credentials.
 
+It is a **general-purpose retail and wholesale marketplace**, not a single-category brand: electronics and mobile accessories, home and kitchen, appliances, beauty and personal care, bags, watches, jewellery, toys, sports and fitness, office supplies, stationery, home decor, lighting, tools, automotive accessories, travel goods, gifts, seasonal lines, wholesale lots — and fashion as one category among them.
+
+## Design system
+
+Bright off-white page, white cards, soft peach surfaces, orange accent, near-black text, one clean sans (Manrope) at compact ecommerce sizes. Tokens live in `src/app/globals.css`; the `shell`, `section-y` and `no-scrollbar` utilities defined there set the 1320px centred column and the section rhythm, so every page lines up without repeating gutter classes.
+
+Two rules that are load-bearing rather than stylistic:
+
+- **No dark page background and no `prefers-color-scheme: dark` inversion.** There used to be one, and it turned the storefront black on any device in dark mode — a second identity nobody designed.
+- **No fabricated content.** The homepage has no testimonials (there is no review backend), no star ratings, no wishlist, no payment-method badges and no hard-coded discount percentage. The hero's "up to X% off" badge is computed from real `compareAtPrice` data and is not rendered when nothing is discounted; the Deals row appears only when products genuinely carry a saving. Hero and category imagery come from the live catalog, not stock photography, so the page shows what the store actually sells.
+
 ## Stack
 
 - Next.js 16 App Router

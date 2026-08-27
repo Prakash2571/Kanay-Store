@@ -32,7 +32,7 @@ export default async function TrackedOrderPage({
         <OrderStatusView order={result.data} />
       ) : (
         <section className="mx-auto max-w-xl rounded-[var(--radius-card)] bg-surface-muted p-7 text-center sm:p-9">
-          <h1 className="font-serif text-4xl font-semibold">Tracking is not available.</h1>
+          <h1 className="text-4xl font-semibold">Tracking is not available.</h1>
           <p className="mt-3 text-sm leading-6 text-ink-muted">
             Check that you opened the full secure link from your order confirmation.
           </p>

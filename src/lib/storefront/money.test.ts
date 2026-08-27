@@ -32,4 +32,27 @@ describe("storefront money", () => {
       ),
     ).toBeNull();
   });
+
+  it("rounds a discount DOWN, so a saving is never overstated", () => {
+    // 49.6% must read as 49, not 50. This number is printed on product cards and drives
+    // the hero's "up to X% off" badge, so rounding up advertises a better price than
+    // anything in the catalog actually has - on the one figure a shopper price-checks.
+    expect(
+      calculateDiscountPercent(
+        { amount: "504.00", currencyCode: "INR" },
+        { amount: "1000.00", currencyCode: "INR" },
+      ),
+    ).toBe(49);
+  });
+
+  it("treats a saving under one percent as no discount", () => {
+    // It would floor to 0, and a "0% off" badge is noise that makes every other badge
+    // less trustworthy.
+    expect(
+      calculateDiscountPercent(
+        { amount: "999.00", currencyCode: "INR" },
+        { amount: "1000.00", currencyCode: "INR" },
+      ),
+    ).toBeNull();
+  });
 });

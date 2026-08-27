@@ -1,37 +1,153 @@
+import { ArrowRight, Headphones, Home, ShoppingBasket, Sparkles, Watch, Wrench } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { StorefrontCollectionSummary } from "@/lib/storefront/types";
+import { heroCollageImages, maxDiscountPercent } from "@/lib/storefront/merchandising";
+import type { StorefrontProductSummary } from "@/lib/storefront/types";
 
-// Unsplash editorial photography. Replace through brand-managed content when available.
-const HERO_IMAGE = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1800&q=82";
-
-export function Hero({ collections }: { collections: StorefrontCollectionSummary[] }) {
-  const primary = collections[0];
-  const secondary = collections[1];
+/**
+ * The homepage hero.
+ *
+ * WHAT THIS REPLACES, AND WHY
+ * ---------------------------
+ * A full-bleed photograph of a model in a trench coat under "Style that earns its place."
+ * in 72px serif. For a catalog whose best sellers are earbuds, kitchen organisers and
+ * wholesale lots, that hero was actively misleading: a visitor who wants a power bank
+ * bounces from a page that looks like an apparel label.
+ *
+ * THE IMAGE IS THE CATALOG
+ * ------------------------
+ * There is no stock photography here. The visual is a collage of real product images from
+ * the live catalog, one per category where possible (see heroCollageImages), so the hero
+ * shows what the store actually sells and updates itself as the catalog changes. When the
+ * catalog is empty or unreachable it falls back to an illustrated peach panel — never to a
+ * padded-out stock photo, because that is how a general store drifts back into looking
+ * like a fashion brand.
+ *
+ * THE DISCOUNT BADGE IS EARNED
+ * ----------------------------
+ * The reference design has a prominent "UP TO 50% OFF" disc. That number is computed from
+ * real compare-at prices and rounded DOWN; if nothing is discounted, the badge is not
+ * rendered at all. A hard-coded percentage is a promise the checkout cannot keep.
+ */
+export function Hero({ products }: { products: StorefrontProductSummary[] }) {
+  const collage = heroCollageImages(products, 4);
+  const discount = maxDiscountPercent(products);
 
   return (
-    <section className="mx-auto grid min-h-[calc(100dvh-6rem)] max-w-[1400px] grid-cols-1 bg-surface md:min-h-0 md:grid-cols-[0.82fr_1.18fr] lg:min-h-[620px] lg:max-h-[760px]">
-      <div className="flex items-center px-5 py-12 sm:px-8 md:px-10 lg:px-16 lg:py-16">
-        <div className="max-w-xl">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-accent-ink">The everyday edit</p>
-          <h1 className="mt-4 max-w-[10ch] font-serif text-5xl font-semibold leading-[0.95] tracking-[-0.035em] sm:text-6xl lg:text-7xl">Style that earns its place.</h1>
-          <p className="mt-5 max-w-[42ch] text-sm leading-6 text-ink-muted sm:text-base">New layers, reliable staples and finishing pieces selected for everyday wardrobes.</p>
+    <section aria-labelledby="hero-heading" className="shell pt-4 lg:pt-6">
+      <div className="grid items-center gap-6 overflow-hidden rounded-[var(--radius-card)] bg-surface-peach-soft p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:p-12">
+        <div>
+          <p className="flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
+            <Sparkles aria-hidden="true" size={15} strokeWidth={2} />
+            Wholesale • Retail • Everyday products
+          </p>
+          <h1
+            className="mt-4 max-w-[18ch] text-[2rem] font-extrabold leading-[1.1] tracking-[-0.02em] sm:text-[2.6rem] lg:text-[3.1rem]"
+            id="hero-heading"
+          >
+            Everything you need. Better prices. One store.
+          </h1>
+          <p className="mt-4 max-w-[52ch] text-sm leading-6 text-ink-muted sm:text-base">
+            Electronics, home and kitchen, appliances, beauty, bags, watches, toys, fitness,
+            office supplies, fashion and thousands of everyday products — all in one place.
+          </p>
+
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link className="inline-flex min-h-11 items-center justify-center bg-ink px-6 text-sm font-bold text-canvas transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={primary ? `/collections/${primary.handle}` : "/shop"}>
-              {primary ? `Shop ${primary.title}` : "Shop now"}
+            <Link
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              href="/shop"
+            >
+              Shop now
+              <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
             </Link>
-            {secondary ? (
-              <Link className="inline-flex min-h-11 items-center justify-center border border-ink px-6 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-canvas focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={`/collections/${secondary.handle}`}>
-                Shop {secondary.title}
-              </Link>
-            ) : null}
+            <Link
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-ink bg-surface px-6 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-white focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              href="/#categories"
+            >
+              Explore categories
+            </Link>
           </div>
         </div>
-      </div>
-      <div className="relative min-h-[54dvh] overflow-hidden md:min-h-[34rem]">
-        <Image alt="Fashion editorials in soft natural light" className="object-cover object-center" fill priority sizes="(max-width: 767px) 100vw, 60vw" src={HERO_IMAGE} />
+
+        <div className="relative">
+          {collage.length > 0 ? (
+            <ProductCollage collage={collage} />
+          ) : (
+            <IllustratedPanel />
+          )}
+
+          {discount !== null ? (
+            <p className="absolute -top-1 right-1 grid size-[5.5rem] place-items-center rounded-[var(--radius-pill)] bg-accent text-center text-[0.7rem] font-extrabold uppercase leading-tight text-white shadow-[var(--shadow-soft)] sm:size-24 sm:text-xs">
+              <span>
+                Up to
+                <br />
+                <span className="text-lg sm:text-xl">{discount}%</span>
+                <br />
+                off
+              </span>
+            </p>
+          ) : null}
+        </div>
       </div>
     </section>
+  );
+}
+
+/** Four real product photographs, arranged as a tile grid. */
+function ProductCollage({ collage }: { collage: { image: { url: string; alt: string }; title: string }[] }) {
+  return (
+    <ul className="grid grid-cols-2 gap-3">
+      {collage.map((entry, index) => (
+        <li
+          className={`relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface ${
+            // The first tile is taller on desktop, which gives the collage the same
+            // asymmetric weight the reference photograph has.
+            index === 0 ? "aspect-square lg:aspect-[4/5]" : "aspect-square"
+          }`}
+          key={entry.image.url}
+        >
+          <Image
+            alt={entry.image.alt || entry.title}
+            className="object-cover"
+            fill
+            priority={index === 0}
+            sizes="(max-width: 1023px) 45vw, 22vw"
+            src={entry.image.url}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * Fallback when the catalog is empty or the API is unreachable.
+ *
+ * Icons across six departments rather than a photograph, so the fallback still says
+ * "general store" and cannot be mistaken for merchandise that does not exist.
+ */
+function IllustratedPanel() {
+  const departments = [
+    { icon: Headphones, label: "Electronics" },
+    { icon: Home, label: "Home" },
+    { icon: ShoppingBasket, label: "Kitchen" },
+    { icon: Sparkles, label: "Beauty" },
+    { icon: Watch, label: "Accessories" },
+    { icon: Wrench, label: "Tools" },
+  ];
+
+  return (
+    <ul className="grid grid-cols-3 gap-3" aria-label="Departments in this store">
+      {departments.map(({ icon: Icon, label }) => (
+        <li
+          className="grid aspect-square place-items-center gap-2 rounded-[var(--radius-card)] border border-line bg-surface p-2 text-center"
+          key={label}
+        >
+          <Icon aria-hidden="true" className="text-accent" size={26} strokeWidth={1.6} />
+          <span className="text-[0.7rem] font-semibold text-ink-muted">{label}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

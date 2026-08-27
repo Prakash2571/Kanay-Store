@@ -20,7 +20,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
             <PackageCheck aria-hidden="true" size={25} strokeWidth={1.75} />
           )}
         </div>
-        <h1 className="mt-5 font-serif text-5xl font-semibold tracking-[-0.03em] sm:text-6xl">
+        <h1 className="mt-5 text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
           {isPending
             ? order.status === "PAYMENT_PENDING"
               ? "We are confirming your payment."
@@ -42,7 +42,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
                   <span
                     className={`grid h-7 w-7 place-items-center rounded-full border ${
                       entry.completed
-                        ? "border-success bg-success text-canvas"
+                        ? "border-success bg-success text-white"
                         : "border-line bg-surface text-ink-muted"
                     }`}
                   >
@@ -92,7 +92,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
       </div>
 
       <aside className="rounded-[var(--radius-card)] bg-surface-muted p-5 sm:p-6">
-        <h2 className="font-serif text-3xl font-semibold">Order summary</h2>
+        <h2 className="text-3xl font-semibold">Order summary</h2>
         <dl className="mt-5 space-y-3 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-ink-muted">Payment</dt>
@@ -130,7 +130,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
         </div>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-canvas"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-white"
         >
           Continue shopping
         </Link>
