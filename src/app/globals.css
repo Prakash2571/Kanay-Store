@@ -55,20 +55,32 @@
 :root {
   color-scheme: light;
 
-  /* Page and card surfaces. White leads; the tints separate sections. */
+  /**
+   * Page and card surfaces.
+   *
+   * WHY THESE WERE DEEPENED
+   * The first pass was pale enough that the whole page read as white: `canvas` at #f8fafc against a
+   * #ffffff card is a 1.03:1 difference, which is invisible on most screens and at any brightness
+   * below maximum. Every tint had the same problem, so section boundaries and category colour
+   * coding both vanished.
+   *
+   * Each soft value is now one step deeper. They are still tints - none of them competes with the
+   * product photography or the type - but a blue card now reads as blue. Every `-ink` pairing was
+   * re-checked against its deepened background and all eight clear 4.8:1 or better.
+   */
   --surface: #ffffff;
-  --canvas: #f8fafc;
-  --surface-muted: #f1f5f9;
-  --surface-blue: #eef6ff;
-  --surface-strong: #e2e8f0;
+  --canvas: #eff3f9;
+  --surface-muted: #e8eef5;
+  --surface-blue: #dbeafe;
+  --surface-strong: #d5dde8;
 
-  --line: #e6ebf1;
-  --line-strong: #d3dbe5;
+  --line: #d8e0ea;
+  --line-strong: #bfcada;
 
   /* Text. Three steps; a fourth grey always ends up applied inconsistently. */
   --ink: #171a1f;
   --ink-muted: #55606d;
-  --ink-subtle: #8a94a3;
+  --ink-subtle: #67707c;
 
   /**
    * PRIMARY BLUE — AND WHY THERE ARE TWO OF THEM
@@ -84,7 +96,7 @@
   --brand: #3b82f6;
   --brand-solid: #2563eb;
   --brand-solid-hover: #1d4ed8;
-  --brand-soft: #eef6ff;
+  --brand-soft: #dbeafe;
   --brand-ink: #1d4ed8;
 
   /**
@@ -100,7 +112,7 @@
    */
   --accent: #f5824a;
   --accent-hover: #ea6f33;
-  --accent-soft: #fff0e6;
+  --accent-soft: #ffdfc9;
   --accent-ink: #9a4a16;
 
   /**
@@ -121,38 +133,38 @@
    * area, saturated versions get a few square pixels, and no single section uses more than
    * one family.
    */
-  --tint-blue: #eef6ff;
+  --tint-blue: #dbeafe;
   --tint-blue-mark: #3b82f6;
   --tint-blue-ink: #1d4ed8;
 
-  --tint-teal: #e8f7f4;
+  --tint-teal: #cfece5;
   --tint-teal-mark: #149a8a;
   --tint-teal-ink: #0b6b5f;
 
-  --tint-yellow: #fff8d9;
+  --tint-yellow: #fcefb4;
   --tint-yellow-mark: #e9a900;
   --tint-yellow-ink: #855c00;
 
-  --tint-lavender: #f2eeff;
+  --tint-lavender: #e4dcff;
   --tint-lavender-mark: #7567d8;
   --tint-lavender-ink: #4c3fa8;
 
-  --tint-green: #edf8ee;
+  --tint-green: #d6f0dc;
   --tint-green-mark: #4d9a58;
   --tint-green-ink: #2f6b38;
 
   /* Rose is background-first: the brief asks for "very soft rose/peach" for beauty. */
-  --tint-rose: #fff1ec;
+  --tint-rose: #fbdfd4;
   --tint-rose-mark: #d9705c;
   --tint-rose-ink: #9c4a3c;
 
   /* Blue-grey. The default for a category that matches no department, and Office's colour. */
-  --tint-slate: #f1f5f9;
+  --tint-slate: #e2e8f0;
   --tint-slate-mark: #64748b;
   --tint-slate-ink: #475569;
 
   /* Orange, exposed under the tint naming so category coding can reach it uniformly. */
-  --tint-orange: #fff0e6;
+  --tint-orange: #ffdfc9;
   --tint-orange-mark: #f5824a;
   --tint-orange-ink: #9a4a16;
 
@@ -161,8 +173,8 @@
    * Both are specified values, and naming them this way stops them being reached for as
    * general-purpose tints — which is how "a bit of warmth" becomes an orange website.
    */
-  --quote-bg: #f2f7ff;
-  --newsletter-bg: #fff2e8;
+  --quote-bg: #dfeafc;
+  --newsletter-bg: #ffe2cd;
 
   /**
    * The brand-story banner's overlay.
@@ -188,7 +200,7 @@
   /* Dark footer for visual closure. */
   --footer-bg: #182230;
   --footer-ink: #e6ebf1;
-  --footer-muted: #8a94a3;
+  --footer-muted: #9aa5b4;
 
   /**
    * Content width.

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Beauty and personal care">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop beauty.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#fbdfd4"/>
+  <circle cx="400" cy="300" r="212" fill="#e89680" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#e89680" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#e89680" opacity="0.22"/>
+  <rect x="330" y="286" width="140" height="202" rx="30" fill="#9c4a3c"/>
+  <rect x="354" y="312" width="40" height="112" rx="20" fill="#e89680" opacity="0.6"/>
+  <rect x="378" y="250" width="44" height="42" fill="#9c4a3c"/>
+  <rect x="362" y="216" width="76" height="36" rx="15" fill="#e89680"/>
+  <rect x="438" y="226" width="48" height="17" rx="8" fill="#e89680"/>
+</svg>

@@ -25,8 +25,11 @@ import type { StorefrontImage } from "./types";
  * HOW TO ADD IMAGES
  * -----------------
  * Drop files into `public/categories/` named after the department key, e.g. `electronics.jpg`,
- * `home-kitchen.webp`, `tools.png`. Keys are listed in SHOWCASE_CATEGORIES. Anything absent falls
- * back to a tinted department card, which is a deliberate part of the design and looks intentional.
+ * `home-kitchen.webp`, `tools.png`. Keys are listed in SHOWCASE_CATEGORIES.
+ *
+ * The repository already ships an `<key>.svg` illustration for all eight departments, so no card is
+ * ever empty. A raster file beats the SVG (see IMAGE_EXTENSIONS), so adding a photograph is enough -
+ * nothing needs deleting.
  *
  * `public/brand-story.jpg` backs the trust banner the same way; without it the banner is a deep
  * navy panel, which is exactly what it already renders underneath the photograph.
@@ -44,7 +47,25 @@ import type { StorefrontImage } from "./types";
  */
 
 const MEDIA_DIRECTORY = path.join(process.cwd(), "public", "categories");
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
+/**
+ * Raster formats first, `.svg` last. Order matters: it is the precedence rule.
+ *
+ * The repository ships an SVG illustration per department so no card is ever empty. A store owner
+ * dropping `electronics.jpg` in should have their photograph WIN over that illustration without
+ * having to delete anything, so the index prefers whichever extension appears earliest here.
+ */
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg"];
+
+/** Lower is higher priority. Unknown extensions are filtered out before this is used. */
+function extensionRank(filename: string): number {
+  const rank = IMAGE_EXTENSIONS.indexOf(path.extname(filename).toLowerCase());
+  return rank === -1 ? Number.MAX_SAFE_INTEGER : rank;
+}
+
+/** True for assets `next/image` must not run through its optimiser. */
+export function isVectorAsset(url: string): boolean {
+  return url.toLowerCase().endsWith(".svg");
+}
 
 function readDirectory(directory: string): { name: string; base: string }[] {
   try {
@@ -55,9 +76,14 @@ function readDirectory(directory: string): { name: string; base: string }[] {
         name: entry.name,
         base: path.basename(entry.name, path.extname(entry.name)).toLowerCase(),
       }))
-      .filter((entry) => IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase()))
-      // Stable order, so which file wins for a duplicated key does not depend on the filesystem.
-      .sort((left, right) => left.name.localeCompare(right.name));
+      .filter((entry) => IMAGE_EXTENSIONS.includes(path.extname(entry.name).toLowerCase()))
+      // A photograph beats the bundled illustration; ties break on name so the winner never
+      // depends on filesystem ordering.
+      .sort(
+        (left, right) =>
+          extensionRank(left.name) - extensionRank(right.name) ||
+          left.name.localeCompare(right.name),
+      );
   } catch {
     // Missing directory is the normal case on a fresh checkout, not an error worth logging.
     return [];

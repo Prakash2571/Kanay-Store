@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Office and stationery">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop office.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#e2e8f0"/>
+  <circle cx="400" cy="300" r="212" fill="#9aa8ba" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#9aa8ba" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#9aa8ba" opacity="0.22"/>
+  <rect x="298" y="222" width="204" height="254" rx="24" fill="#475569"/>
+  <rect x="322" y="252" width="156" height="200" rx="12" fill="#e2e8f0"/>
+  <rect x="366" y="204" width="68" height="36" rx="13" fill="#9aa8ba"/>
+  <rect x="346" y="292" width="110" height="13" rx="6" fill="#9aa8ba"/>
+  <rect x="346" y="330" width="86" height="13" rx="6" fill="#9aa8ba"/>
+  <rect x="346" y="368" width="110" height="13" rx="6" fill="#9aa8ba"/>
+</svg>

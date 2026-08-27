@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Tools and hardware">
+  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
+       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
+       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
+       photograph instead, drop tools.jpg beside this file - raster files take priority. -->
+  <rect width="800" height="640" fill="#fcefb4"/>
+  <circle cx="400" cy="300" r="212" fill="#dfb63a" opacity="0.34"/>
+  <circle cx="612" cy="126" r="78" fill="#dfb63a" opacity="0.26"/>
+  <circle cx="176" cy="512" r="104" fill="#dfb63a" opacity="0.22"/>
+  <g transform="rotate(-38 400 322)">
+    <rect x="374" y="228" width="52" height="212" rx="22" fill="#855c00"/>
+    <path d="M352 178h96v70h-96z" fill="#855c00"/>
+    <rect x="384" y="168" width="32" height="52" rx="8" fill="#fcefb4"/>
+    <path d="M352 396h96v70h-96z" fill="#855c00"/>
+    <rect x="384" y="424" width="32" height="52" rx="8" fill="#fcefb4"/>
+  </g>
+</svg>
