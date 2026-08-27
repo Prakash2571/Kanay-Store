@@ -74,8 +74,16 @@ function clampQuantity(quantity: number, minimum?: number | null): number {
   return Math.max(floor, Math.min(MAX_CART_QUANTITY, Math.trunc(quantity)));
 }
 
-/** The smallest quantity a line may hold: its MOQ, or one. */
-export function minimumQuantityFor(item: { minimumOrderQuantity?: number | null }): number {
+/**
+ * The smallest quantity a line may hold: its MOQ, or one.
+ *
+ * Takes `Partial<CartProductItem>` rather than `{ minimumOrderQuantity?: number | null }`.
+ * The narrower shape is a weak type — every property optional — so TypeScript rejects any
+ * argument that has no property in common with it, which means a caller holding a complete
+ * cart item that simply predates this field cannot pass it. Widening to the partial item keeps
+ * the "no minimum is one, never zero" guarantee while accepting every real caller.
+ */
+export function minimumQuantityFor(item: Partial<CartProductItem>): number {
   const minimum = item.minimumOrderQuantity;
   return minimum !== null && minimum !== undefined && minimum > 0 ? minimum : 1;
 }

@@ -95,9 +95,15 @@ describe("cart quantity ceiling", () => {
  */
 describe("minimum order quantity", () => {
   it("reports no minimum as one", () => {
-    expect(minimumQuantityFor(item)).toBe(1);
-    expect(minimumQuantityFor({ minimumOrderQuantity: null })).toBe(1);
+    // Three ways a product can have no minimum, all of which must read as one and none of
+    // which may read as zero: absent (a line persisted before the field existed), explicitly
+    // null (the backend saying "no `moq:` tag"), and undefined.
     expect(minimumQuantityFor({})).toBe(1);
+    expect(minimumQuantityFor({ minimumOrderQuantity: null })).toBe(1);
+    expect(minimumQuantityFor({ minimumOrderQuantity: undefined })).toBe(1);
+    // A complete item that simply carries no minimum field at all - the shape every cart line
+    // had before this feature shipped.
+    expect(minimumQuantityFor(item)).toBe(1);
   });
 
   it("reports a real minimum", () => {
