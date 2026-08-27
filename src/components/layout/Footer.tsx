@@ -5,14 +5,13 @@ import type { StorefrontCollectionSummary } from "@/lib/storefront/types";
 /**
  * Multi-column footer, on dark navy.
  *
- * WHY THE FOOTER IS DARK IN BOTH THEMES
- * -------------------------------------
- * It was a light grey panel, which meant the page just ran out at the bottom. A dark navy
- * footer terminates the page and is the one place in this design where the brand's darkest
- * navy gets real surface area. It uses its own token set (`--footer-bg`, `--footer-ink`,
- * `--footer-muted`) precisely so it does NOT invert with the theme: in light mode it is the
- * anchor at the end of a bright page, and in dark mode it deepens slightly rather than
- * lightening into the page it is supposed to close off.
+ * WHY THE FOOTER IS DARK ON A LIGHT PAGE
+ * --------------------------------------
+ * It was a light grey panel, which meant the page just ran out at the bottom rather than
+ * ending. A dark navy footer terminates it. It carries its own token set (`--footer-bg`,
+ * `--footer-ink`, `--footer-muted`) rather than reusing `--ink` and `--canvas`, because those
+ * are defined for dark-on-light and every one of them would need inverting by hand here —
+ * which is how a footer link ends up near-invisible after an unrelated token tweak.
  *
  * WHAT IS NOT HERE
  * ----------------

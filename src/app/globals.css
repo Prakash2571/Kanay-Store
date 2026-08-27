@@ -24,13 +24,25 @@
  * it becomes a general-purpose accent the page drifts back towards the warm-retail feel this
  * palette exists to leave behind.
  *
- * DARK MODE IS CLASS-DRIVEN, NOT MEDIA-DRIVEN
- * -------------------------------------------
- * Tokens are redefined under `.dark`, and the html element gets that class from a tiny
- * pre-hydration script (see ThemeScript). A `prefers-color-scheme` block alone cannot support
- * a toggle, and a toggle that only applies after React hydrates flashes the wrong theme on
- * every page load. The script reads the stored choice, falls back to the OS preference, and
- * sets the class before first paint.
+ * THERE IS ONE THEME, AND IT IS THIS ONE
+ * --------------------------------------
+ * No `.dark` block, no `prefers-color-scheme` inversion, no toggle. `color-scheme: light` is
+ * declared so the browser paints form controls, scrollbars and autofill to match rather than
+ * handing us dark-mode widgets on a light page.
+ *
+ * A second palette is a second design to keep correct, and every token below would need a
+ * counterpart that holds contrast against an inverted background. The failure mode is not
+ * theoretical: the dark variant this replaced silently broke four things at once - navy text
+ * on a near-black canvas, white CTA labels on a near-white `--ink` fill, a white tick on light
+ * green, and white on amber. One palette, verified once.
+ *
+ * FILLS AND TEXT ARE SEPARATE TOKENS
+ * ---------------------------------
+ * `--brand-dark` is a FILL (the quote band, the header mark). `--brand-ink` is TEXT, one step
+ * darker than `--brand` so small bold type clears AA on white. `--accent` is teal for text and
+ * icons on light surfaces; `--accent-bright` is the teal that reads on a dark navy fill, where
+ * `--accent` is far too dark. Keeping these apart is what stops a colour being reached for in
+ * the one context it does not work in.
  *
  * TOKEN NAMES
  * -----------
@@ -63,16 +75,15 @@
   --brand-hover: #1d4ed8;
   --brand-soft: #eaf2ff;
   /**
-   * `brand-dark` is a FILL, `brand-ink` is TEXT. They are separate tokens because they have
-   * to move in opposite directions between themes.
-   *
-   * The deep navy band and the header mark need to stay deep navy in dark mode - a band that
-   * matches the page background is not a band. But navy TEXT on a #0b1220 canvas is
-   * unreadable, so the text token lightens to a pale blue instead. One token doing both jobs
-   * meant every eyebrow and "View all" link on the site failed contrast the moment dark mode
-   * was switched on.
+   * `brand-dark` is a FILL: the quote band and the header mark. Deep enough that white text
+   * and a teal accent both sit on it comfortably.
    */
   --brand-dark: #163a70;
+  /**
+   * `brand-ink` is brand-coloured TEXT and icons: eyebrows, "View all" links, hover states.
+   * One step darker than `--brand` (5.9:1 on white against 5.2:1) because a 12px bold label
+   * needs more contrast than a 48px-wide button fill does.
+   */
   --brand-ink: #1d4ed8;
 
   /* Secondary: teal. Bulk/wholesale indicators, "in stock" style affirmations. */
@@ -81,6 +92,12 @@
   --accent-soft: #ddf5f1;
   /* Text weight that reads on a teal or blue tinted surface. */
   --accent-ink: #115e59;
+  /**
+   * The teal for use ON the navy band. `--accent` is tuned for light surfaces and lands at
+   * roughly 1.5:1 against `--brand-dark`, which is invisible; this is the same hue taken light
+   * enough to read there.
+   */
+  --accent-bright: #2dd4bf;
 
   /* Rationed. Discounts, offers, warnings - nothing else. */
   --highlight: #f59e0b;
@@ -98,69 +115,13 @@
   --shadow-soft: 0 12px 32px rgba(17, 24, 39, 0.07);
   --shadow-card: 0 1px 3px rgba(17, 24, 39, 0.06);
 
-  /* Footer is dark in BOTH themes: it anchors the page and is part of the brand. */
+  /* The footer is dark on a light page on purpose: it anchors the bottom and is part of
+     the brand rather than a neutral end to the document. */
   --footer-bg: #0f172a;
   --footer-ink: #e2e8f0;
   --footer-muted: #94a3b8;
 
   --content-width: 1320px;
-}
-
-.dark {
-  color-scheme: dark;
-
-  /* Navy-slate, never pure black: black surfaces make product photography look cut out,
-     and this catalog is mostly photographed-on-white merchandise. */
-  --canvas: #0b1220;
-  --surface: #111827;
-  --surface-muted: #172033;
-  --surface-blue: #15233c;
-  --surface-teal: #102a2a;
-  --surface-strong: #263449;
-  --line: #263449;
-  --line-strong: #34445b;
-
-  --ink: #f8fafc;
-  --ink-muted: #cbd5e1;
-  --ink-subtle: #94a3b8;
-
-  /* Lightened so they carry contrast against a dark surface rather than sinking into it. */
-  /**
-   * `--brand` stays cobalt in dark mode rather than lightening to a pastel blue.
-   *
-   * It is a BUTTON FILL, and every button that uses it carries white text. A #60a5fa fill
-   * with white text is about 2:1 — the label all but disappears. #2563eb keeps white at
-   * roughly 5:1 in both themes, and a cobalt button on a navy-slate canvas is perfectly
-   * legible as a button. Hover lightens instead of darkening, which is the direction that
-   * reads as "raised" on a dark surface.
-   */
-  --brand: #2563eb;
-  --brand-hover: #3b82f6;
-  --brand-soft: #15233c;
-  /* Fill stays deep navy; text lightens. See the note on these two tokens above. */
-  --brand-dark: #16304f;
-  --brand-ink: #a9c9f7;
-
-  --accent: #2dd4bf;
-  --accent-hover: #14b8a6;
-  --accent-soft: #153d39;
-  --accent-ink: #5eead4;
-
-  --highlight: #fbbf24;
-  --highlight-soft: #2a2010;
-  --highlight-ink: #fcd34d;
-
-  --danger: #f87171;
-  --success: #4ade80;
-  --star: #fbbf24;
-  --focus: #60a5fa;
-
-  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
-
-  --footer-bg: #080e1a;
-  --footer-ink: #e2e8f0;
-  --footer-muted: #94a3b8;
 }
 
 @theme inline {
@@ -183,6 +144,7 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-bright: var(--accent-bright);
   --color-accent-ink: var(--accent-ink);
   --color-highlight: var(--highlight);
   --color-highlight-soft: var(--highlight-soft);
@@ -232,16 +194,6 @@ a {
 ::selection {
   background: var(--brand-soft);
   color: var(--brand-ink);
-}
-
-/**
- * Product imagery keeps its real colours in dark mode.
- *
- * No filter, no opacity, no blend mode on product media. A dimmed photograph
- * misrepresents the merchandise, and a wholesale buyer is judging the goods from it.
- */
-.dark img {
-  filter: none;
 }
 
 @utility shell {

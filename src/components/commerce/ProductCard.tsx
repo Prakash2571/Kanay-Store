@@ -79,19 +79,18 @@ export function ProductCard({
         )}
 
         {/*
-          Amber is reserved for exactly this. Text is a literal near-black brown, not
-          `highlight-ink`, because the badge keeps its amber fill in dark mode while
-          `highlight-ink` inverts to a light amber that would disappear on it. White on amber
-          is about 2:1 and fails too, which is what this was.
+          Amber is reserved for exactly this. `highlight-ink` is the dark brown that clears AA
+          on the amber fill; this badge was white on amber, which is about 2:1.
         */}
         {discount !== null ? (
-          <span className="absolute left-2 top-2 rounded-[var(--radius-pill)] bg-highlight px-2 py-0.5 text-[0.65rem] font-extrabold text-[#3f2a06]">
+          <span className="absolute left-2 top-2 rounded-[var(--radius-pill)] bg-highlight px-2 py-0.5 text-[0.65rem] font-extrabold text-highlight-ink">
             {discount}% off
           </span>
         ) : null}
 
         {soldOut ? (
-          <span className="absolute right-2 top-2 rounded-[var(--radius-pill)] bg-brand px-2 py-0.5 text-[0.65rem] font-extrabold text-canvas">
+          {/* Neutral ink, deliberately not brand blue: "sold out" is not a thing to promote. */}
+          <span className="absolute right-2 top-2 rounded-[var(--radius-pill)] bg-ink px-2 py-0.5 text-[0.65rem] font-extrabold text-white">
             Sold out
           </span>
         ) : null}

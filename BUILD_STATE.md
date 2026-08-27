@@ -124,14 +124,19 @@ for a catalog of electronics, appliances, tools and office supplies.
 Current palette — cool grey page (`#F6F8FB`), white cards, cobalt primary (`#2563EB`), deep
 navy for bands and the header mark (`#163A70`), teal secondary for wholesale signals
 (`#0F766E`), amber (`#F59E0B`) RATIONED to discount labels, offer flags and warnings only,
-dark navy footer (`#0F172A`) in both themes. ONE clean sans (Manrope) at compact ecommerce
-sizes — hero 32–50px, section headings 20–24px, product titles 14–16px. No editorial serif.
+dark navy footer (`#0F172A`). ONE clean sans (Manrope) at compact ecommerce sizes — hero
+32–50px, section headings 20–24px, product titles 14–16px. No editorial serif.
 
-FULL DARK MODE, class-driven (`.dark` + pre-paint inline script, toggle in the header).
-Navy-slate surfaces (`#0B1220` canvas, `#111827` cards), never pure black. NO filter, opacity
-or blend mode on product imagery in either theme. Fill and text tokens are split where the
-surface does not invert (`--brand-dark` fill vs `--brand-ink` text); colours inside a
-non-inverting surface are literals.
+ONE THEME, LIGHT. No `.dark` block, no `prefers-color-scheme` inversion, no toggle, no
+pre-paint theme script, no `suppressHydrationWarning`. `color-scheme: light` is declared so
+browser-painted UI (form controls, scrollbars, autofill) matches. A dark variant was built and
+then removed at the client's request; it is NOT to be re-added. NO filter, opacity or blend
+mode on product imagery, ever.
+
+Fill and text tokens are separate: `--brand-dark` (fill: quote band, header mark) vs
+`--brand-ink` (brand-coloured text, a step darker than `--brand` for small bold type), and
+`--accent` (teal on light surfaces) vs `--accent-bright` (teal on the navy band, where
+`--accent` is ~1.5:1).
 
 Category-neutral imagery: the homepage hero and category rail are built from live catalog
 images rather than stock photography, so the page shows what the store actually sells.

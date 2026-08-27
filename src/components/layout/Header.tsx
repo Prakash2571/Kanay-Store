@@ -2,7 +2,6 @@ import { Menu, PackageSearch, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 import { CartCountBadge } from "@/components/cart/CartCountBadge";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const ICON_STROKE = 1.75;
 
@@ -63,7 +62,7 @@ export function Header() {
           </ul>
         </nav>
 
-        {/* Search, track, theme, cart - the order the brief specifies. */}
+        {/* Search, track, cart. */}
         <div className="ml-auto flex items-center gap-0.5 xl:ml-2">
           <Link
             aria-label="Search products"
@@ -80,7 +79,6 @@ export function Header() {
           >
             <PackageSearch aria-hidden="true" size={21} strokeWidth={ICON_STROKE} />
           </Link>
-          <ThemeToggle />
           <Link
             aria-label="Open cart"
             className="relative grid size-11 place-items-center rounded-[var(--radius-control)] text-ink-muted transition-colors hover:bg-surface-muted hover:text-brand-ink focus-visible:outline focus-visible:outline-2"

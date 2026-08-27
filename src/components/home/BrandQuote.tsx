@@ -14,18 +14,15 @@ import Link from "next/link";
  * no five stars appear. It reads as the store's own voice because it is, which is the
  * honest version of this section on a store with no review backend.
  *
- * The navy is `--brand-dark` (#163a70) in light mode and stays a deep navy in dark mode
- * rather than going black: a band that matches the page background is not a band. Teal is
- * the accent on the rule and the eyebrow, which is exactly the secondary role teal has
- * everywhere else in this system.
+ * The navy is `--brand-dark` (#163a70), the one place in this design where the brand's
+ * darkest value gets real surface area. Teal is the accent on the rule and the eyebrow, which
+ * is exactly the secondary role teal has everywhere else in the system.
  *
- * WHY THE TEAL IS A LITERAL AND NOT `--accent`
- * -------------------------------------------
- * Because the BACKGROUND does not invert. `--accent` is a dark teal in light mode, which on
- * this navy band is roughly 1.5:1 — invisible. Every colour inside a surface that keeps its
- * value across themes has to keep its value too, so the teal here is a fixed light teal that
- * reads on navy in both. Same reasoning as the white body text: `text-ink` would flip to
- * near-black on a band that stayed navy.
+ * THE TEAL HERE IS `--accent-bright`, NOT `--accent`
+ * -------------------------------------------------
+ * `--accent` (#0f766e) is tuned for text on light surfaces and lands at roughly 1.5:1 against
+ * this navy — invisible. `--accent-bright` is the same hue taken light enough to read on a dark
+ * fill. That is the whole reason the two tokens exist separately.
  */
 export function BrandQuote() {
   return (
@@ -38,7 +35,7 @@ export function BrandQuote() {
         */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -left-24 -top-24 size-64 rounded-full bg-[#2dd4bf]/20 blur-3xl"
+          className="pointer-events-none absolute -left-24 -top-24 size-64 rounded-full bg-accent-bright/20 blur-3xl"
         />
         <span
           aria-hidden="true"
@@ -46,7 +43,7 @@ export function BrandQuote() {
         />
 
         <div className="relative mx-auto max-w-3xl">
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#5eead4]">
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-accent-soft">
             Why buyers use Kanay
           </p>
           <p
@@ -57,7 +54,7 @@ export function BrandQuote() {
           </p>
           <span
             aria-hidden="true"
-            className="mx-auto mt-7 block h-0.5 w-16 rounded-full bg-[#2dd4bf]"
+            className="mx-auto mt-7 block h-0.5 w-16 rounded-full bg-accent-bright"
           />
           <p className="mx-auto mt-7 max-w-[58ch] text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
             Volume is what turns a fair price into a good one. Kanay puts wholesale minimums,
@@ -67,13 +64,8 @@ export function BrandQuote() {
           </p>
 
           <div className="mt-9 flex flex-wrap justify-center gap-3">
-            {/*
-              The primary button's label is a literal navy, not `brand-ink`: the button is
-              white in BOTH themes, so its text must not lighten with the theme the way
-              `brand-ink` does. Same reasoning as the hero's amber discount disc.
-            */}
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-white px-6 text-sm font-bold text-[#163a70] transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-white px-6 text-sm font-bold text-brand-dark transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
               href="/shop"
             >
               Browse wholesale

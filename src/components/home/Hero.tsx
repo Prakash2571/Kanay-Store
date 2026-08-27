@@ -78,16 +78,9 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
             <IllustratedPanel />
           )}
 
-          {/*
-            Amber, and this is one of the three places amber is allowed: a discount claim.
-
-            The text colour is a literal near-black brown rather than a token because the
-            disc keeps the SAME amber fill in both themes, so its text must not follow the
-            theme either. `highlight-ink` inverts to a light amber in dark mode and would
-            vanish; `brand-ink` inverts to a pale blue and would too.
-          */}
+          {/* Amber, and this is one of the two places amber is allowed: a discount claim. */}
           {discount !== null ? (
-            <p className="absolute -top-1 right-1 grid size-[5.5rem] place-items-center rounded-[var(--radius-pill)] bg-highlight text-center text-[0.7rem] font-extrabold uppercase leading-tight text-[#3f2a06] shadow-[var(--shadow-soft)] sm:size-24 sm:text-xs">
+            <p className="absolute -top-1 right-1 grid size-[5.5rem] place-items-center rounded-[var(--radius-pill)] bg-highlight text-center text-[0.7rem] font-extrabold uppercase leading-tight text-highlight-ink shadow-[var(--shadow-soft)] sm:size-24 sm:text-xs">
               <span>
                 Up to
                 <br />
