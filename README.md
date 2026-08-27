@@ -16,11 +16,11 @@ Target balance: ~55–60% white, 15–20% light blue, 8–10% soft orange, 5–8
 
 Every hue family has three values and they are not interchangeable:
 
-| | purpose | contrast |
-|---|---|---|
-| `--tint-X` | soft background — the value that gets **area** | — |
-| `--tint-X-mark` | saturated — dots, rules, 2px bars. **Never behind text** | 2.0–3.5:1 on white |
-| `--tint-X-ink` | dark — text and meaningful icons | ≥5.5:1 on white *and* on its own soft |
+|                 | purpose                                                  | contrast                              |
+| --------------- | -------------------------------------------------------- | ------------------------------------- |
+| `--tint-X`      | soft background — the value that gets **area**           | —                                     |
+| `--tint-X-mark` | saturated — dots, rules, 2px bars. **Never behind text** | 2.0–3.5:1 on white                    |
+| `--tint-X-ink`  | dark — text and meaningful icons                         | ≥5.5:1 on white _and_ on its own soft |
 
 The same split applies to the two primaries, and in both cases it exists because the specified colour cannot do both jobs:
 
@@ -35,7 +35,7 @@ Electronics blue · Home & Kitchen green · Accessories lavender · Beauty rose 
 
 The mapping lives in **one** table (`categoryTintFor` in `src/lib/storefront/showcase.ts`) because the entire value of colour coding is consistency — two components disagreeing about the colour of "Home" would destroy it. Colour lands on the card body and a 2px bar; typography stays dark. That is the line between colour-coded and childish.
 
-> **Tailwind gotcha:** tint classes are written out in full (`bg-tint-blue`, not `` bg-tint-${name} ``). Tailwind v4 generates utilities by scanning source text, so a composed class name produces **no CSS at all**, renders unstyled, and throws nothing. `showcase.test.ts` asserts the class shapes for exactly this reason.
+> **Tailwind gotcha:** tint classes are written out in full (`bg-tint-blue`, not `bg-tint-${name}`). Tailwind v4 generates utilities by scanning source text, so a composed class name produces **no CSS at all**, renders unstyled, and throws nothing. `showcase.test.ts` asserts the class shapes for exactly this reason.
 
 ### Width and type scale
 
@@ -45,7 +45,7 @@ Display type is **fluid** (`clamp`) rather than stepped at breakpoints, defined 
 
 **A display cap must be checked against the width of the column it sits in, not the width of the page.** `display-1` was briefly 4.15rem, which needed ~790px for "Everything you need." while the hero's text column is ~738px — the headline broke onto four lines and the hero grew tall enough to fill the viewport by itself. The caps are sized with a real margin against that column.
 
-**`ch` units belong on paragraphs, not on wrappers or large headings.** `1ch` resolves against the *element's own* font size, so `max-w-[46ch]` on a `<div>` is ~386px (inherited 16px) and on a 51px heading is ~1400px — neither is the line length it looks like. Paragraphs use `ch` because that is exactly where measuring in characters is meaningful; containers and display headings use `rem`.
+**`ch` units belong on paragraphs, not on wrappers or large headings.** `1ch` resolves against the _element's own_ font size, so `max-w-[46ch]` on a `<div>` is ~386px (inherited 16px) and on a 51px heading is ~1400px — neither is the line length it looks like. Paragraphs use `ch` because that is exactly where measuring in characters is meaningful; containers and display headings use `rem`.
 
 **Grid counts are 2 / 3 / 4 / 6 and rows are capped at 12 items.** 12 divides by all four, so no breakpoint ends in a half-empty row. The old 5-column step was removed for exactly that reason — nothing sensible divides by both 5 and 6. If you change a column count, check the item cap with it.
 
@@ -53,9 +53,9 @@ Display type is **fluid** (`clamp`) rather than stepped at breakpoints, defined 
 
 - **One theme, light.** No `.dark` block, no `prefers-color-scheme` inversion, no toggle. `color-scheme: light` is declared so the browser paints form controls, scrollbars and autofill to match. A dark variant was built and removed; the four contrast bugs it introduced are why one verified palette beats two.
 - **No filter, opacity or blend mode on product imagery.** A tinted photograph misrepresents merchandise a buyer is judging from it.
-- **Homepage imagery is never a hard-coded third-party URL.** Live catalog images first, then files the owner drops into `public/categories/` (discovered on disk by `categoryMedia.ts`), then a **restrained studio placeholder** — a lit sweep in the department's colour with a faint icon watermark. There is deliberately **no drawn artwork**: two attempts at it (flat vector, then gradient-shaded with highlights and contact shadows) both read as cartoons, because vector illustration of a physical product always does on a commerce page. The placeholder reads as a catalogue slot awaiting its photograph, which is what it is. `scripts/add-category-photo.sh` and `add-category-photos.sh` add real photographs with HTTP-status, content-type and size checks. A raster file always beats the bundled SVG, so adding a photograph requires no deletion. SVG sources are passed to `next/image` with `unoptimized`, which avoids having to enable `dangerouslyAllowSVG` globally. The previous version shipped eight `images.unsplash.com` IDs that the build environment could not verify, and two failed in production: one 404'd, and another resolved to a photograph of coffee beans under alt text describing a kitchen appliance. **A broken image is obvious; a plausible photograph of the wrong subject silently mislabels a category and lies to screen readers.** Reading the directory means the only images the app references are ones that exist. See `public/categories/README.md`.
+- **Homepage image precedence is explicit.** Live Shopify product/collection imagery wins, then owner-supplied files discovered in `public/categories/`, then reviewed Pexels photographs pinned to permanent numeric photo IDs, then the **restrained studio fallback** — a lit sweep in the department colour with a faint icon watermark. There is deliberately **no drawn product artwork**: two attempts (flat vector, then gradient-shaded) both read as cartoons. Source-page titles, subjects and licence links for every default photograph are recorded in `public/categories/README.md`; none uses a random/search endpoint. `scripts/add-category-photo.sh` and `add-category-photos.sh` validate owner-supplied URLs by HTTP status, content type and size. A local raster file wins without code changes, while SVG sources remain `unoptimized` in `next/image`.
 - **No fabricated content.** No testimonials (no review backend), no star ratings, no wishlist, no payment-method badges, no hard-coded discount percentage, no invented tier pricing. There is deliberately **no "Best seller" badge** — Shopify's FEATURED sort is manual merchandising order and nothing records units sold, so the badge says "Featured", which is true.
-- **Stats mix two kinds of figure.** Categories is *derived* from live catalog facets. Daily buyers and product count are *static business figures* stated by the owner, written as conservative floors, and never labelled live/current/today. See the comment in `StatsStrip.tsx`.
+- **Stats mix two kinds of figure.** Categories is _derived_ from live catalog facets. Daily buyers and product count are _static business figures_ stated by the owner, written as conservative floors, and never labelled live/current/today. See the comment in `StatsStrip.tsx`.
 
 ## Wholesale minimums (MOQ)
 
@@ -93,15 +93,15 @@ Never place a Razorpay key secret, Shopify Admin token, Mongo connection string,
 
 ## Environment
 
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_STORE_NAME` | Public store name |
-| `NEXT_PUBLIC_TRADEMART_API_URL` | Trademart_B public API origin (default port 4000) |
-| `NEXT_PUBLIC_SITE_URL` | Canonical storefront URL |
-| `NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD_PAISE` | Optional configured customer shipping threshold |
-| `NEXT_PUBLIC_STANDARD_SHIPPING_PAISE` | Optional configured customer shipping charge |
-| `NEXT_PUBLIC_SUPPORT_EMAIL` | Optional displayed support email |
-| `NEXT_PUBLIC_SUPPORT_PHONE` | Optional displayed support phone |
+| Variable                                    | Purpose                                           |
+| ------------------------------------------- | ------------------------------------------------- |
+| `NEXT_PUBLIC_STORE_NAME`                    | Public store name                                 |
+| `NEXT_PUBLIC_TRADEMART_API_URL`             | Trademart_B public API origin (default port 4000) |
+| `NEXT_PUBLIC_SITE_URL`                      | Canonical storefront URL                          |
+| `NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD_PAISE` | Optional configured customer shipping threshold   |
+| `NEXT_PUBLIC_STANDARD_SHIPPING_PAISE`       | Optional configured customer shipping charge      |
+| `NEXT_PUBLIC_SUPPORT_EMAIL`                 | Optional displayed support email                  |
+| `NEXT_PUBLIC_SUPPORT_PHONE`                 | Optional displayed support phone                  |
 
 Commercial policy values are display hints only. Trademart_B computes the authoritative checkout snapshot and total.
 
