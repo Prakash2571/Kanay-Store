@@ -41,7 +41,8 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
     cta: "Browse home",
     href: home?.href ?? "/shop",
     image: home?.image ?? showcaseImageFor("home"),
-    tone: "bg-surface-blue",
+    tone: "bg-tint-green",
+    border: "border-tint-green-mark/25",
   };
 
   const secondary = [
@@ -53,7 +54,8 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       cta: "Browse tech",
       href: tech?.href ?? "/shop",
       image: tech?.image ?? showcaseImageFor("electronics"),
-      tone: "bg-surface",
+      tone: "bg-tint-blue",
+      border: "border-tint-blue-mark/25",
     },
     {
       key: "deals",
@@ -63,7 +65,8 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       cta: "View deals",
       href: "/#deals",
       image: showcaseImageFor("tools"),
-      tone: "bg-surface-orange",
+      tone: "bg-tint-orange",
+      border: "border-tint-orange-mark/25",
     },
   ];
 
@@ -76,7 +79,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr] lg:gap-5">
         {/* The large card. Photograph on top, copy beneath, so the image gets real area. */}
         <Link
-          className={`group flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-line transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 ${feature.tone}`}
+          className={`group flex flex-col overflow-hidden rounded-[var(--radius-card)] border transition-[box-shadow,transform] hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 motion-safe:hover:-translate-y-0.5 ${feature.border} ${feature.tone}`}
           href={feature.href}
         >
           <span className="relative block aspect-[16/9] overflow-hidden bg-surface-muted lg:aspect-[2/1]">
@@ -116,7 +119,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
         <div className="grid gap-4 lg:gap-5">
           {secondary.map((card) => (
             <Link
-              className={`group flex items-stretch gap-0 overflow-hidden rounded-[var(--radius-card)] border border-line transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 ${card.tone}`}
+              className={`group flex items-stretch gap-0 overflow-hidden rounded-[var(--radius-card)] border transition-[box-shadow,transform] hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 motion-safe:hover:-translate-y-0.5 ${card.border} ${card.tone}`}
               href={card.href}
               key={card.key}
             >

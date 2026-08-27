@@ -64,7 +64,7 @@ export default async function CollectionPage({
                   <option value="PRICE_DESC">Price high-low</option>
                 </select>
               </label>
-              <button className="ml-3 min-h-11 rounded-[var(--radius-control)] bg-brand px-5 text-sm font-bold text-white" type="submit">Sort</button>
+              <button className="ml-3 min-h-11 rounded-[var(--radius-control)] bg-brand-solid px-5 text-sm font-bold text-white" type="submit">Sort</button>
             </form>
             {result.data.products.length ? <ProductGrid priorityCount={4} products={result.data.products} /> : <CatalogEmpty title="This collection is empty" message="No approved products are available in this collection right now." />}
           </>

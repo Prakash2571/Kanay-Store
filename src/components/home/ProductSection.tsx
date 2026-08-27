@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import { ProductCard } from "@/components/commerce/ProductCard";
+import { ProductCard, type ProductCardBadge } from "@/components/commerce/ProductCard";
 import type { StorefrontProductSummary } from "@/lib/storefront/types";
 
 /**
@@ -25,6 +25,7 @@ export function ProductSection({
   loadFailed = false,
   priorityCount = 0,
   tone = "canvas",
+  badge,
 }: {
   id: string;
   title: string;
@@ -36,6 +37,11 @@ export function ProductSection({
   loadFailed?: boolean;
   priorityCount?: number;
   tone?: "canvas" | "surface";
+  /**
+   * Badge applied to every card in this row. Set by the caller because only the caller knows what
+   * the row IS - the card cannot tell "featured order" from "newest order" by looking at a product.
+   */
+  badge?: ProductCardBadge;
 }) {
   const headingId = `${id}-heading`;
 
@@ -68,7 +74,7 @@ export function ProductSection({
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
             {products.map((product, index) => (
               <li className="min-w-0" key={product.id}>
-                <ProductCard priority={index < priorityCount} product={product} />
+                <ProductCard badge={badge} priority={index < priorityCount} product={product} />
               </li>
             ))}
           </ul>

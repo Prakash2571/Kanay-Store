@@ -38,7 +38,7 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
             >
               <span
                 aria-hidden="true"
-                className="grid size-9 place-items-center rounded-[var(--radius-control)] bg-brand text-base font-extrabold leading-none text-white"
+                className="grid size-9 place-items-center rounded-[var(--radius-control)] bg-brand-solid text-base font-extrabold leading-none text-white"
               >
                 K
               </span>
@@ -104,7 +104,7 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
             <div className="mt-4 grid gap-2.5 text-sm text-footer-muted">
               {supportEmail ? (
                 <a
-                  className="rounded transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="rounded transition-colors hover:text-[#93c5fd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   href={`mailto:${supportEmail}`}
                 >
                   {supportEmail}
@@ -112,7 +112,7 @@ export function Footer({ collections = [] }: { collections?: StorefrontCollectio
               ) : null}
               {supportPhone ? (
                 <a
-                  className="rounded transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="rounded transition-colors hover:text-[#93c5fd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   href={`tel:${supportPhone.replace(/\s/g, "")}`}
                 >
                   {supportPhone}

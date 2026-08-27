@@ -55,14 +55,11 @@
 :root {
   color-scheme: light;
 
-  /* Page and card surfaces. White leads; the tints are there to separate sections. */
+  /* Page and card surfaces. White leads; the tints separate sections. */
   --surface: #ffffff;
   --canvas: #f8fafc;
   --surface-muted: #f1f5f9;
   --surface-blue: #eef6ff;
-  /* The orange counterpart of `surface-blue`, for the one or two blocks that need warmth. */
-  --surface-orange: #fff1e8;
-  /* Disabled fills and image placeholders. */
   --surface-strong: #e2e8f0;
 
   --line: #e6ebf1;
@@ -73,44 +70,114 @@
   --ink-muted: #55606d;
   --ink-subtle: #8a94a3;
 
-  /* Primary: blue. Structure, navigation, links, focus, most CTAs. */
-  --brand: #3b82f6;
-  --brand-hover: #2563eb;
-  --brand-soft: #eef6ff;
   /**
-   * `brand-ink` is brand-coloured TEXT and icons; `brand` is a FILL.
+   * PRIMARY BLUE — AND WHY THERE ARE TWO OF THEM
+   * --------------------------------------------
+   * #3b82f6 is the specified brand blue and it is right for icons, borders and decoration.
+   * White text on it is 3.68:1, which FAILS AA for the 14px bold labels every button in this
+   * app uses. So `--brand` decorates and `--brand-solid` (#2563eb, white at 5.17:1) is the
+   * button fill. Same hue family, one of them just has to be dark enough to carry a label.
    *
-   * #3b82f6 is 3.1:1 on white - fine behind white button text, and too weak for a 12px bold
-   * eyebrow. The text token is a step darker so small type clears AA. They are separate
-   * because a single value cannot do both jobs.
+   * This is not theoretical tidiness: before the split, every primary button on the site had
+   * an unreadable label.
    */
+  --brand: #3b82f6;
+  --brand-solid: #2563eb;
+  --brand-solid-hover: #1d4ed8;
+  --brand-soft: #eef6ff;
   --brand-ink: #1d4ed8;
 
   /**
-   * Accent: ORANGE. Rationed, and this is the whole list.
+   * ACCENT ORANGE — AND WHY ITS BUTTONS HAVE DARK TEXT
+   * -------------------------------------------------
+   * White on #f5824a is 2.57:1, nowhere near legible. Darkening the orange far enough to carry
+   * white text (about #bf4d1a) turns it rust and loses the warmth that is the whole point of
+   * having it. Dark ink on #f5824a is 6.79:1, so the orange stays bright and the label goes
+   * dark. That is a deliberate, common CTA style, not a compromise.
    *
-   *   - the single most important CTA in a section
-   *   - offer, sale and discount badges
-   *   - small accent marks: a rule, a quote glyph, an active underline
-   *   - eyebrow labels that need to read as "notice this"
-   *
-   * NOT section backgrounds, not every button, not headings. The balance this palette is
-   * built for is roughly two thirds white, a fifth pale blue, and orange in single-digit
-   * percentages. The moment orange spreads past that list the page reads as a cosmetics
-   * landing page, which is the exact failure the blue system replaced.
+   * `--accent-ink` is orange TEXT on a white or soft-orange surface, where the fill token is
+   * 2.4:1 and unreadable.
    */
-  --accent: #f58a4b;
-  --accent-hover: #e97735;
-  --accent-soft: #ffe7d6;
-  /**
-   * Orange TEXT. #f58a4b is 2.3:1 on white and cannot carry a label; this is the same hue
-   * dark enough to read on white and on `--accent-soft`.
-   */
+  --accent: #f5824a;
+  --accent-hover: #ea6f33;
+  --accent-soft: #fff0e6;
   --accent-ink: #9a4a16;
 
+  /**
+   * SECONDARY TINTS
+   * ---------------
+   * Six extra hue families, each with three values, used to give categories and small badges
+   * individual personality without turning the page into a rainbow.
+   *
+   *   --tint-X       soft background. This is the one that gets AREA.
+   *   --tint-X-mark  saturated. Dots, rules, decorative marks. Never behind text.
+   *   --tint-X-ink   dark. Text and meaningful icons. Clears 5.5:1 on both white and its soft.
+   *
+   * The `mark` values are the saturated colours from the brief. They are deliberately NOT
+   * available as text colours, because every one of them lands between 2.0:1 and 3.5:1 on
+   * white — a yellow label written with `--tint-yellow-mark` would be invisible.
+   *
+   * The discipline that keeps this minimal rather than childish: soft versions get surface
+   * area, saturated versions get a few square pixels, and no single section uses more than
+   * one family.
+   */
+  --tint-blue: #eef6ff;
+  --tint-blue-mark: #3b82f6;
+  --tint-blue-ink: #1d4ed8;
+
+  --tint-teal: #e8f7f4;
+  --tint-teal-mark: #149a8a;
+  --tint-teal-ink: #0b6b5f;
+
+  --tint-yellow: #fff8d9;
+  --tint-yellow-mark: #e9a900;
+  --tint-yellow-ink: #855c00;
+
+  --tint-lavender: #f2eeff;
+  --tint-lavender-mark: #7567d8;
+  --tint-lavender-ink: #4c3fa8;
+
+  --tint-green: #edf8ee;
+  --tint-green-mark: #4d9a58;
+  --tint-green-ink: #2f6b38;
+
+  /* Rose is background-first: the brief asks for "very soft rose/peach" for beauty. */
+  --tint-rose: #fff1ec;
+  --tint-rose-mark: #d9705c;
+  --tint-rose-ink: #9c4a3c;
+
+  /* Blue-grey. The default for a category that matches no department, and Office's colour. */
+  --tint-slate: #f1f5f9;
+  --tint-slate-mark: #64748b;
+  --tint-slate-ink: #475569;
+
+  /* Orange, exposed under the tint naming so category coding can reach it uniformly. */
+  --tint-orange: #fff0e6;
+  --tint-orange-mark: #f5824a;
+  --tint-orange-ink: #9a4a16;
+
+  /**
+   * Section surfaces that are named for their SECTION, not their hue.
+   * Both are specified values, and naming them this way stops them being reached for as
+   * general-purpose tints — which is how "a bit of warmth" becomes an orange website.
+   */
+  --quote-bg: #f2f7ff;
+  --newsletter-bg: #fff2e8;
+
+  /**
+   * The brand-story banner's overlay.
+   * Slate-navy at 45%, not black: black flattens a photograph into a grey smear, and the point
+   * of that section is that the photograph is legible. Dark enough for white text, light enough
+   * that the cartons behind it still read as cartons.
+   */
+  --overlay: rgba(15, 23, 42, 0.52);
+  --overlay-strong: rgba(15, 23, 42, 0.72);
+
+  /* Semantic. Deliberately separate from the decorative tints above: `--success` means an
+     order shipped, `--tint-green` means the Home category. Merging them would make a
+     category colour change the meaning of a status tick. */
   --danger: #b42318;
   --success: #067647;
-  --focus: #3b82f6;
 
   --radius-card: 0.875rem;
   --radius-control: 0.5rem;
@@ -118,19 +185,11 @@
   --shadow-soft: 0 12px 32px rgba(23, 26, 31, 0.07);
   --shadow-card: 0 1px 3px rgba(23, 26, 31, 0.06);
 
-  /* The footer is dark on a light page on purpose: it anchors the bottom and is part of
-     the brand rather than a neutral end to the document. */
-  --footer-bg: #131a26;
+  /* Dark footer for visual closure. */
+  --footer-bg: #182230;
   --footer-ink: #e6ebf1;
   --footer-muted: #8a94a3;
 
-  /**
-   * Content width.
-   *
-   * Was 1320px, which combined with a 6-icon hero panel left the page looking like content
-   * floating in a column with dead space beside it. 1360 plus a hero that actually fills its
-   * half is what fixes that; the number alone never would have.
-   */
   --content-width: 1360px;
 }
 
@@ -145,15 +204,46 @@
   --color-ink-subtle: var(--ink-subtle);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+
   --color-brand: var(--brand);
-  --color-brand-hover: var(--brand-hover);
-  --color-brand-ink: var(--brand-ink);
+  --color-brand-solid: var(--brand-solid);
+  --color-brand-solid-hover: var(--brand-solid-hover);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
-  --color-surface-orange: var(--surface-orange);
   --color-accent-ink: var(--accent-ink);
+
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-blue-mark: var(--tint-blue-mark);
+  --color-tint-blue-ink: var(--tint-blue-ink);
+  --color-tint-teal: var(--tint-teal);
+  --color-tint-teal-mark: var(--tint-teal-mark);
+  --color-tint-teal-ink: var(--tint-teal-ink);
+  --color-tint-yellow: var(--tint-yellow);
+  --color-tint-yellow-mark: var(--tint-yellow-mark);
+  --color-tint-yellow-ink: var(--tint-yellow-ink);
+  --color-tint-lavender: var(--tint-lavender);
+  --color-tint-lavender-mark: var(--tint-lavender-mark);
+  --color-tint-lavender-ink: var(--tint-lavender-ink);
+  --color-tint-green: var(--tint-green);
+  --color-tint-green-mark: var(--tint-green-mark);
+  --color-tint-green-ink: var(--tint-green-ink);
+  --color-tint-rose: var(--tint-rose);
+  --color-tint-rose-mark: var(--tint-rose-mark);
+  --color-tint-rose-ink: var(--tint-rose-ink);
+  --color-tint-slate: var(--tint-slate);
+  --color-tint-slate-mark: var(--tint-slate-mark);
+  --color-tint-slate-ink: var(--tint-slate-ink);
+  --color-tint-orange: var(--tint-orange);
+  --color-tint-orange-mark: var(--tint-orange-mark);
+  --color-tint-orange-ink: var(--tint-orange-ink);
+
+  --color-quote-bg: var(--quote-bg);
+  --color-newsletter-bg: var(--newsletter-bg);
+
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-footer-bg: var(--footer-bg);

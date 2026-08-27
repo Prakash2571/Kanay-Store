@@ -115,49 +115,73 @@ Approved dials remain, and are NOT to be re-asked:
 Direction (revised — supersedes the earlier "premium fashion/lifestyle" direction, which
 mis-sold a multi-category catalog as an apparel label):
 
-General-purpose WHOLESALE + retail marketplace. White-led, blue structure, orange accent.
+General-purpose WHOLESALE + retail marketplace. White-led, blue structure, orange action accent,
+six soft tint families for category coding.
 
-Superseded twice. (1) Peach `#FFF0E6` / `#FCE4D4` on cream with orange `#F28C5B` read as a
-beauty / skincare store. (2) The all-blue replacement was trustworthy but cold, and its hero
-fell back to a 3x2 grid of outline icons, which read as a wireframe.
+Superseded three times. (1) Peach/cream + orange #F28C5B read as beauty/skincare. (2) All-blue was
+trustworthy but cold and its hero fell back to an icon grid, which read as a wireframe. (3) Blue +
+orange only was still visually flat.
 
-Current palette: white `#FFFFFF` surfaces on `#F8FAFC`, hero/section blue `#EEF6FF`, soft orange
-`#FFF1E8`, border `#E6EBF1`, text `#171A1F` / `#55606D` / `#8A94A3`, blue `#3B82F6` (hover
-`#2563EB`), ORANGE ACCENT `#F58A4B` (hover `#E97735`, soft `#FFE7D6`), dark footer `#131A26`.
-Target balance ~65-70% white, 15-20% pale blue, 5-10% orange.
+Palette: white #FFFFFF on #F8FAFC, light blue #EEF6FF, blue #3B82F6 (decor) / #2563EB (button
+fill), orange #F5824A (hover #EA6F33, soft #FFF0E6, ink #9A4A16), teal #E8F7F4/#149A8A/#0B6B5F,
+yellow #FFF8D9/#E9A900/#855C00, lavender #F2EEFF/#7567D8/#4C3FA8, green #EDF8EE/#4D9A58/#2F6B38,
+rose #FFF1EC/#D9705C/#9C4A3C, slate #F1F5F9/#64748B/#475569. Quote surface #F2F7FF, newsletter
+#FFF2E8, footer #182230. Target ~55-60% white / 15-20% light blue / 8-10% soft orange / 5-8% soft
+teal-green / traces of yellow+lavender / rest photography.
 
-Orange is confined to: the single most important CTA in a section, offer/discount badges, small
-accent marks (rule, quote glyph, nav hover underline), eyebrow labels. NOT section backgrounds,
-NOT every button. The amber family is deleted - orange does the "notice this" job once.
+THREE VALUES PER FAMILY, NOT INTERCHANGEABLE:
+  --tint-X        soft background, gets AREA
+  --tint-X-mark   saturated, decoration ONLY, never behind text (2.0-3.5:1 on white)
+  --tint-X-ink    dark, text and meaningful icons (>=5.5:1 on white and on its own soft)
 
-Fills vs text: `--brand`/`--accent` are fills behind white text; `--brand-ink`/`--accent-ink`
-are the same hues dark enough to be text on white (`--accent` is 2.3:1 on white).
+Same split on the primaries, both forced by measured contrast: white on #3B82F6 is 3.68:1 (fails
+AA for 14px bold), so --brand decorates and --brand-solid #2563EB is the button fill. White on
+#F5824A is 2.57:1, so ORANGE BUTTONS CARRY DARK INK (6.79:1) - do not "fix" this to white.
+Badges are soft fill + dark ink, never saturated fill + white text.
 
-ONE THEME, LIGHT. No `.dark` block, no `prefers-color-scheme` inversion, no toggle, no pre-paint
-theme script, no `suppressHydrationWarning`. A dark variant was built and then removed at the
-client's request; it is NOT to be re-added. NO filter, opacity or blend mode on product imagery.
+CATEGORY CODING (one table, categoryTintFor in lib/storefront/showcase.ts): Electronics blue,
+Home & Kitchen green, Accessories lavender, Beauty rose, Tools yellow, Office slate, Fitness teal,
+Fashion orange; unrecognised -> slate. Colour on card body + 2px bar only, typography stays dark.
 
-Content width 1360px. Section rhythm 56px mobile / 80px desktop (`section-y`).
+TAILWIND GOTCHA: tint classes must be written out in full. `bg-tint-${name}` generates NO CSS,
+renders unstyled and throws nothing. showcase.test.ts asserts the class shapes.
 
-HOMEPAGE VISUALS ARE PHOTOGRAPHY. Hero is an asymmetric 4-photo collage (one featured tile
-spanning 2 rows + 3 supporting; tiles exactly, at both breakpoints). Category rail is
-image-backed cards, 2/4/6 across. Live catalog images lead; `lib/storefront/showcase.ts` supplies
-curated CATEGORY photographs (images.unsplash.com, already in next.config remotePatterns and the
-CSP img-src) only when the catalog cannot fill them. `showcaseImageFor` returns null rather than
-guessing for a label it cannot place. Icons are secondary only - the icon-grid fallback is gone.
+ONE THEME, LIGHT. No .dark block, no prefers-color-scheme inversion, no toggle, no pre-paint theme
+script. A dark variant was built and removed at the client's request; NOT to be re-added. NO
+filter/opacity/blend on product imagery.
 
-Homepage order: service strip -> header -> hero -> stats strip -> category cards -> promo
-(1 large left + 2 stacked right) -> best sellers -> wholesale deals (only when MOQ products
-exist) -> wholesale banner -> new arrivals -> deals (only when genuinely discounted) -> why-Kanay
-benefits -> light orange brand quote -> services strip -> newsletter.
+Content width 1360px. Section rhythm 56px mobile / 80px desktop.
 
-Composition rule: sections must NOT all be equal-size bordered boxes. Stats is a divided strip,
-benefits are rule-topped columns, promo is asymmetric, services is a bordered strip.
+PHOTOGRAPHY: hero is an asymmetric 4-photo collage (featured tile spanning 2 rows + 3 supporting;
+tiles exactly at both breakpoints). Category rail is image-backed tinted cards, 2/4/6 across. Live
+catalog images lead; showcase.ts supplies curated CATEGORY photos (images.unsplash.com, already in
+next.config remotePatterns and CSP img-src) only as fallback. departmentFor returns null rather
+than guessing. Tints sit BEHIND photos so a bad URL degrades to a designed card - the URLs could
+not be verified from the build environment.
 
-STATS: categories is DERIVED from live catalog facets. Daily buyers (`25+`) and wholesale
-products (`120+`) are STATIC BUSINESS FIGURES stated by the owner, written as conservative
-floors, and must never be labelled live/current/today or made precise - there is no analytics
-pipeline and no product total in the API. See the comment block in StatsStrip.tsx.
+BRAND STORY BANNER (BrandStory.tsx): full-width-in-shell photographic trust section, stacked
+shipping cartons, navy overlay (--overlay 52% flat + a directional --overlay-strong gradient on the
+content side only, so the far side of the photo stays bright). min-h 22/25/28rem. Navy gradient is
+painted by the CONTAINER, so a failed image leaves a readable navy panel. Deliberately NOT
+edge-to-edge - wider than header/footer/product rows would read as an embedded advert. No person as
+focus: that is what turns a trust banner into a lifestyle campaign.
+
+NO "BEST SELLER" BADGE. Shopify FEATURED is manual merchandising order and nothing records units
+sold. The featured row badge says "Featured" (yellow); the newest row says "New" (lavender). Both
+true.
+
+Homepage order: service strip -> header -> hero -> stats strip -> category cards -> promo (1 large
+mint left + 2 stacked blue/orange right) -> best sellers [Featured] -> wholesale deals -> wholesale
+banner -> new arrivals [New] -> deals -> why-Kanay benefits (tinted icon discs) -> BRAND STORY
+BANNER -> brand quote (#F2F7FF, big orange quote mark) -> services strip -> newsletter (#FFF2E8).
+
+Composition rule: sections must NOT all be equal-size bordered boxes. Stats is a divided strip with
+small coloured dots, benefits are tinted discs with no card, promo is asymmetric, services is a
+bordered strip, brand story is photographic.
+
+STATS: categories is DERIVED from live catalog facets. Daily buyers (25+) and wholesale products
+(120+) are STATIC BUSINESS FIGURES stated by the owner, conservative floors, never labelled
+live/current/today and never made precise. See the comment block in StatsStrip.tsx.
 
 Wholesale MOQ: source of truth is the Shopify product tag `moq:<n>`, parsed by the backend and
 enforced at checkout (`MOQ_NOT_MET`, 409) against freshly read data. Frontend shows the badge,

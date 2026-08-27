@@ -45,7 +45,7 @@ export function CartSummary({ subtotalPaise, checkoutEnabled = true }: CartSumma
         {checkoutEnabled && (
           <Link
             href="/checkout"
-            className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] bg-brand px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
+            className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-control)] bg-brand-solid px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98]"
           >
             Secure checkout
           </Link>

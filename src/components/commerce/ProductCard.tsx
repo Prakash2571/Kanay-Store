@@ -29,12 +29,32 @@ import type { CartProductItem, StorefrontProductSummary } from "@/lib/storefront
  * they read as decoration; two families mean a buyer can scan a grid and see which items are
  * discounted without reading a word.
  */
+/**
+ * Optional row badge.
+ *
+ * `new` is set by the New arrivals row and `featured` by the Best sellers row. Both are TRUE
+ * claims: the backend's NEWEST sort is genuinely recency-ordered, and FEATURED is genuinely the
+ * merchant's featured order.
+ *
+ * There is deliberately no "Best seller" badge. Shopify's FEATURED sort is manual merchandising
+ * order, not sales data, and nothing in this system records units sold — so a best-seller badge
+ * would be a popularity claim with nothing behind it. "Featured" says exactly what is true.
+ */
+export type ProductCardBadge = "new" | "featured";
+
+const ROW_BADGE: Record<ProductCardBadge, { label: string; className: string }> = {
+  new: { label: "New", className: "bg-tint-lavender text-tint-lavender-ink" },
+  featured: { label: "Featured", className: "bg-tint-yellow text-tint-yellow-ink" },
+};
+
 export function ProductCard({
   product,
   priority = false,
+  badge,
 }: {
   product: StorefrontProductSummary;
   priority?: boolean;
+  badge?: ProductCardBadge;
 }) {
   const image = product.images[0] ?? null;
   const priceVaries = product.priceRange.min.amount !== product.priceRange.max.amount;
@@ -64,7 +84,7 @@ export function ProductCard({
       : null;
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)]">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface transition-[border-color,box-shadow] hover:border-brand hover:shadow-[var(--shadow-card)]">
       <Link
         aria-label={`View ${product.title}`}
         className="relative block aspect-square overflow-hidden bg-surface-muted focus-visible:outline focus-visible:outline-2"
@@ -85,20 +105,41 @@ export function ProductCard({
           </span>
         )}
 
-        {/* Orange is reserved for exactly this: an offer. White on `--accent` is 3.1:1, which
-            is why this badge is bold and small-caps rather than regular weight. */}
-        {discount !== null ? (
-          <span className="absolute left-2 top-2 rounded-[var(--radius-pill)] bg-accent px-2 py-0.5 text-[0.65rem] font-extrabold text-white shadow-[var(--shadow-card)]">
-            {discount}% off
-          </span>
-        ) : null}
+        {/*
+          Badges are soft-background pills with dark ink, not saturated fills with white text.
+          Every saturated colour in this palette lands between 2.0:1 and 3.5:1 against white, so a
+          solid orange pill with a white label is unreadable — and a row of loud pills on a white
+          card is the thing that makes a grid look cheap. Soft fill plus dark ink stays legible and
+          stays calm, and the hue still does the scanning work.
+        */}
+        <span className="absolute left-2 top-2 flex flex-col items-start gap-1">
+          {discount !== null ? (
+            <span className="rounded-[var(--radius-pill)] bg-tint-orange px-2 py-0.5 text-[0.65rem] font-extrabold text-tint-orange-ink shadow-[var(--shadow-card)]">
+              {discount}% off
+            </span>
+          ) : null}
+          {hasMinimum(moq) ? (
+            <span className="rounded-[var(--radius-pill)] bg-tint-teal px-2 py-0.5 text-[0.65rem] font-extrabold text-tint-teal-ink shadow-[var(--shadow-card)]">
+              Wholesale
+            </span>
+          ) : null}
+        </span>
 
-        {/* Neutral ink, deliberately not brand or accent: sold out is not a thing to promote. */}
-        {soldOut ? (
-          <span className="absolute right-2 top-2 rounded-[var(--radius-pill)] bg-ink px-2 py-0.5 text-[0.65rem] font-extrabold text-white">
-            Sold out
-          </span>
-        ) : null}
+        <span className="absolute right-2 top-2 flex flex-col items-end gap-1">
+          {/* Neutral ink: sold out is not a thing to promote, so it gets no brand colour. */}
+          {soldOut ? (
+            <span className="rounded-[var(--radius-pill)] bg-ink px-2 py-0.5 text-[0.65rem] font-extrabold text-white">
+              Sold out
+            </span>
+          ) : null}
+          {badge && !soldOut ? (
+            <span
+              className={`rounded-[var(--radius-pill)] px-2 py-0.5 text-[0.65rem] font-extrabold shadow-[var(--shadow-card)] ${ROW_BADGE[badge].className}`}
+            >
+              {ROW_BADGE[badge].label}
+            </span>
+          ) : null}
+        </span>
       </Link>
 
       <div className="flex flex-1 flex-col p-3.5">
@@ -144,7 +185,7 @@ export function ProductCard({
             <AddToCartButton className="w-full" item={cartItem} quantity={startingQuantity(moq)} />
           ) : (
             <Link
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-line bg-surface-muted px-3 text-xs font-bold transition-colors hover:border-accent hover:text-accent-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-line bg-surface-muted px-3 text-xs font-bold transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href={`/products/${product.handle}`}
             >
               {product.availableForSale ? "View product" : "View item"}

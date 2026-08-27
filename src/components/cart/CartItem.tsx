@@ -78,13 +78,18 @@ export function CartItem({ item }: { item: CartLine }) {
   );
 }
 
-/** Teal MOQ note, shown only on lines that carry a real minimum. */
+/**
+ * Teal MOQ note, shown only on lines that carry a real minimum.
+ *
+ * Teal because that is the wholesale colour everywhere else a buyer meets this concept - the
+ * "Wholesale" badge on the product card and the terms block on the product page. One idea, one hue.
+ */
 function MinimumNote({ item }: { item: CartLine }) {
   const minimum = minimumQuantityFor(item);
   if (minimum <= 1) return null;
 
   return (
-    <p className="mt-2 inline-flex items-center rounded-[var(--radius-pill)] bg-surface-orange px-2.5 py-1 text-[0.7rem] font-bold text-accent-ink">
+    <p className="mt-2 inline-flex items-center rounded-[var(--radius-pill)] bg-tint-teal px-2.5 py-1 text-[0.7rem] font-bold text-tint-teal-ink">
       Wholesale · minimum {minimum} units
     </p>
   );

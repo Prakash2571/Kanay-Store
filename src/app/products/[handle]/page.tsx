@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     return (
       <StoreShell collections={collections}>
         <main className="shell grid min-h-[55dvh] place-items-center py-16 text-center">
-          <div><h1 className="text-2xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover" href="/shop">Back to shop</Link></div>
+          <div><h1 className="text-2xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-brand-solid px-6 text-sm font-bold text-white transition-colors hover:bg-brand-solid-hover" href="/shop">Back to shop</Link></div>
         </main>
       </StoreShell>
     );

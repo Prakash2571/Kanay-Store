@@ -152,10 +152,10 @@ export function ProductPurchasePanel({ product }: { product: StorefrontProduct }
         ignore the panel on the products where it matters.
       */}
       {hasMoq ? (
-        <div className="mb-5 flex items-start gap-3 rounded-[var(--radius-card)] border border-accent/25 bg-surface-orange p-4">
-          <Info aria-hidden="true" className="mt-0.5 shrink-0 text-accent" size={18} strokeWidth={1.9} />
+        <div className="mb-5 flex items-start gap-3 rounded-[var(--radius-card)] border border-tint-teal-mark/25 bg-tint-teal p-4">
+          <Info aria-hidden="true" className="mt-0.5 shrink-0 text-tint-teal-ink" size={18} strokeWidth={1.9} />
           <div className="min-w-0 text-sm">
-            <p className="font-bold text-accent-ink">Wholesale item · minimum {minimum} units</p>
+            <p className="font-bold text-tint-teal-ink">Wholesale item · minimum {minimum} units</p>
             <p className="mt-1 leading-6 text-ink-muted">
               This product is sold in bulk, so orders start at {minimum} units
               {minimumValue ? ` (${minimumValue})` : ""}. Checkout re-checks the minimum and

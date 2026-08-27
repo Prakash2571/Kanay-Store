@@ -130,7 +130,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
         </div>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-brand px-5 text-sm font-semibold text-white"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-brand-solid px-5 text-sm font-semibold text-white"
         >
           Continue shopping
         </Link>

@@ -56,7 +56,7 @@ export function WholesaleBanner() {
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand-solid px-6 text-sm font-bold text-white transition-colors hover:bg-brand-solid-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href="/about#moq"
             >
               How MOQ works

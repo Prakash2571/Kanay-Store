@@ -34,7 +34,7 @@ export function CartPageClient() {
         </p>
         <Link
           href="/shop"
-          className="mt-7 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-brand px-6 font-semibold text-white"
+          className="mt-7 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-brand-solid px-6 font-semibold text-white"
         >
           Shop the collection
         </Link>

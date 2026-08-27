@@ -27,7 +27,7 @@ type AddToCartButtonProps = {
 const VARIANTS: Record<"card" | "primary", string> = {
   card:
     "border border-line bg-surface-muted text-ink hover:border-brand hover:bg-brand-soft hover:text-brand-ink",
-  primary: "bg-brand text-white hover:bg-brand-hover",
+  primary: "bg-brand-solid text-white hover:bg-brand-solid-hover",
 };
 
 export function AddToCartButton({

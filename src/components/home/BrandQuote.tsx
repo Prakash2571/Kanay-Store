@@ -24,14 +24,14 @@ import Link from "next/link";
 export function BrandQuote() {
   return (
     <section aria-labelledby="brand-quote-heading" className="shell section-y">
-      <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-orange px-6 py-12 text-center sm:px-10 sm:py-14 lg:py-16">
+      <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-quote-bg px-6 py-12 text-center sm:px-10 sm:py-14 lg:py-16">
         {/*
           The one large orange mark on the page. Decorative, so it is aria-hidden and the
           sentence below reads on its own.
         */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 font-serif text-[5rem] leading-none text-accent/25 sm:text-[6.5rem]"
+          className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 select-none font-serif text-[8rem] leading-[1] text-accent/20 sm:text-[11rem]"
         >
           &ldquo;
         </span>
@@ -56,7 +56,7 @@ export function BrandQuote() {
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               href="/shop"
             >
               Browse wholesale

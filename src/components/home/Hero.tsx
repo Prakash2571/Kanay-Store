@@ -69,7 +69,7 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
               carries structure; this one action is the thing the page is for.
             */}
             <Link
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               href="/shop"
             >
               Browse wholesale
@@ -92,8 +92,12 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
         <div className="relative">
           <ProductCollage collage={collage} />
 
+          {/*
+            Soft yellow, the brief's decorative-badge slot. Dark yellow ink on it rather than white:
+            white on the saturated yellow is 2.07:1, the worst pairing in the whole palette.
+          */}
           {discount !== null ? (
-            <p className="absolute -left-2 -top-3 grid size-[4.75rem] place-items-center rounded-[var(--radius-pill)] bg-accent text-center text-[0.65rem] font-extrabold uppercase leading-tight text-white shadow-[var(--shadow-soft)] sm:size-[5.25rem] sm:text-[0.7rem]">
+            <p className="absolute -left-2 -top-3 grid size-[4.75rem] place-items-center rounded-[var(--radius-pill)] border border-tint-yellow-mark/30 bg-tint-yellow text-center text-[0.65rem] font-extrabold uppercase leading-tight text-tint-yellow-ink shadow-[var(--shadow-soft)] sm:size-[5.25rem] sm:text-[0.7rem]">
               <span>
                 Up to
                 <br />
