@@ -71,6 +71,58 @@ export function discountedProducts(
     .map((entry) => entry.product);
 }
 
+/**
+ * Products that carry a wholesale minimum order quantity, smallest minimum first.
+ *
+ * Smallest first because the row exists to get a buyer STARTED on bulk ordering, and a
+ * lead card reading "MOQ 500" reads as "not for you" to most of the people looking at it.
+ *
+ * A product qualifies only when the backend sent a minimum greater than one. There is no
+ * inferred wholesale flag and no "looks like a bulk product" heuristic: the merchant tags
+ * a product `moq:<n>` or it is not a wholesale line, and the checkout enforces exactly the
+ * same rule. That means this row can never advertise a bulk minimum the order will not
+ * actually be held to, in either direction.
+ */
+export function wholesaleProducts(
+  products: StorefrontProductSummary[],
+): StorefrontProductSummary[] {
+  return products
+    .filter((product) => {
+      const minimum = product.minimumOrderQuantity;
+      return typeof minimum === "number" && Number.isSafeInteger(minimum) && minimum > 1;
+    })
+    .sort((left, right) => (left.minimumOrderQuantity ?? 0) - (right.minimumOrderQuantity ?? 0));
+}
+
+/**
+ * How many distinct categories the store has, counting a collection and a product type of
+ * the same name once.
+ *
+ * This is the only product-side number the stats strip is allowed to print, because it is
+ * the only one the catalog response actually establishes store-wide: `filters.collections`
+ * and `filters.productTypes` are facet lists covering the whole catalog, not just the page
+ * of products that came back. A product COUNT is deliberately not derived here - the API is
+ * cursor-paginated and returns no total, so any figure would be the size of the slice the
+ * homepage happened to request, dressed up as the size of the store.
+ */
+export function distinctCategoryCount(input: {
+  collections: StorefrontCollectionSummary[];
+  productTypes?: string[];
+}): number {
+  const labels = new Set<string>();
+
+  for (const collection of input.collections) {
+    const normalised = collection.title.trim().toLowerCase();
+    if (normalised !== "") labels.add(normalised);
+  }
+  for (const productType of input.productTypes ?? []) {
+    const normalised = productType.trim().toLowerCase();
+    if (normalised !== "") labels.add(normalised);
+  }
+
+  return labels.size;
+}
+
 export interface CategoryTile {
   /** Stable key for React, and the thing that makes two tiles the "same" tile. */
   key: string;

@@ -2,27 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
-import { calculateDiscountPercent, moneyToPaise } from "@/lib/storefront/money";
+import { calculateDiscountPercent, formatMoney, moneyToPaise } from "@/lib/storefront/money";
+import { hasMinimum, minimumOrderValueLabel, moqLabel, startingQuantity, unitPriceLabel } from "@/lib/storefront/moq";
 import type { CartProductItem, StorefrontProductSummary } from "@/lib/storefront/types";
 
-import { ProductPrice } from "./ProductPrice";
-
 /**
- * The product card, in the reference's style: white surface, subtle warm border, rounded
- * corners, square image, compact title, price with any strike-through, and a full-width Add
- * to cart.
+ * The wholesale product card.
  *
- * TWO THINGS THE REFERENCE HAS THAT THIS DOES NOT, ON PURPOSE
- * -----------------------------------------------------------
- * A star rating and a wishlist heart. Neither has a backend: nothing collects reviews and
- * nothing stores a saved item. A decorative "4.8 ★" is a fabricated rating on a page where
- * a shopper is deciding what to buy, and a heart that silently does nothing is worse than no
- * heart — the customer believes the item is saved and finds an empty list later. Both slots
- * are ready for real data; the discount badge occupies the corner the heart would use.
+ * WHAT CHANGED FROM THE RETAIL VERSION
+ * ------------------------------------
+ * A retail card answers "what does this cost". A wholesale card has to answer three things
+ * before a buyer will click: the UNIT price, the MINIMUM they must take, and what that
+ * minimum costs them. Without the third figure every buyer opens a calculator, and a card
+ * that shows "₹349" next to "MOQ 10" invites the reading that ₹349 is the pack price.
  *
- * The image is a SQUARE (the reference is too) rather than the old 4:5 portrait. Portrait
- * crops flatter clothing and cut the top off appliances and boxed goods, which is most of
- * this catalog.
+ * BADGE COLOURS CARRY MEANING
+ * ---------------------------
+ * Blue for the MOQ (structural information), teal for bulk availability, amber ONLY for a
+ * discount. When every badge was the same accent colour they read as decoration; three
+ * families means a buyer can scan a grid and see which items are discounted without reading.
  */
 export function ProductCard({
   product,
@@ -35,6 +33,8 @@ export function ProductCard({
   const priceVaries = product.priceRange.min.amount !== product.priceRange.max.amount;
   const compareAt = product.compareAtPriceRange?.min ?? null;
   const discount = calculateDiscountPercent(product.priceRange.min, compareAt);
+  const moq = product.minimumOrderQuantity ?? null;
+  const minimumOrder = minimumOrderValueLabel(product.priceRange.min, moq);
   const quickVariant = product.quickAddVariant;
   const quickPricePaise = quickVariant ? moneyToPaise(quickVariant.price) : null;
   const soldOut = !product.availableForSale;
@@ -52,11 +52,12 @@ export function ProductCard({
           unitPricePaise: quickPricePaise,
           currencyCode: "INR",
           availableForSale: product.availableForSale && quickVariant.availableForSale,
+          minimumOrderQuantity: moq,
         }
       : null;
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface transition-[border-color,box-shadow] hover:border-accent-soft hover:shadow-[var(--shadow-card)]">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface transition-[border-color,box-shadow] hover:border-brand hover:shadow-[var(--shadow-card)]">
       <Link
         aria-label={`View ${product.title}`}
         className="relative block aspect-square overflow-hidden bg-surface-muted focus-visible:outline focus-visible:outline-2"
@@ -77,14 +78,20 @@ export function ProductCard({
           </span>
         )}
 
+        {/*
+          Amber is reserved for exactly this. Text is a literal near-black brown, not
+          `highlight-ink`, because the badge keeps its amber fill in dark mode while
+          `highlight-ink` inverts to a light amber that would disappear on it. White on amber
+          is about 2:1 and fails too, which is what this was.
+        */}
         {discount !== null ? (
-          <span className="absolute left-2 top-2 rounded-[var(--radius-pill)] bg-accent px-2 py-0.5 text-[0.65rem] font-extrabold text-white">
+          <span className="absolute left-2 top-2 rounded-[var(--radius-pill)] bg-highlight px-2 py-0.5 text-[0.65rem] font-extrabold text-[#3f2a06]">
             {discount}% off
           </span>
         ) : null}
 
         {soldOut ? (
-          <span className="absolute right-2 top-2 rounded-[var(--radius-pill)] bg-ink px-2 py-0.5 text-[0.65rem] font-extrabold text-white">
+          <span className="absolute right-2 top-2 rounded-[var(--radius-pill)] bg-brand px-2 py-0.5 text-[0.65rem] font-extrabold text-canvas">
             Sold out
           </span>
         ) : null}
@@ -99,27 +106,41 @@ export function ProductCard({
 
         <h3 className="line-clamp-2 text-[0.85rem] font-semibold leading-5 sm:text-sm">
           <Link
-            className="rounded transition-colors hover:text-accent-ink focus-visible:outline focus-visible:outline-2"
+            className="rounded transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
             href={`/products/${product.handle}`}
           >
             {product.title}
           </Link>
         </h3>
 
-        <div className="mt-1.5">
-          <ProductPrice
-            compareAtPrice={compareAt}
-            prefix={priceVaries ? "From " : undefined}
-            price={product.priceRange.min}
-          />
-        </div>
+        <p className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <span className="text-sm font-extrabold text-ink sm:text-[0.95rem]">
+            {unitPriceLabel(product.priceRange.min, priceVaries ? "From " : undefined)}
+          </span>
+          {discount !== null && compareAt ? (
+            <span className="text-xs text-ink-subtle line-through">{formatMoney(compareAt)}</span>
+          ) : null}
+        </p>
+
+        {hasMinimum(moq) ? (
+          <p className="mt-2 flex flex-wrap items-center gap-1.5">
+            <span className="rounded-[var(--radius-control)] bg-brand-soft px-1.5 py-0.5 text-[0.65rem] font-bold text-brand-ink">
+              {moqLabel(moq)}
+            </span>
+            {minimumOrder ? (
+              <span className="text-[0.68rem] font-semibold text-ink-muted">
+                Min. order {minimumOrder}
+              </span>
+            ) : null}
+          </p>
+        ) : null}
 
         <div className="mt-auto pt-3">
           {cartItem ? (
-            <AddToCartButton className="w-full" item={cartItem} />
+            <AddToCartButton className="w-full" item={cartItem} quantity={startingQuantity(moq)} />
           ) : (
             <Link
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-line bg-surface-muted px-3 text-xs font-bold transition-colors hover:border-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] border border-line bg-surface-muted px-3 text-xs font-bold transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href={`/products/${product.handle}`}
             >
               {product.availableForSale ? "Choose options" : "View item"}

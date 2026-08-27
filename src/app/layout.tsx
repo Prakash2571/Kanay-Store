@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 
 import { CartProvider } from "@/components/cart/CartProvider";
+import { THEME_INIT_SCRIPT } from "@/components/theme/theme";
 import { siteOrigin, storeName as resolveStoreName } from "@/lib/seo/site";
 
 import "./globals.css";
@@ -25,9 +26,9 @@ const sans = Manrope({
 const storeName = resolveStoreName();
 const siteUrl = siteOrigin();
 
-const TAGLINE = "Everyday products at better prices";
+const TAGLINE = "Wholesale sourcing across every category";
 const DESCRIPTION =
-  "Shop electronics, home and kitchen, beauty, accessories, fashion, toys, fitness and thousands of everyday products at Kanay Store. Retail and wholesale, priced in INR.";
+  "Source electronics, home and kitchen, appliances, accessories, beauty, tools, office supplies, fitness and everyday products at wholesale-friendly quantities. Minimum order quantities shown per product, priced in INR.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -51,7 +52,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" className={sans.variable}>
+    <html className={sans.variable} lang="en-IN" suppressHydrationWarning>
+      <head>
+        {/*
+          Applies the stored (or OS) theme BEFORE first paint, so the page never renders
+          light and then snaps to dark. It has to be inline and it has to be in <head> -
+          anything deferred is, by definition, after the flash.
+
+          dangerouslySetInnerHTML is required to emit a raw script body, and is safe here for
+          one specific reason: THEME_INIT_SCRIPT is a fixed string literal with no
+          interpolation (asserted in theme.test.ts), so there is no input to inject into.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
         <CartProvider>{children}</CartProvider>
       </body>

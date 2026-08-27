@@ -20,7 +20,13 @@ export function ProductPrice({
       {discount !== null && compareAtPrice ? (
         <>
           <span className="text-ink-muted line-through">{formatMoney(compareAtPrice)}</span>
-          <span className="text-xs font-bold text-accent-ink">{discount}% off</span>
+          {/*
+            Amber, because this is a discount label — one of the three things amber is
+            reserved for. `highlight-ink` (not `highlight`) since this is text on the page
+            surface: it is a dark brown on white and a light amber on navy, so it stays
+            readable in both themes.
+          */}
+          <span className="text-xs font-bold text-highlight-ink">{discount}% off</span>
         </>
       ) : null}
     </div>

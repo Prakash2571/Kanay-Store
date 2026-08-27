@@ -89,7 +89,7 @@ function NextPageLink({ basePath, cursor, params }: { basePath: string; cursor: 
   next.set("after", cursor);
   return (
     <div className="flex justify-center">
-      <Link className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-ink bg-surface px-7 text-sm font-bold transition-colors hover:bg-ink hover:text-white focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={`${basePath}?${next.toString()}`}>Load more</Link>
+      <Link className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-7 text-sm font-bold transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px" href={`${basePath}?${next.toString()}`}>Load more</Link>
     </div>
   );
 }

@@ -166,6 +166,21 @@ export function customerCheckoutMessage(code?: string, fallback?: string): strin
       return "That option just sold out. Please choose another.";
     case "PRICE_CHANGED":
       return "The price changed since you added this item. Your cart needs to be reviewed.";
+    /**
+     * A wholesale line is below its minimum order quantity.
+     *
+     * The backend's message is preferred here, unlike most codes, because it is the only one
+     * that names the product, its minimum and what to do about it — and this is a refusal the
+     * customer can fix themselves in one step. A generic "checkout could not be completed"
+     * would send them back to a cart with no idea which line is wrong.
+     *
+     * The fallback still has to exist: a long enough product title can push the backend's
+     * sentence past the length this function is willing to show a customer.
+     */
+    case "MOQ_NOT_MET":
+      return fallback && fallback.length < 180
+        ? fallback
+        : "One item is below its minimum order quantity. Open your cart and raise it to the minimum shown on the product.";
     case "PAYMENT_FAILED":
       return "Payment was not completed. You were not charged if Razorpay shows the payment as failed.";
     case "PAYMENT_PENDING":

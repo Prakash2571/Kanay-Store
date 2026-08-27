@@ -3,9 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   buildCategoryTiles,
   discountedProducts,
+  distinctCategoryCount,
   excludeById,
   heroCollageImages,
   maxDiscountPercent,
+  wholesaleProducts,
 } from "./merchandising";
 import type {
   StorefrontCollectionSummary,
@@ -258,5 +260,103 @@ describe("excludeById", () => {
   it("preserves order", () => {
     const newest = [product({ id: "c" }), product({ id: "d" })];
     expect(excludeById(newest, []).map((entry) => entry.id)).toEqual(["c", "d"]);
+  });
+});
+
+
+/**
+ * The "Wholesale deals" row.
+ *
+ * The row's whole claim is "these products are sold in bulk, and this is the minimum". It is
+ * only allowed to include a product the BACKEND said has a minimum, because the checkout
+ * enforces that same tag-derived number and a row that guessed would be advertising terms
+ * the order will not be held to.
+ */
+describe("wholesaleProducts", () => {
+  it("keeps only products the backend gave a minimum above one", () => {
+    const result = wholesaleProducts([
+      product({ id: "no-field" }),
+      product({ id: "explicit-null", minimumOrderQuantity: null }),
+      product({ id: "one", minimumOrderQuantity: 1 }),
+      product({ id: "bulk", minimumOrderQuantity: 12 }),
+    ]);
+
+    expect(result.map((entry) => entry.id)).toEqual(["bulk"]);
+  });
+
+  it("treats a minimum of exactly one as no minimum", () => {
+    // A product that can be bought singly is not a wholesale line, even though the merchant
+    // wrote the tag out. Including it would put a "MOQ 1" badge in a bulk row.
+    expect(wholesaleProducts([product({ id: "one", minimumOrderQuantity: 1 })])).toEqual([]);
+  });
+
+  it("orders by smallest minimum first", () => {
+    // Lowest barrier to entry leads. A row whose first card reads "MOQ 500" tells most
+    // visitors the section is not for them.
+    const result = wholesaleProducts([
+      product({ id: "big", minimumOrderQuantity: 500 }),
+      product({ id: "small", minimumOrderQuantity: 6 }),
+      product({ id: "mid", minimumOrderQuantity: 50 }),
+    ]);
+
+    expect(result.map((entry) => entry.id)).toEqual(["small", "mid", "big"]);
+  });
+
+  it("rejects a non-integer minimum instead of rounding it", () => {
+    // 2.5 units is not orderable, and rounding would invent a rule nobody set.
+    expect(wholesaleProducts([product({ id: "odd", minimumOrderQuantity: 2.5 })])).toEqual([]);
+  });
+
+  it("does not mutate the array it was given", () => {
+    const input = [
+      product({ id: "big", minimumOrderQuantity: 500 }),
+      product({ id: "small", minimumOrderQuantity: 6 }),
+    ];
+    wholesaleProducts(input);
+    expect(input.map((entry) => entry.id)).toEqual(["big", "small"]);
+  });
+});
+
+/**
+ * The one product-side FIGURE the stats strip prints.
+ *
+ * It has to be store-wide, which is why it is derived from the catalog's filter facets and
+ * not from the ten products the homepage fetched. These tests pin the de-duplication, because
+ * a store with a "Home & Kitchen" collection AND a "Home & Kitchen" product type has one
+ * category, not two, and "18 categories" on a store with nine is the kind of inflated number
+ * this section exists to avoid.
+ */
+describe("distinctCategoryCount", () => {
+  it("counts collections and product types together", () => {
+    const count = distinctCategoryCount({
+      collections: [collection({ id: "c1", title: "Home & Kitchen" })],
+      productTypes: ["Electronics", "Tools"],
+    });
+
+    expect(count).toBe(3);
+  });
+
+  it("counts a collection and a product type of the same name once", () => {
+    const count = distinctCategoryCount({
+      collections: [collection({ id: "c1", title: "Home & Kitchen" })],
+      productTypes: ["home & kitchen", "Tools"],
+    });
+
+    expect(count).toBe(2);
+  });
+
+  it("ignores blank labels rather than counting them", () => {
+    const count = distinctCategoryCount({
+      collections: [],
+      productTypes: ["", "   ", "Tools"],
+    });
+
+    expect(count).toBe(1);
+  });
+
+  it("is zero on an empty store, so the strip can fall back to wording", () => {
+    // "0 categories" is worse than saying nothing, and the caller relies on this being 0
+    // rather than throwing or guessing.
+    expect(distinctCategoryCount({ collections: [] })).toBe(0);
   });
 });

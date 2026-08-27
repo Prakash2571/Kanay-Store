@@ -43,8 +43,8 @@ export function ServicesStrip() {
       <ul className="grid gap-3 rounded-[var(--radius-card)] border border-line bg-surface p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4">
         {SERVICES.map(({ icon: Icon, title, text }) => (
           <li className="flex items-start gap-3 sm:px-1" key={title}>
-            <span className="grid size-10 shrink-0 place-items-center rounded-[var(--radius-pill)] bg-surface-peach-soft">
-              <Icon aria-hidden="true" className="text-accent-ink" size={19} strokeWidth={1.8} />
+            <span className="grid size-10 shrink-0 place-items-center rounded-[var(--radius-pill)] bg-surface-blue">
+              <Icon aria-hidden="true" className="text-brand-ink" size={19} strokeWidth={1.8} />
             </span>
             <div className="min-w-0">
               <h3 className="text-[0.82rem] font-bold uppercase tracking-[0.06em]">{title}</h3>

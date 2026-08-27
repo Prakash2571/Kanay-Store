@@ -69,6 +69,14 @@ export const productSummarySchema = z.object({
   availability: z.enum(["SELLABLE", "OUT_OF_STOCK", "UNAVAILABLE"]),
   collections: z.array(collectionReferenceSchema).default([]),
   quickAddVariant: quickAddVariantSchema.nullable().optional(),
+  /**
+   * Wholesale minimum order quantity, set by the merchant on the product.
+   *
+   * Optional and nullable on purpose: null means NO minimum (not one), and `optional` keeps
+   * this schema compatible with a backend that has not yet deployed the field - the
+   * storefront then shows no MOQ rather than failing to parse the catalog.
+   */
+  minimumOrderQuantity: z.number().int().positive().nullable().optional(),
 });
 
 export const productDetailSchema = productSummarySchema.extend({
@@ -175,4 +183,9 @@ export type CartProductItem = {
   unitPricePaise: number;
   currencyCode: "INR";
   availableForSale: boolean;
+  /**
+   * The product's wholesale minimum, carried into the cart so a line cannot be decremented
+   * below what the checkout will accept. Null or absent means no minimum.
+   */
+  minimumOrderQuantity?: number | null;
 };

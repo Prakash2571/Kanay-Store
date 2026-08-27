@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
+import { BrandQuote } from "@/components/home/BrandQuote";
 import { CategoryCircles } from "@/components/home/CategoryCircles";
 import { Hero } from "@/components/home/Hero";
 import { Newsletter } from "@/components/home/Newsletter";
 import { ProductSection } from "@/components/home/ProductSection";
 import { PromoCards } from "@/components/home/PromoCards";
 import { ServicesStrip } from "@/components/home/ServicesStrip";
+import { StatsStrip } from "@/components/home/StatsStrip";
+import { WhyKanay } from "@/components/home/WhyKanay";
 import { WholesaleBanner } from "@/components/home/WholesaleBanner";
 import { StoreShell } from "@/components/layout/StoreShell";
 import { getCatalog } from "@/lib/storefront/catalog";
@@ -13,13 +16,15 @@ import { getCollections } from "@/lib/storefront/collections";
 import {
   buildCategoryTiles,
   discountedProducts,
+  distinctCategoryCount,
   excludeById,
+  wholesaleProducts,
 } from "@/lib/storefront/merchandising";
 
 export const metadata: Metadata = {
-  title: "Everyday products at better prices",
+  title: "Wholesale and retail, priced per unit",
   description:
-    "Shop electronics, home and kitchen, beauty, accessories, toys, fitness, office supplies, fashion and thousands of everyday products at Kanay Store. Retail and wholesale, priced in INR.",
+    "Buy in bulk or one at a time across electronics, home and kitchen, tools, office supplies, beauty, accessories and thousands of everyday products. Minimum order quantities shown up front, priced in INR.",
   alternates: { canonical: "/" },
 };
 
@@ -58,6 +63,19 @@ export default async function HomePage() {
     limit: 10,
   });
 
+  /**
+   * The two figures the stats strip is allowed to print.
+   *
+   * Both come from the catalog's FILTER facets, which describe the whole catalog, not from
+   * `products.length`, which is only the ten items this page asked for. `priceRange` is null
+   * when the catalog request failed or the store is empty, and the strip falls back to
+   * wording rather than printing a zero.
+   */
+  const categoryCount = distinctCategoryCount({ collections, productTypes });
+  const lowestPrice = featuredResult.ok
+    ? (featuredResult.data.filters.priceRange?.min ?? null)
+    : null;
+
   const bestSellers = featured.slice(0, 10);
   // Trending drops anything already shown above: on a small catalog the two orderings
   // overlap almost completely, and repeating eight products under a second heading makes
@@ -65,16 +83,20 @@ export default async function HomePage() {
   const trending = excludeById(newest, bestSellers).slice(0, 10);
   // Deals is real or absent. Only products with a genuine compare-at saving qualify.
   const deals = discountedProducts([...featured, ...newest]).slice(0, 10);
+  // Bulk lines are the ones the merchant tagged `moq:<n>`. Never inferred, so this row
+  // cannot advertise a minimum the checkout will not hold the order to.
+  const bulk = wholesaleProducts([...featured, ...newest]).slice(0, 10);
 
   return (
     <StoreShell collections={collections}>
       <main>
         <Hero products={[...featured, ...newest]} />
+        <StatsStrip categoryCount={categoryCount} lowestPrice={lowestPrice} />
         <CategoryCircles tiles={categoryTiles} />
         <PromoCards tiles={categoryTiles} />
 
         <ProductSection
-          description="Popular products across the Kanay marketplace, priced in INR."
+          description="Popular products across the Kanay marketplace, priced per unit in INR."
           id="best-sellers"
           loadFailed={!featuredResult.ok}
           priorityCount={4}
@@ -84,15 +106,33 @@ export default async function HomePage() {
           viewAllHref="/shop"
         />
 
+        {/*
+          Rendered only when the catalog actually contains bulk lines. An empty "Wholesale
+          deals" heading on a store with no MOQ products would be advertising a capability
+          with nothing behind it, which is the specific failure mode this whole redesign is
+          trying to avoid.
+        */}
+        {bulk.length > 0 ? (
+          <ProductSection
+            description="Products sold in bulk. The minimum order quantity is shown on each item and enforced at checkout."
+            id="wholesale-deals"
+            products={bulk}
+            title="Wholesale deals"
+            viewAllHref="/shop"
+            viewAllLabel="View all products"
+          />
+        ) : null}
+
         <WholesaleBanner />
 
         {trending.length > 0 || !newestResult.ok ? (
           <ProductSection
-            description="Discover useful products across electronics, home, lifestyle, accessories and more."
+            description="Recently added across electronics, home, tools, office, lifestyle and more."
             id="trending"
             loadFailed={!newestResult.ok}
             products={trending}
             title="New arrivals"
+            tone="surface"
             viewAllHref="/shop?sort=NEWEST"
             viewAllLabel="View new arrivals"
           />
@@ -105,11 +145,12 @@ export default async function HomePage() {
             id="deals"
             products={deals}
             title="Deals"
-            tone="surface"
             viewAllHref="/shop"
           />
         ) : null}
 
+        <WhyKanay />
+        <BrandQuote />
         <ServicesStrip />
         {/*
           NO TESTIMONIALS SECTION, DELIBERATELY.
@@ -120,6 +161,9 @@ export default async function HomePage() {
           and a shopper reading it has no way to know that. Labelling it "sample" does not
           fix the impression it leaves; the first thing a visitor takes from a wall of
           five-star quotes is that other people have bought and been happy.
+
+          The BrandQuote band above is the honest version of this section: it is the store's
+          own positioning statement, in the store's own voice, attributed to nobody.
 
           When verified reviews exist in the backend, this is where they go.
         */}

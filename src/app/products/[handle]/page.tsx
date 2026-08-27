@@ -15,6 +15,7 @@ import {
 import { siteOrigin } from "@/lib/seo/site";
 import { getCatalog } from "@/lib/storefront/catalog";
 import { getCollections } from "@/lib/storefront/collections";
+import { moqLabel } from "@/lib/storefront/moq";
 import { getProduct } from "@/lib/storefront/products";
 import type { StorefrontProduct } from "@/lib/storefront/types";
 
@@ -42,7 +43,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     return (
       <StoreShell collections={collections}>
         <main className="shell grid min-h-[55dvh] place-items-center py-16 text-center">
-          <div><h1 className="text-2xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover" href="/shop">Back to shop</Link></div>
+          <div><h1 className="text-2xl font-semibold">This item cannot be loaded</h1><p className="mt-3 text-sm text-ink-muted">Refresh the page or try again shortly.</p><Link className="mt-7 inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover" href="/shop">Back to shop</Link></div>
         </main>
       </StoreShell>
     );
@@ -63,8 +64,20 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           <div className="grid gap-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-14">
             <ProductGallery images={product.images} title={product.title} />
             <div className="lg:sticky lg:top-28 lg:self-start">
-              {product.productType ? <p className="text-xs font-bold uppercase tracking-[0.12em] text-accent-ink">{product.productType}</p> : null}
-              <h1 className="mt-3 text-4xl font-semibold leading-[1] tracking-[-0.025em] sm:text-2xl">{product.title}</h1>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                {product.productType ? <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-ink">{product.productType}</p> : null}
+                {/*
+                  The MOQ badge belongs above the fold, next to the category, not only inside
+                  the purchase panel further down. "Can I even buy one of these?" is the first
+                  question on a wholesale listing, and the answer should not require scrolling.
+                */}
+                {moqLabel(product.minimumOrderQuantity) ? (
+                  <span className="rounded-[var(--radius-control)] bg-brand-soft px-2 py-0.5 text-[0.7rem] font-bold text-brand-ink">
+                    {moqLabel(product.minimumOrderQuantity)}
+                  </span>
+                ) : null}
+              </div>
+              <h1 className="mt-3 text-2xl font-semibold leading-[1.15] tracking-[-0.025em] sm:text-3xl">{product.title}</h1>
               {product.vendorPublicName ? <p className="mt-2 text-xs text-ink-muted">By {product.vendorPublicName}</p> : null}
               <div className="mt-5">
                 <ProductPrice compareAtPrice={product.compareAtPriceRange?.min} prefix={product.priceRange.min.amount !== product.priceRange.max.amount ? "From " : undefined} price={product.priceRange.min} size="large" />
@@ -90,7 +103,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         {recommendations.length ? (
           <section aria-labelledby="recommended-heading" className="border-t border-line bg-surface py-14 lg:py-20">
             <div className="shell">
-              <h2 className="mb-7 text-4xl font-semibold tracking-[-0.025em]" id="recommended-heading">You may also like</h2>
+              <h2 className="mb-7 text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id="recommended-heading">You may also like</h2>
               <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">{recommendations.map((item) => <ProductCard key={item.id} product={item} />)}</div>
             </div>
           </section>
