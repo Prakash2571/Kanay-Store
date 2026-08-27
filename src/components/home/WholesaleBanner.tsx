@@ -42,7 +42,7 @@ export function WholesaleBanner() {
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">Wholesale</p>
           <h2
-            className="display-3 mt-3 max-w-[24ch] font-extrabold"
+            className="display-3 mt-3 max-w-[24rem] font-extrabold text-balance"
             id="wholesale-heading"
           >
             Buying in quantity? Here is how it works.

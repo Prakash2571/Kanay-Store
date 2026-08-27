@@ -24,14 +24,14 @@ import Link from "next/link";
 export function BrandQuote() {
   return (
     <section aria-labelledby="brand-quote-heading" className="shell section-y">
-      <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-quote-bg px-6 py-14 text-center sm:px-10 sm:py-18 lg:py-24 2xl:py-28">
+      <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-quote-bg px-6 py-12 text-center sm:px-10 sm:py-14 lg:py-18">
         {/*
           The one large orange mark on the page. Decorative, so it is aria-hidden and the
           sentence below reads on its own.
         */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 select-none font-serif text-[8rem] leading-[1] text-accent/20 sm:text-[12rem] 2xl:text-[15rem]"
+          className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 select-none font-serif text-[7rem] leading-[1] text-accent/20 sm:text-[9.5rem]"
         >
           &ldquo;
         </span>
@@ -41,28 +41,28 @@ export function BrandQuote() {
             Why buyers use Kanay
           </p>
           <p
-            className="display-2 mt-6 font-extrabold"
+            className="display-2 mt-5 max-w-[30ch] mx-auto font-extrabold text-balance"
             id="brand-quote-heading"
           >
             Buy smarter. Buy together. Grow further.
           </p>
           <span aria-hidden="true" className="mx-auto mt-6 block h-0.5 w-14 rounded-full bg-accent" />
-          <p className="lead mx-auto mt-7 max-w-[62ch] text-ink-muted">
+          <p className="lead mx-auto mt-6 max-w-[62ch] text-ink-muted">
             Volume is what turns a fair price into a good one. Kanay puts wholesale minimums,
             retail quantities and one approved catalog behind a single checkout, so a shop owner
             ordering fifty units and a household ordering one are buying from the same verified
             stock.
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-8 text-sm font-bold text-ink transition-colors hover:bg-accent-hover 2xl:min-h-[3.25rem] 2xl:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-8 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               href="/shop"
             >
               Browse wholesale
             </Link>
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-8 text-sm font-bold text-ink 2xl:min-h-[3.25rem] 2xl:text-base transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-8 text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href="/about#wholesale"
             >
               How wholesale works

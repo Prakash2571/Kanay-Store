@@ -39,7 +39,7 @@ export default async function AboutPage() {
   return (
     <StoreShell collections={collections}>
       <main className="shell section-y">
-        <header className="max-w-[62ch]">
+        <header className="max-w-[46rem]">
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-brand-ink">About</p>
           <h1 className="mt-3 text-3xl font-extrabold tracking-[-0.02em] sm:text-4xl">
             A wholesale and retail marketplace for everyday products

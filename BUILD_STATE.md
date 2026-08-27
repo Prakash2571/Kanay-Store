@@ -154,10 +154,23 @@ Content width 1680px (was 1320 -> 1360; 1360 left ~280px dead each side on the 1
 this is viewed on). Shell padding 1/1.5/2/2.5rem. Section rhythm 56px mobile / 80px desktop /
 88px at 2xl.
 
-FLUID TYPE SCALE in globals.css, not per-breakpoint classes: display-1 (hero,
-clamp 2.1-4.15rem), display-2 (banner/statement, 1.75-3.1rem), display-3 (section headings,
-1.3-1.95rem), stat-figure (1.7-2.7rem), lead (0.95-1.15rem). Defined as @utility rather than
-text-[clamp(...)] so the scale is tunable in one place and cannot silently fail to parse.
+FLUID TYPE SCALE in globals.css, not per-breakpoint classes: display-1 (hero, clamp 2-3.2rem),
+display-2 (banner/statement, 1.65-2.65rem), display-3 (section headings, 1.3-1.8rem), stat-figure
+(1.65-2.4rem), lead (0.95-1.1rem). Defined as @utility rather than text-[clamp(...)] so the scale
+is tunable in one place and cannot silently fail to parse.
+
+SIZE A DISPLAY CAP AGAINST ITS COLUMN, NOT THE PAGE. display-1 was 4.15rem, which needs ~790px for
+"Everything you need." while the hero text column is ~738px: four ragged lines and a hero as tall
+as the viewport. Caps now carry a real margin.
+
+`ch` UNITS BELONG ON PARAGRAPHS ONLY. 1ch resolves against the element's OWN font size, so
+max-w-[46ch] on a wrapper div is ~386px and on a 51px heading is ~1400px. BrandStory's content
+wrapper had exactly this bug and was squeezing the banner into a third of its apparent width.
+Wrappers and display headings use rem; paragraphs keep ch, which is where it means something.
+
+Banner heights: hero collage lg 25rem / 2xl 27rem, brand story lg min-h 27rem, quote lg py-18.
+These were 31/36, 34/38 and py-24/28 and made the page feel endless. Section rhythm does NOT grow
+past lg - the 88px 2xl step only added scrolling.
 
 GRID DIVISIBILITY RULE: product/category grids are 2 / 3 / 4 / 6 columns and rows are capped at
 12 items, because 12 divides by all of them and no breakpoint ends in a half-empty row. The old
