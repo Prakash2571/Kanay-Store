@@ -50,7 +50,7 @@ export function WhyKanay() {
   return (
     <section aria-labelledby="why-heading" className="border-y border-line bg-surface">
       <div className="shell section-y">
-        <div className="max-w-[56ch]">
+        <div className="max-w-[42rem]">
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
             Built for bulk buyers
           </p>

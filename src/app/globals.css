@@ -339,9 +339,7 @@ a {
     padding-block: 5rem;
   }
 
-  @media (width >= 96rem) {
-    padding-block: 5.5rem;
-  }
+  /* No further growth past `lg`. 88px only made the page longer to scroll. */
 }
 
 /**
@@ -359,37 +357,51 @@ a {
  * Middle terms are viewport-relative and the max is a rem cap, so nothing scales without limit.
  */
 @utility display-1 {
-  /* Hero headline. */
-  font-size: clamp(2.1rem, 4vw, 4.15rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  /**
+   * Hero headline.
+   *
+   * The cap was 4.15rem and it was too big: Manrope ExtraBold averages roughly 0.6em per
+   * character, so "Everything you need." at 66px needs about 790px of line, and the hero's text
+   * column is around 700px. The headline broke onto four lines and the panel grew tall enough to
+   * fill the viewport on its own.
+   *
+   * The text column is about 738px at a 1920px viewport. At 3.2rem the longest line ("Better
+   * prices in bulk.", 22 characters) needs roughly 675px, leaving a real margin for the estimate
+   * being approximate. 3.4rem needed 718px of that 738px, which is not a margin.
+   *
+   * The lesson worth keeping: a display cap has to be checked against the width of the COLUMN it
+   * sits in, not against the width of the page.
+   */
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
 }
 
 @utility display-2 {
-  /* Banner and statement headings. */
-  font-size: clamp(1.75rem, 2.9vw, 3.1rem);
-  line-height: 1.12;
-  letter-spacing: -0.028em;
+  /* Banner and statement headings. Same reasoning as display-1, one step down. */
+  font-size: clamp(1.65rem, 2.4vw, 2.65rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
 }
 
 @utility display-3 {
   /* Section headings: "Best sellers", "Shop by department". */
-  font-size: clamp(1.3rem, 1.75vw, 1.95rem);
+  font-size: clamp(1.3rem, 1.6vw, 1.8rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 @utility stat-figure {
   /* The four numbers in the stats strip. */
-  font-size: clamp(1.7rem, 2.3vw, 2.7rem);
+  font-size: clamp(1.65rem, 2vw, 2.4rem);
   line-height: 1;
   letter-spacing: -0.035em;
 }
 
 @utility lead {
   /* Supporting paragraph under a display-1 or display-2 heading. */
-  font-size: clamp(0.95rem, 1vw, 1.15rem);
-  line-height: 1.7;
+  font-size: clamp(0.95rem, 0.95vw, 1.1rem);
+  line-height: 1.65;
 }
 
 @utility no-scrollbar {

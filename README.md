@@ -41,6 +41,10 @@ The content column is **1680px**. It went 1320 → 1360 → 1680 because on the 
 
 Display type is **fluid** (`clamp`) rather than stepped at breakpoints, defined once in `globals.css` as `display-1` (hero), `display-2` (banner/statement), `display-3` (section headings), `stat-figure` and `lead`. Two reasons it lives there instead of as `text-[clamp(...)]` classes: the scale is tunable in one place, and an arbitrary value Tailwind fails to parse renders at the default font size **with no error**.
 
+**A display cap must be checked against the width of the column it sits in, not the width of the page.** `display-1` was briefly 4.15rem, which needed ~790px for "Everything you need." while the hero's text column is ~738px — the headline broke onto four lines and the hero grew tall enough to fill the viewport by itself. The caps are sized with a real margin against that column.
+
+**`ch` units belong on paragraphs, not on wrappers or large headings.** `1ch` resolves against the *element's own* font size, so `max-w-[46ch]` on a `<div>` is ~386px (inherited 16px) and on a 51px heading is ~1400px — neither is the line length it looks like. Paragraphs use `ch` because that is exactly where measuring in characters is meaningful; containers and display headings use `rem`.
+
 **Grid counts are 2 / 3 / 4 / 6 and rows are capped at 12 items.** 12 divides by all four, so no breakpoint ends in a half-empty row. The old 5-column step was removed for exactly that reason — nothing sensible divides by both 5 and 6. If you change a column count, check the item cap with it.
 
 ### Other load-bearing rules

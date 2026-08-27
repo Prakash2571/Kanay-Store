@@ -68,11 +68,11 @@ export function StatsStrip({
   ];
 
   return (
-    <section aria-labelledby="stats-heading" className="shell pt-9 lg:pt-12">
+    <section aria-labelledby="stats-heading" className="shell pt-8 lg:pt-10">
       <h2 className="sr-only" id="stats-heading">
         Kanay Store at a glance
       </h2>
-      <dl className="grid grid-cols-2 gap-y-8 rounded-[var(--radius-card)] border border-line bg-surface px-6 py-8 sm:px-8 lg:grid-cols-4 lg:gap-y-0 lg:px-12 lg:py-10 2xl:px-16">
+      <dl className="grid grid-cols-2 gap-y-8 rounded-[var(--radius-card)] border border-line bg-surface px-6 py-7 sm:px-8 lg:grid-cols-4 lg:gap-y-0 lg:px-10 lg:py-8 2xl:px-12">
         {stats.map((stat, index) => (
           <div
             className={`px-1 sm:px-2 lg:px-6 ${
