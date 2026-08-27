@@ -46,21 +46,32 @@ function page(handles: string[], hasNextPage = false, endCursor: string | null =
   };
 }
 
+/**
+ * `MetadataRoute.Robots['rules']` is a single object OR an array of them, so it has to be
+ * narrowed through a stable reference - `Array.isArray(robots().rules)` does not narrow
+ * `robots().rules`, because each call is a fresh expression.
+ */
+async function firstRobotsRule(): Promise<{ allow?: unknown; disallow?: unknown }> {
+  const { default: robots } = await import("@/app/robots");
+  const rules = robots().rules;
+  const rule = Array.isArray(rules) ? rules[0] : rules;
+  return (rule ?? {}) as { allow?: unknown; disallow?: unknown };
+}
+
+function asStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value.filter((entry): entry is string => typeof entry === "string");
+  return typeof value === "string" ? [value] : [];
+}
+
 describe("robots.txt", () => {
   it("allows the site root", async () => {
-    const { default: robots } = await import("@/app/robots");
-    const result = robots();
-    expect(result.rules).toBeDefined();
-    const rule = Array.isArray(result.rules) ? result.rules[0] : result.rules;
-    expect(rule?.allow).toBe("/");
+    const rule = await firstRobotsRule();
+    expect(asStringArray(rule.allow)).toContain("/");
   });
 
   it("disallows every private route, including the tokenised tracking path", async () => {
-    const { default: robots } = await import("@/app/robots");
-    const rule = (Array.isArray(robots().rules) ? robots().rules[0] : robots().rules) as {
-      disallow?: string[];
-    };
-    const disallow = rule.disallow ?? [];
+    const rule = await firstRobotsRule();
+    const disallow = asStringArray(rule.disallow);
 
     for (const path of ["/cart", "/checkout", "/order", "/track", "/track-order", "/api"]) {
       expect(disallow).toContain(path);
