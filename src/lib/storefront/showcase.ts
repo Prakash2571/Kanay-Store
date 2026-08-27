@@ -1,45 +1,25 @@
-import type { StorefrontImage } from "./types";
-
 /**
- * Department identity: a photograph and a colour, per category.
+ * Department identity: a colour and a keyword table, per category.
  *
- * TWO JOBS, ONE KEYWORD TABLE
- * ---------------------------
+ * ONE KEYWORD TABLE, TWO CONSUMERS
+ * --------------------------------
  * Categories on this storefront come from live Shopify collections and product types, so their
- * labels are free text ("Home & Kitchen Essentials", "Bluetooth Audio Gear"). Two features need
- * to resolve that text: the imagery fallback and the colour coding. They share one table here so
- * a label can never get an electronics photograph and a green card.
+ * labels are free text ("Home & Kitchen Essentials", "Bluetooth Audio Gear"). Both the colour
+ * coding and the imagery lookup resolve that text, and they share one table here so a label can
+ * never get an electronics photograph and a green card.
  *
- * WHY THE PHOTOGRAPHS EXIST
- * -------------------------
- * The hero and category rail are illustrated by real merchandise on a configured store — both
- * read `images[0]` off the products the backend returned. When the catalog is unreachable or the
- * store has no products, the fallback used to be outline icons in boxes, which made the homepage
- * look like a half-built template.
+ * THERE ARE NO IMAGE URLS IN THIS FILE ANY MORE
+ * --------------------------------------------
+ * There were eight hard-coded `images.unsplash.com` IDs. Nothing in the build environment can
+ * reach the network, so none of them could be verified, and both failure modes reached production:
+ * one 404'd, and another resolved to a photograph of coffee beans under alt text reading "small
+ * kitchen appliance on a worktop". The broken one was obvious; the plausible-but-wrong one silently
+ * mislabelled a category and lied to screen readers, which is worse.
  *
- * These are CATEGORY illustrations, not products. No price, no title, no MOQ, no add-to-cart,
- * and they link to a catalog search rather than a product page. That is the distinction that
- * makes them acceptable: "Electronics", over a photograph of headphones, linking to the
- * electronics filter, is a signpost. A card reading "Wireless Earbuds — ₹349/unit — MOQ 10" for
- * a product the store does not carry is a lie a customer can act on.
- *
- * THE IMAGE URLS ARE NOT VERIFIABLE FROM THIS ENVIRONMENT
- * ------------------------------------------------------
- * There is no outbound network access here, so these URLs could not be checked for a 200. Every
- * consumer therefore layers the photograph OVER a tinted, labelled surface: if a URL is wrong the
- * tile shows a soft coloured card with its department name, which is a designed state rather than
- * a broken one. Swapping any URL is a one-line change and needs no component edits.
- *
- * `images.unsplash.com` is already an allowed remote pattern in next.config.ts and already listed
- * in the CSP's `img-src`, so none of this adds a network origin.
+ * Imagery now lives in `public/categories/` and is discovered by `categoryMedia.ts`, so the only
+ * images referenced are ones that demonstrably exist. This module stays pure and testable: it maps
+ * a label to a department, a colour and a key, and nothing else.
  */
-
-const UNSPLASH = "https://images.unsplash.com";
-
-/** Pinned transform: fixed width, cropped, moderate quality. Keeps the URL cacheable. */
-function photo(id: string, width = 800): string {
-  return `${UNSPLASH}/${id}?auto=format&fit=crop&w=${width}&q=70`;
-}
 
 /**
  * The eight tint families, as LITERAL Tailwind class strings.
@@ -128,12 +108,15 @@ export const TINTS: Record<TintName, Tint> = {
 export const DEFAULT_TINT: TintName = "slate";
 
 export interface ShowcaseCategory {
+  /**
+   * Stable key. Also the filename a store owner uses to supply this department's photograph:
+   * `public/categories/<key>.jpg`. See categoryMedia.ts.
+   */
   key: string;
   /** Department name, matched case-insensitively against live category labels. */
   label: string;
   /** Keywords that resolve a free-text label to this department. */
   match: string[];
-  image: StorefrontImage;
   tint: TintName;
   href: string;
 }
@@ -151,12 +134,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "electronics",
     label: "Electronics",
     match: ["electronic", "audio", "headphone", "earbud", "gadget", "tech", "computer", "mobile", "phone", "charger", "cable"],
-    image: {
-      url: photo("photo-1505740420928-5e560c06d30e"),
-      alt: "Over-ear headphones on a plain background",
-      width: 800,
-      height: 800,
-    },
     tint: "blue",
     href: "/shop",
   },
@@ -164,12 +141,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "home-kitchen",
     label: "Home & Kitchen",
     match: ["home", "kitchen", "appliance", "cookware", "utensil", "decor", "furnish", "living", "lighting", "drinkware", "bottle"],
-    image: {
-      url: photo("photo-1517668808822-9ebb02f2a0e6"),
-      alt: "Small kitchen appliance on a worktop",
-      width: 800,
-      height: 800,
-    },
     tint: "green",
     href: "/shop",
   },
@@ -177,12 +148,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "accessories",
     label: "Accessories",
     match: ["accessor", "watch", "wearable", "jewel", "bag", "backpack", "luggage", "wallet", "belt"],
-    image: {
-      url: photo("photo-1523275335684-37898b6baf30"),
-      alt: "Wristwatch photographed on a light surface",
-      width: 800,
-      height: 800,
-    },
     tint: "lavender",
     href: "/shop",
   },
@@ -190,12 +155,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "beauty",
     label: "Beauty & Personal Care",
     match: ["beauty", "skincare", "personal care", "cosmetic", "grooming", "fragrance"],
-    image: {
-      url: photo("photo-1556228578-8c89e6adf883"),
-      alt: "Skincare bottles arranged together",
-      width: 800,
-      height: 800,
-    },
     tint: "rose",
     href: "/shop",
   },
@@ -203,12 +162,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "tools",
     label: "Tools & Hardware",
     match: ["tool", "hardware", "automotive", "diy", "industrial", "paint"],
-    image: {
-      url: photo("photo-1581147036324-c1c9bf6df9c0"),
-      alt: "Hand tools laid out on a workbench",
-      width: 800,
-      height: 800,
-    },
     tint: "yellow",
     href: "/shop",
   },
@@ -216,12 +169,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "office",
     label: "Office & Stationery",
     match: ["office", "stationery", "stationary", "paper", "desk", "school"],
-    image: {
-      url: photo("photo-1497366216548-37526070297c"),
-      alt: "Tidy office desk with stationery",
-      width: 800,
-      height: 800,
-    },
     tint: "slate",
     href: "/shop",
   },
@@ -229,12 +176,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "fitness",
     label: "Sports & Fitness",
     match: ["fitness", "sport", "gym", "outdoor", "cycle", "yoga"],
-    image: {
-      url: photo("photo-1517836357463-d25dfeac3438"),
-      alt: "Fitness equipment in a training space",
-      width: 800,
-      height: 800,
-    },
     tint: "teal",
     href: "/shop",
   },
@@ -242,12 +183,6 @@ export const SHOWCASE_CATEGORIES: ShowcaseCategory[] = [
     key: "fashion",
     label: "Fashion",
     match: ["fashion", "apparel", "clothing", "shirt", "wear", "textile", "footwear", "shoe"],
-    image: {
-      url: photo("photo-1483985988355-763728e1935b"),
-      alt: "Folded clothing on a retail display",
-      width: 800,
-      height: 800,
-    },
     tint: "orange",
     href: "/shop",
   },
@@ -274,11 +209,6 @@ export function departmentFor(label: string): ShowcaseCategory | null {
   return null;
 }
 
-/** A photograph for a category label with no image of its own, or null when unrecognised. */
-export function showcaseImageFor(label: string): StorefrontImage | null {
-  return departmentFor(label)?.image ?? null;
-}
-
 /**
  * The colour a category card should wear.
  *
@@ -289,29 +219,14 @@ export function categoryTintFor(label: string): Tint {
   return TINTS[departmentFor(label)?.tint ?? DEFAULT_TINT];
 }
 
-/** `count` photographs for the hero collage, spread across departments. */
-export function showcaseCollage(count: number): { image: StorefrontImage; title: string }[] {
-  return SHOWCASE_CATEGORIES.slice(0, Math.max(0, count)).map((category) => ({
-    image: category.image,
-    title: category.label,
-  }));
-}
-
 /**
- * The brand-story banner background.
+ * `count` departments for the hero collage, spread across the catalog.
  *
- * Chosen for SUBJECT, not mood: stacked shipping cartons is the single most legible shorthand for
- * "this is a wholesale operation that dispatches orders". Deliberately not a model, not a
- * boutique, not a styled flat-lay — the brief is explicit that the section must not read as a
- * fashion campaign, and a person as the focus is what tips it there.
- *
- * Wider than the category photos because it spans the full content column; the section renders a
- * navy gradient underneath it, so if this URL is wrong the banner is a deep navy panel with
- * readable white text rather than a broken image.
+ * Returns DEPARTMENTS, not images: the caller resolves each one against `public/categories/` and
+ * renders a tinted card where there is no file. The order is the spread — electronics, home,
+ * accessories, beauty — four visibly different things, which is what makes the collage read as a
+ * general marketplace rather than a single-category shop.
  */
-export const BRAND_STORY_IMAGE: StorefrontImage = {
-  url: photo("photo-1553413077-190dd305871c", 1920),
-  alt: "Stacked shipping cartons ready for dispatch in a warehouse",
-  width: 1920,
-  height: 1080,
-};
+export function showcaseCollage(count: number): ShowcaseCategory[] {
+  return SHOWCASE_CATEGORIES.slice(0, Math.max(0, count));
+}

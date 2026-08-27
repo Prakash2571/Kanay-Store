@@ -1,9 +1,10 @@
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import type { CategoryTile } from "@/lib/storefront/merchandising";
-import { SHOWCASE_CATEGORIES, categoryTintFor, showcaseImageFor } from "@/lib/storefront/showcase";
+import { DepartmentVisual } from "@/components/commerce/DepartmentVisual";
+import { departmentImageFor } from "@/lib/storefront/categoryMedia";
+import { SHOWCASE_CATEGORIES, categoryTintFor, departmentFor } from "@/lib/storefront/showcase";
 
 /**
  * The category rail, directly below the hero.
@@ -38,7 +39,7 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
           key: `showcase:${category.key}`,
           label: category.label,
           href: category.href,
-          image: category.image,
+          image: null,
         }));
 
   return (
@@ -81,32 +82,25 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
 }
 
 function CategoryCard({ tile }: { tile: CategoryTile }) {
-  const image = tile.image ?? showcaseImageFor(tile.label);
+  // Collection image first, then a file the owner supplied in public/categories, then the tinted
+  // card. Never a stock URL - see categoryMedia.ts for what that cost.
+  const image = tile.image ?? departmentImageFor(tile.label);
   const tint = categoryTintFor(tile.label);
+  const department = departmentFor(tile.label);
 
   return (
     <Link
       className={`group block overflow-hidden rounded-[var(--radius-card)] border transition-[box-shadow,transform] hover:shadow-[var(--shadow-card)] focus-visible:outline focus-visible:outline-2 motion-safe:hover:-translate-y-0.5 ${tint.border} ${tint.surface}`}
       href={tile.href}
     >
-      {/* Tint first, photograph over it. A failed image leaves the tinted panel and its initial. */}
-      <span className={`relative block aspect-[5/4] overflow-hidden ${tint.surface}`}>
-        <span
-          aria-hidden="true"
-          className={`absolute inset-0 grid place-items-center text-2xl font-extrabold ${tint.ink}`}
-        >
-          {tile.label.charAt(0).toUpperCase()}
-        </span>
-        {image ? (
-          <Image
-            alt=""
-            className="relative object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
-            fill
-            sizes="(max-width: 639px) 45vw, (max-width: 1023px) 23vw, 16vw"
-            src={image.url}
-          />
-        ) : null}
-      </span>
+      <DepartmentVisual
+        className="aspect-[5/4]"
+        departmentKey={department?.key}
+        image={image}
+        label={tile.label}
+        sizes="(max-width: 639px) 45vw, (max-width: 1023px) 23vw, 16vw"
+        tint={tint}
+      />
 
       {/* A 2px bar of the saturated mark: the only place the strong colour appears. */}
       <span aria-hidden="true" className={`block h-0.5 w-full ${tint.mark}`} />

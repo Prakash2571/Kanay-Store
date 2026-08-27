@@ -51,8 +51,11 @@ const contentSecurityPolicyReportOnly = [
   // Razorpay Checkout is loaded from their CDN at runtime.
   "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com",
   "style-src 'self' 'unsafe-inline'",
-  // Shopify CDN serves product imagery; data: covers inlined placeholders.
-  "img-src 'self' data: blob: https://cdn.shopify.com https://images.unsplash.com https://*.razorpay.com",
+  // Shopify CDN serves product imagery; data: covers inlined placeholders. Category and banner
+  // imagery is served from `public/`, so it is covered by 'self' and needs no third-party origin -
+  // images.unsplash.com was removed from both here and remotePatterns when the hard-coded stock
+  // URLs went (one 404'd, one showed the wrong subject; see lib/storefront/categoryMedia.ts).
+  "img-src 'self' data: blob: https://cdn.shopify.com https://*.razorpay.com",
   "font-src 'self' data:",
   // The Trademart backend origin is not known at build time, so it cannot be listed
   // here. That is the main reason this policy is not yet enforced: connect-src has to
@@ -93,10 +96,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.shopify.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
       },
     ],
   },
