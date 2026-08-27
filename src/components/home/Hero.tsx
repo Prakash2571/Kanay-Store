@@ -1,10 +1,20 @@
 import { ArrowRight, PackageCheck, Sparkles } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
+import { DepartmentVisual } from "@/components/commerce/DepartmentVisual";
+import { departmentMedia } from "@/lib/storefront/categoryMedia";
 import { heroCollageImages, maxDiscountPercent } from "@/lib/storefront/merchandising";
-import { showcaseCollage } from "@/lib/storefront/showcase";
-import type { StorefrontProductSummary } from "@/lib/storefront/types";
+import { TINTS, categoryTintFor, showcaseCollage, type Tint } from "@/lib/storefront/showcase";
+import type { StorefrontImage, StorefrontProductSummary } from "@/lib/storefront/types";
+
+/** One collage tile: a real product photo, an owner-supplied department photo, or a tinted card. */
+type HeroTile = {
+  key: string;
+  label: string;
+  tint: Tint;
+  departmentKey?: string;
+  image: StorefrontImage | null;
+};
 
 /**
  * The homepage hero.
@@ -32,13 +42,32 @@ import type { StorefrontProductSummary } from "@/lib/storefront/types";
  * not rendered at all, because a hard-coded percentage is a promise the checkout cannot keep.
  */
 export function Hero({ products }: { products: StorefrontProductSummary[] }) {
-  const fromCatalog = heroCollageImages(products, 4);
-  // Top up rather than replace: a store with two product photos shows both, plus two curated
-  // category images, instead of discarding its own imagery for a full curated set.
-  const collage = [
-    ...fromCatalog,
-    ...showcaseCollage(4).slice(0, Math.max(0, 4 - fromCatalog.length)),
-  ].slice(0, 4);
+  const fromCatalog: HeroTile[] = heroCollageImages(products, 4).map((entry, index) => ({
+    key: `product:${index}:${entry.image.url}`,
+    label: entry.title,
+    tint: TINTS.blue,
+    image: entry.image,
+  }));
+
+  /**
+   * Top up rather than replace: a store with two product photos shows both, plus two department
+   * tiles, instead of discarding its own imagery.
+   *
+   * A department tile uses a file from `public/categories/` if the owner supplied one and otherwise
+   * renders as a colour-coded card. There is no stock-photo path any more - see categoryMedia.ts.
+   */
+  const departments: HeroTile[] = showcaseCollage(4 - fromCatalog.length).map((department) => {
+    const url = departmentMedia(department.key);
+    return {
+      key: `department:${department.key}`,
+      label: department.label,
+      tint: categoryTintFor(department.label),
+      departmentKey: department.key,
+      image: url ? { url, alt: department.label, width: null, height: null } : null,
+    };
+  });
+
+  const collage = [...fromCatalog, ...departments].slice(0, 4);
   const discount = maxDiscountPercent(products);
 
   return (
@@ -137,24 +166,21 @@ const SUPPORTING_SPAN = [
   "col-span-2 aspect-[16/9] sm:col-span-1 sm:aspect-auto",
 ];
 
-function ProductCollage({
-  collage,
-}: {
-  collage: { image: { url: string; alt: string }; title: string }[];
-}) {
+function ProductCollage({ collage }: { collage: HeroTile[] }) {
   const [featured, ...supporting] = collage;
   if (!featured) return null;
 
   return (
     <ul className="grid grid-cols-2 gap-3 sm:min-h-[21rem] sm:grid-cols-4 sm:grid-rows-2 sm:gap-4 lg:min-h-[25rem] 2xl:min-h-[27rem]">
-      <li className="relative col-span-2 aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-card)] sm:row-span-2 sm:aspect-auto">
-        <Image
-          alt={featured.image.alt || featured.title}
-          className="object-cover"
-          fill
+      <li className="group relative col-span-2 aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)] sm:row-span-2 sm:aspect-auto">
+        <DepartmentVisual
+          className="h-full w-full"
+          departmentKey={featured.departmentKey}
+          image={featured.image}
+          label={featured.label}
           priority
           sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 32vw"
-          src={featured.image.url}
+          tint={featured.tint}
         />
         {/*
           The featured tile is labelled because it is large enough that a viewer asks what they
@@ -162,21 +188,22 @@ function ProductCollage({
           list, and their alt text already carries the same information for screen readers.
         */}
         <span className="absolute bottom-3 left-3 rounded-[var(--radius-pill)] bg-surface/90 px-3 py-1 text-[0.7rem] font-bold text-ink shadow-[var(--shadow-card)] backdrop-blur">
-          {featured.title}
+          {featured.label}
         </span>
       </li>
 
       {supporting.slice(0, 3).map((entry, index) => (
         <li
-          className={`relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-card)] ${SUPPORTING_SPAN[index]}`}
-          key={entry.image.url}
+          className={`group relative overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)] ${SUPPORTING_SPAN[index]}`}
+          key={entry.key}
         >
-          <Image
-            alt={entry.image.alt || entry.title}
-            className="object-cover"
-            fill
+          <DepartmentVisual
+            className="h-full w-full"
+            departmentKey={entry.departmentKey}
+            image={entry.image}
+            label={entry.label}
             sizes="(max-width: 639px) 45vw, (max-width: 1023px) 30vw, 16vw"
-            src={entry.image.url}
+            tint={entry.tint}
           />
         </li>
       ))}

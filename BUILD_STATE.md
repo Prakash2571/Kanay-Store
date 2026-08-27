@@ -177,12 +177,25 @@ GRID DIVISIBILITY RULE: product/category grids are 2 / 3 / 4 / 6 columns and row
 xl:grid-cols-5 step was REMOVED for this reason - nothing sensible divides by both 5 and 6. Change
 a column count and you must re-check the item cap.
 
-PHOTOGRAPHY: hero is an asymmetric 4-photo collage (featured tile spanning 2 rows + 3 supporting;
-tiles exactly at both breakpoints). Category rail is image-backed tinted cards, 2/4/6 across. Live
-catalog images lead; showcase.ts supplies curated CATEGORY photos (images.unsplash.com, already in
-next.config remotePatterns and CSP img-src) only as fallback. departmentFor returns null rather
-than guessing. Tints sit BEHIND photos so a bad URL degrades to a designed card - the URLs could
-not be verified from the build environment.
+IMAGERY: hero is an asymmetric 4-tile collage (featured tile spanning 2 rows + 3 supporting; tiles
+exactly at both breakpoints). Category rail is image-backed tinted cards, 2/4/6 across, 12 tiles.
+
+Resolution order for every tile: (1) live Shopify product image, (2) a file the owner put in
+public/categories/<department-key>.<ext>, discovered by reading the directory in categoryMedia.ts,
+(3) a colour-coded DepartmentVisual card (tint + department icon + faint oversized glyph).
+
+NO HARD-CODED THIRD-PARTY IMAGE URLS, EVER. The previous version shipped eight images.unsplash.com
+IDs. The build environment has no outbound network so none could be verified, and two failed in
+production: photo-1581147036324 404'd, and photo-1517668808822 rendered COFFEE BEANS under alt text
+reading "small kitchen appliance on a worktop". The broken one was obvious; the plausible-but-wrong
+one silently mislabelled a category and lied to screen readers. images.unsplash.com was removed from
+next.config remotePatterns AND the CSP img-src, since nothing uses it.
+
+Directory is re-read per render in development (drop a file in, refresh) and cached once in
+production. A missing directory is the normal fresh-checkout case, not an error.
+
+public/brand-story.<ext> optionally backs the trust banner; without it the banner is the navy panel
+it already renders underneath, so there is no placeholder state to design.
 
 BRAND STORY BANNER (BrandStory.tsx): full-width-in-shell photographic trust section, stacked
 shipping cartons, navy overlay (--overlay 52% flat + a directional --overlay-strong gradient on the

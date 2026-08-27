@@ -2,7 +2,7 @@ import { ArrowRight, BadgeCheck, Boxes, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { BRAND_STORY_IMAGE } from "@/lib/storefront/showcase";
+import { brandStoryMedia } from "@/lib/storefront/categoryMedia";
 
 /**
  * The full-width brand story / trust banner.
@@ -44,17 +44,25 @@ import { BRAND_STORY_IMAGE } from "@/lib/storefront/showcase";
  * from breaking the grid.
  */
 export function BrandStory() {
+  /**
+   * Optional. Drop `public/brand-story.jpg` in and it becomes the background; without it the
+   * section is the navy panel it already renders underneath, which is why there is no placeholder
+   * and no broken-image state to design around.
+   */
+  const image = brandStoryMedia();
+
   return (
     <section aria-labelledby="brand-story-heading" className="shell section-y">
       <div className="relative isolate overflow-hidden rounded-[var(--radius-card)] bg-[#0f172a]">
-        <Image
-          alt={BRAND_STORY_IMAGE.alt}
-          className="absolute inset-0 -z-10 h-full w-full object-cover"
-          height={BRAND_STORY_IMAGE.height ?? 1080}
-          sizes="(max-width: 1023px) 100vw, 1360px"
-          src={BRAND_STORY_IMAGE.url}
-          width={BRAND_STORY_IMAGE.width ?? 1920}
-        />
+        {image ? (
+          <Image
+            alt={image.alt}
+            className="absolute inset-0 -z-10 object-cover"
+            fill
+            sizes="(max-width: 1023px) 100vw, 1680px"
+            src={image.url}
+          />
+        ) : null}
 
         {/* Flat base overlay: readability floor across the whole image. */}
         <span

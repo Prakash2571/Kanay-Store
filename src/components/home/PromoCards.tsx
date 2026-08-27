@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { CategoryTile } from "@/lib/storefront/merchandising";
-import { showcaseImageFor } from "@/lib/storefront/showcase";
+import { departmentImageFor } from "@/lib/storefront/categoryMedia";
 import type { StorefrontImage } from "@/lib/storefront/types";
 
 /**
@@ -16,12 +16,14 @@ import type { StorefrontImage } from "@/lib/storefront/types";
  * primary and two secondaries, which is how a real merchandising block is composed and which
  * also tells the visitor which one matters most.
  *
- * EVERY CARD IS PHOTOGRAPHED
- * --------------------------
- * They previously fell back to an icon in a bordered square whenever the matched collection had
- * no image, which was most of the time. Imagery now comes from the matched collection, then from
- * a product in it, then from the curated department photograph — and the icon fallback is gone
- * entirely, because a card whose whole job is to be visual should not degrade to a glyph.
+ * IMAGERY, AND WHAT HAPPENS WITHOUT IT
+ * ------------------------------------
+ * Matched collection image first, then a file the owner supplied in `public/categories/`. With
+ * neither, the card carries its soft tint and no image area at all — it does not fall back to an
+ * icon in a bordered square, which is what it used to do and what made the section look unbuilt.
+ *
+ * There is deliberately no stock-photo path: the hard-coded URLs this replaced produced a 404 and a
+ * miscaptioned photograph in production. See lib/storefront/categoryMedia.ts.
  *
  * STILL NO PRICES HERE
  * --------------------
@@ -40,7 +42,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
     text: "Wholesale home and kitchen picks — cookware, storage, decor and small appliances, in the quantities a shop or an office actually orders.",
     cta: "Browse home",
     href: home?.href ?? "/shop",
-    image: home?.image ?? showcaseImageFor("home"),
+    image: home?.image ?? departmentImageFor("home"),
     tone: "bg-tint-green",
     border: "border-tint-green-mark/25",
   };
@@ -53,7 +55,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       text: "Audio, charging and mobile — the fastest-moving lines in the catalog.",
       cta: "Browse tech",
       href: tech?.href ?? "/shop",
-      image: tech?.image ?? showcaseImageFor("electronics"),
+      image: tech?.image ?? departmentImageFor("electronics"),
       tone: "bg-tint-blue",
       border: "border-tint-blue-mark/25",
     },
@@ -64,7 +66,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       text: "Products below their usual price, with minimums shown up front.",
       cta: "View deals",
       href: "/#deals",
-      image: showcaseImageFor("tools"),
+      image: departmentImageFor("tools"),
       tone: "bg-tint-orange",
       border: "border-tint-orange-mark/25",
     },

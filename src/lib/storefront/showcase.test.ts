@@ -1,25 +1,27 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  BRAND_STORY_IMAGE,
   DEFAULT_TINT,
   SHOWCASE_CATEGORIES,
   TINTS,
   categoryTintFor,
   departmentFor,
   showcaseCollage,
-  showcaseImageFor,
 } from "./showcase";
 
 /**
- * Department identity: photography and colour coding.
+ * Department identity: keyword matching and colour coding.
  *
- * The risk this module carries is not a rendering bug, it is a CLAIM — put a photograph of earbuds
- * on a category that is not electronics and the page is lying about what it sells. So most of these
- * tests are about the cases where it must refuse to guess.
+ * The risk this module carries is not a rendering bug, it is a CLAIM — resolve a category to the
+ * wrong department and the page colours it wrong and, once imagery exists, illustrates it wrong. So
+ * most of these tests are about the cases where it must refuse to guess.
  *
  * The other risk is silent: a Tailwind class assembled at runtime produces no CSS and fails
  * invisibly. The class-shape tests below exist because that failure mode has no error message.
+ *
+ * There are no image-URL assertions left. This module no longer carries any: hard-coded stock URLs
+ * produced a 404 and a miscaptioned photograph in production, so imagery moved to files discovered
+ * on disk (categoryMedia.ts) and the only images the app can reference are ones that exist.
  */
 describe("departmentFor", () => {
   it("matches a department by exact label", () => {
@@ -51,38 +53,31 @@ describe("departmentFor", () => {
   });
 });
 
-describe("showcaseImageFor", () => {
-  it("returns a photograph for a recognised department", () => {
-    expect(showcaseImageFor("Tools & Hardware")?.url).toContain("images.unsplash.com");
-  });
-
-  it("returns null for an unrecognised label", () => {
-    // Illustrating "Monsoon Clearance" with headphones would tell a shopper the sale is
-    // about electronics.
-    expect(showcaseImageFor("Monsoon Clearance")).toBeNull();
-  });
-
-  it("gives every department a non-empty alt text", () => {
-    // Decorative in the category rail, but load-bearing in the hero collage where it is the
-    // only description a screen-reader user gets.
+describe("department metadata", () => {
+  it("gives every department a key usable as a filename", () => {
+    // The key IS the filename an owner supplies: public/categories/<key>.jpg. A key with a space,
+    // a slash or an uppercase letter would be a filename nobody can guess from the docs.
     for (const category of SHOWCASE_CATEGORIES) {
-      expect(category.image.alt.trim().length).toBeGreaterThan(0);
+      expect(category.key).toMatch(/^[a-z0-9-]+$/);
     }
   });
 
-  it("only ever points at the allow-listed image host", () => {
-    // next.config.ts lists two remote patterns and the CSP lists the same two. A URL on any
-    // other host renders as a broken image in production and nowhere else.
-    for (const category of [...SHOWCASE_CATEGORIES.map((c) => c.image), BRAND_STORY_IMAGE]) {
-      expect(category.url.startsWith("https://images.unsplash.com/")).toBe(true);
-    }
+  it("keeps department keys unique", () => {
+    const keys = SHOWCASE_CATEGORIES.map((category) => category.key);
+    expect(new Set(keys).size).toBe(keys.length);
   });
 
   it("links departments to a route that always resolves", () => {
-    // The fallback rail renders when the catalog is unreachable, so a filtered URL could point at
-    // a category that does not exist. /shop always renders, empty state included.
+    // The fallback rail renders when the catalog is unreachable, so a filtered URL could point at a
+    // category that does not exist. /shop always renders, empty state included.
     for (const category of SHOWCASE_CATEGORIES) {
       expect(category.href).toBe("/shop");
+    }
+  });
+
+  it("gives every department a tint that exists", () => {
+    for (const category of SHOWCASE_CATEGORIES) {
+      expect(TINTS[category.tint]).toBeDefined();
     }
   });
 });
@@ -160,10 +155,10 @@ describe("showcaseCollage", () => {
   });
 
   it("spreads across departments rather than repeating one", () => {
-    // Four electronics photos would say "electronics shop". The point of the hero visual is that
-    // this is a multi-category marketplace.
-    expect(new Set(showcaseCollage(4).map((entry) => entry.title)).size).toBe(4);
-    expect(new Set(showcaseCollage(4).map((entry) => entry.image.url)).size).toBe(4);
+    // Four tiles from one department would say "electronics shop". The point of the hero visual is
+    // that this is a multi-category marketplace.
+    expect(new Set(showcaseCollage(4).map((entry) => entry.key)).size).toBe(4);
+    expect(new Set(showcaseCollage(4).map((entry) => entry.tint)).size).toBe(4);
   });
 
   it("handles zero and negative counts without throwing", () => {
@@ -173,18 +168,5 @@ describe("showcaseCollage", () => {
 
   it("caps at the number of departments available", () => {
     expect(showcaseCollage(99)).toHaveLength(SHOWCASE_CATEGORIES.length);
-  });
-});
-
-describe("brand story banner image", () => {
-  it("describes a sourcing scene, not a person or a lifestyle shot", () => {
-    // The section must not read as a fashion campaign, and a person as the focus is what tips it
-    // there. This pins the intent so a future image swap has to stay on brief.
-    expect(BRAND_STORY_IMAGE.alt.toLowerCase()).toMatch(/carton|box|parcel|warehouse|packag/);
-  });
-
-  it("carries explicit dimensions so the banner cannot shift layout while loading", () => {
-    expect(BRAND_STORY_IMAGE.width).toBeGreaterThan(1200);
-    expect(BRAND_STORY_IMAGE.height).toBeGreaterThan(600);
   });
 });
