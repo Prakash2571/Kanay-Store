@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { parseTrackingToken } from "@/lib/storefront/orders";
+import { readRecentCheckout } from "@/lib/storefront/recentCheckout";
 
 export function TrackOrderForm() {
   const router = useRouter();
@@ -22,20 +23,15 @@ export function TrackOrderForm() {
   }
 
   function resumeRecentCheckout() {
-    try {
-      const parsed = JSON.parse(localStorage.getItem("kanay-last-checkout") ?? "null") as {
-        id?: string;
-        token?: string;
-      } | null;
-      if (!parsed?.id || !parsed.token) {
-        setError("No recent checkout was found on this device.");
-        return;
-      }
-      const params = new URLSearchParams({ session: parsed.id, token: parsed.token });
-      router.push(`/order/success?${params.toString()}`);
-    } catch {
-      setError("No recent checkout was found on this device.");
+    const recent = readRecentCheckout();
+    if (recent === null) {
+      setError("No checkout from this browser tab was found. Use your secure order link instead.");
+      return;
     }
+    const params = new URLSearchParams({ session: recent.id, token: recent.token });
+    // replace, not push: the URL carries a status token, so it should not be left
+    // behind as a back-button entry.
+    router.replace(`/order/success?${params.toString()}`);
   }
 
   return (
@@ -77,8 +73,12 @@ export function TrackOrderForm() {
           onClick={resumeRecentCheckout}
           className="min-h-11 rounded-[var(--radius-control)] border border-ink px-5 text-sm font-semibold transition-[transform,background-color,color] active:scale-[0.98] hover:bg-ink hover:text-canvas"
         >
-          Resume checkout from this device
+          Resume checkout in this tab
         </button>
+        <p className="mt-2 text-xs leading-5 text-ink-muted">
+          Your order link is kept only for this browser tab, so it is not left on the
+          device after you close it.
+        </p>
       </div>
     </div>
   );
