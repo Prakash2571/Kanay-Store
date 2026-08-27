@@ -1,12 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Fashion">
-  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
-       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
-       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
-       photograph instead, drop fashion.jpg beside this file - raster files take priority. -->
-  <rect width="800" height="640" fill="#ffdfc9"/>
-  <circle cx="400" cy="300" r="212" fill="#f09a68" opacity="0.34"/>
-  <circle cx="612" cy="126" r="78" fill="#f09a68" opacity="0.26"/>
-  <circle cx="176" cy="512" r="104" fill="#f09a68" opacity="0.22"/>
-  <path d="M362 214 L288 250 L316 332 L350 316 V472 A16 16 0 0 0 366 488 H434 A16 16 0 0 0 450 472 V316 L484 332 L512 250 L438 214 A40 40 0 0 1 362 214 Z" fill="#9a4a16"/>
-  <path d="M362 214 A40 40 0 0 0 438 214" fill="none" stroke="#f09a68" stroke-width="13"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Folded t-shirt on a studio backdrop">
+  <!-- Kanay Store category imagery: a rendered product shot on a studio backdrop.
+       Drawn rather than photographed because the build environment has no outbound network, so a
+       photograph can be neither downloaded nor verified - and the previous attempt at stock URLs
+       shipped a 404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts).
+       Backdrop and product tones derive from this department's tint tokens in globals.css.
+       To use a real photograph instead: ./scripts/add-category-photo.sh fashion <url-or-file>
+       Raster files take priority over this file automatically. -->
+  <defs>
+    <radialGradient id="sweep" cx="50%" cy="34%" r="80%">
+      <stop offset="0" stop-color="#fff1e7"/>
+      <stop offset="0.62" stop-color="#ffdfc9"/>
+      <stop offset="1" stop-color="#e0c4b1"/>
+    </radialGradient>
+    <linearGradient id="body" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#e9ad88"/>
+      <stop offset="0.45" stop-color="#e08a55"/>
+      <stop offset="1" stop-color="#8a3f13"/>
+    </linearGradient>
+    <linearGradient id="bodyAlt" x1="0" y1="0" x2="1" y2="0.6">
+      <stop offset="0" stop-color="#8a3f13"/>
+      <stop offset="0.55" stop-color="#e08a55"/>
+      <stop offset="1" stop-color="#682f0e"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1cab2"/>
+      <stop offset="0.28" stop-color="#e49869"/>
+      <stop offset="0.55" stop-color="#b87146"/>
+      <stop offset="0.78" stop-color="#e7a47a"/>
+      <stop offset="1" stop-color="#753610"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="contact" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#473e38" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#473e38" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="drop" x="-30%" y="-30%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#45200a" flood-opacity="0.30"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="640" fill="url(#sweep)"/>
+  <ellipse cx="400" cy="150" rx="300" ry="150" fill="#ffffff" opacity="0.22" filter="url(#blur)"/>
+  <ellipse cx="400" cy="498" rx="188" ry="28" fill="url(#contact)"/>
+  <g filter="url(#drop)">
+    <rect x="256" y="248" width="288" height="232" rx="26" fill="url(#body)"/>
+    <path d="M256 248h288v54a640 640 0 0 1-288 0z" fill="#ffffff" opacity="0.14"/>
+    <path d="M300 248l60-32a52 52 0 0 0 80 0l60 32z" fill="url(#bodyAlt)"/>
+    <path d="M360 216a52 52 0 0 0 80 0 62 62 0 0 1-80 0z" fill="#612c0d" opacity="0.55"/>
+    <path d="M256 330h288" stroke="#612c0d" stroke-width="10" stroke-opacity="0.20"/>
+    <path d="M256 404h288" stroke="#612c0d" stroke-width="10" stroke-opacity="0.16"/>
+    <path d="M300 248v232" stroke="#612c0d" stroke-width="8" stroke-opacity="0.14"/>
+    <path d="M500 248v232" stroke="#612c0d" stroke-width="8" stroke-opacity="0.14"/>
+    <rect x="276" y="266" width="30" height="196" rx="15" fill="url(#gloss)"/>
+  </g>
+  <rect width="800" height="640" filter="url(#grain)" opacity="0.05"/>
 </svg>

@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="Stacked cartons ready for dispatch in a warehouse">
+  <!-- Kanay Store brand-story banner: a rendered warehouse scene, not a photograph.
+       The build environment has no outbound network, so a photograph can be neither downloaded nor
+       verified. Bold shapes over fine detail on purpose - the section lays a navy overlay at ~52%
+       plus a directional gradient over this, so small detail would be lost anyway.
+       Replace by dropping a real public/brand-story.jpg in; raster takes priority. -->
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8eef6"/>
+      <stop offset="0.55" stop-color="#cfd9e6"/>
+      <stop offset="1" stop-color="#aab7c8"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9aa7b8"/>
+      <stop offset="1" stop-color="#6f7c8c"/>
+    </linearGradient>
+    <radialGradient id="pool" cx="34%" cy="10%" r="70%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soften" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#wall)"/>
+  <rect y="700" width="1920" height="380" fill="url(#floor)"/>
+  <g stroke="#5c6877" stroke-opacity="0.25" stroke-width="3">
+    <path d="M0 760h1920"/><path d="M0 860h1920"/><path d="M0 980h1920"/>
+  </g>
+
+  <!-- Distant racking, blurred so the foreground reads as the subject. -->
+  <g filter="url(#soften)" opacity="0.75">
+    <g>
+      <path d="M120 470 l34 -17.0 h190 l-34 17.0 z" fill="#c9b49d"/>
+      <path d="M310 470 l34 -17.0 v150 l-34 17.0 z" fill="#8e785f"/>
+      <rect x="120" y="470" width="190" height="150" fill="#b69a7a"/>
+      <rect x="207.4" y="470" width="13.3" height="150" fill="#786651" opacity="0.55"/>
+      <rect x="120" y="515.0" width="190" height="6.75" fill="#786651" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M330 470 l34 -17.0 h190 l-34 17.0 z" fill="#bfad97"/>
+      <path d="M520 470 l34 -17.0 v150 l-34 17.0 z" fill="#83705a"/>
+      <rect x="330" y="470" width="190" height="150" fill="#a89073"/>
+      <rect x="417.4" y="470" width="13.3" height="150" fill="#6f5f4c" opacity="0.55"/>
+      <rect x="330" y="515.0" width="190" height="6.75" fill="#6f5f4c" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M540 470 l34 -17.0 h190 l-34 17.0 z" fill="#ccb9a5"/>
+      <path d="M730 470 l34 -17.0 v150 l-34 17.0 z" fill="#917e68"/>
+      <rect x="540" y="470" width="190" height="150" fill="#baa185"/>
+      <rect x="627.4" y="470" width="13.3" height="150" fill="#7b6a58" opacity="0.55"/>
+      <rect x="540" y="515.0" width="190" height="6.75" fill="#7b6a58" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M120 330 l34 -17.0 h190 l-34 17.0 z" fill="#c9b49d"/>
+      <path d="M310 330 l34 -17.0 v140 l-34 17.0 z" fill="#8e785f"/>
+      <rect x="120" y="330" width="190" height="140" fill="#b69a7a"/>
+      <rect x="207.4" y="330" width="13.3" height="140" fill="#786651" opacity="0.55"/>
+      <rect x="120" y="372.0" width="190" height="6.3" fill="#786651" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M330 330 l34 -17.0 h190 l-34 17.0 z" fill="#bfad97"/>
+      <path d="M520 330 l34 -17.0 v140 l-34 17.0 z" fill="#83705a"/>
+      <rect x="330" y="330" width="190" height="140" fill="#a89073"/>
+      <rect x="417.4" y="330" width="13.3" height="140" fill="#6f5f4c" opacity="0.55"/>
+      <rect x="330" y="372.0" width="190" height="6.3" fill="#6f5f4c" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M540 330 l34 -17.0 h190 l-34 17.0 z" fill="#ccb9a5"/>
+      <path d="M730 330 l34 -17.0 v140 l-34 17.0 z" fill="#917e68"/>
+      <rect x="540" y="330" width="190" height="140" fill="#baa185"/>
+      <rect x="627.4" y="330" width="13.3" height="140" fill="#7b6a58" opacity="0.55"/>
+      <rect x="540" y="372.0" width="190" height="6.3" fill="#7b6a58" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1230 455 l34 -17.0 h200 l-34 17.0 z" fill="#c9b49d"/>
+      <path d="M1430 455 l34 -17.0 v165 l-34 17.0 z" fill="#8e785f"/>
+      <rect x="1230" y="455" width="200" height="165" fill="#b69a7a"/>
+      <rect x="1322.0" y="455" width="14.000000000000002" height="165" fill="#786651" opacity="0.55"/>
+      <rect x="1230" y="504.5" width="200" height="7.425" fill="#786651" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1450 455 l34 -17.0 h200 l-34 17.0 z" fill="#bfad97"/>
+      <path d="M1650 455 l34 -17.0 v165 l-34 17.0 z" fill="#83705a"/>
+      <rect x="1450" y="455" width="200" height="165" fill="#a89073"/>
+      <rect x="1542.0" y="455" width="14.000000000000002" height="165" fill="#6f5f4c" opacity="0.55"/>
+      <rect x="1450" y="504.5" width="200" height="7.425" fill="#6f5f4c" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1670 455 l34 -17.0 h200 l-34 17.0 z" fill="#ccb9a5"/>
+      <path d="M1870 455 l34 -17.0 v165 l-34 17.0 z" fill="#917e68"/>
+      <rect x="1670" y="455" width="200" height="165" fill="#baa185"/>
+      <rect x="1762.0" y="455" width="14.000000000000002" height="165" fill="#7b6a58" opacity="0.55"/>
+      <rect x="1670" y="504.5" width="200" height="7.425" fill="#7b6a58" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1230 300 l34 -17.0 h200 l-34 17.0 z" fill="#c9b49d"/>
+      <path d="M1430 300 l34 -17.0 v155 l-34 17.0 z" fill="#8e785f"/>
+      <rect x="1230" y="300" width="200" height="155" fill="#b69a7a"/>
+      <rect x="1322.0" y="300" width="14.000000000000002" height="155" fill="#786651" opacity="0.55"/>
+      <rect x="1230" y="346.5" width="200" height="6.975" fill="#786651" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1450 300 l34 -17.0 h200 l-34 17.0 z" fill="#bfad97"/>
+      <path d="M1650 300 l34 -17.0 v155 l-34 17.0 z" fill="#83705a"/>
+      <rect x="1450" y="300" width="200" height="155" fill="#a89073"/>
+      <rect x="1542.0" y="300" width="14.000000000000002" height="155" fill="#6f5f4c" opacity="0.55"/>
+      <rect x="1450" y="346.5" width="200" height="6.975" fill="#6f5f4c" opacity="0.35"/>
+    </g>
+  </g>
+  <g stroke="#66727f" stroke-opacity="0.35" stroke-width="14" filter="url(#soften)">
+    <path d="M100 300v330"/><path d="M745 300v330"/><path d="M1210 280v350"/><path d="M1890 280v350"/>
+  </g>
+
+  <!-- Foreground stack, plus its pallet and contact shadow. -->
+  <ellipse cx="1050" cy="845" rx="330" ry="46" fill="#4b5563" opacity="0.35"/>
+    <g>
+      <path d="M790 620 l46 -23.0 h250 l-46 23.0 z" fill="#d6b48c"/>
+      <path d="M1040 620 l46 -23.0 v205 l-46 23.0 z" fill="#9c784d"/>
+      <rect x="790" y="620" width="250" height="205" fill="#c89a63"/>
+      <rect x="905.0" y="620" width="17.5" height="205" fill="#846641" opacity="0.55"/>
+      <rect x="790" y="681.5" width="250" height="9.225" fill="#846641" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M1000 620 l46 -23.0 h250 l-46 23.0 z" fill="#dbbd9a"/>
+      <path d="M1250 620 l46 -23.0 v205 l-46 23.0 z" fill="#a1815c"/>
+      <rect x="1000" y="620" width="250" height="205" fill="#cfa676"/>
+      <rect x="1115.0" y="620" width="17.5" height="205" fill="#896e4e" opacity="0.55"/>
+      <rect x="1000" y="681.5" width="250" height="9.225" fill="#896e4e" opacity="0.35"/>
+    </g>
+    <g>
+      <path d="M860 425 l46 -23.0 h250 l-46 23.0 z" fill="#cdae87"/>
+      <path d="M1110 425 l46 -23.0 v195 l-46 23.0 z" fill="#937149"/>
+      <rect x="860" y="425" width="250" height="195" fill="#bc915d"/>
+      <rect x="975.0" y="425" width="17.5" height="195" fill="#7c603d" opacity="0.55"/>
+      <rect x="860" y="483.5" width="250" height="8.775" fill="#7c603d" opacity="0.35"/>
+    </g>
+  <g fill="#8a6a45">
+    <rect x="770" y="828" width="500" height="22" rx="5"/>
+    <rect x="790" y="850" width="40" height="34" rx="4"/>
+    <rect x="1000" y="850" width="40" height="34" rx="4"/>
+    <rect x="1210" y="850" width="40" height="34" rx="4"/>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#pool)"/>
+  <rect width="1920" height="1080" filter="url(#grain)" opacity="0.05"/>
+</svg>
