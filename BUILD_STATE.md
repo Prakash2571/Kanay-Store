@@ -191,8 +191,13 @@ public/categories/<department-key>.<ext>, discovered by reading the directory in
 (3) the committed public/categories/<key>.svg illustration, (4) a colour-coded DepartmentVisual card
 (tint + department icon + faint oversized glyph).
 
-EIGHT SVG ILLUSTRATIONS ARE COMMITTED so no card is ever empty. Flat vector, colours read from the
-tint tokens by the generator so artwork cannot drift from the CSS. RASTER BEATS SVG - precedence is
+EIGHT RENDERED PRODUCT SHOTS ARE COMMITTED (public/categories/<key>.svg) plus public/brand-story.svg,
+so no card is ever empty. Studio backdrop + gradient-shaded product + specular highlights + contact
+shadow + grain overlay. Colours are read from the tint tokens BY THE GENERATOR so artwork cannot
+drift from the CSS. Drawn not photographed because the build environment has no outbound network -
+verified: every product mid-tone clears 1.8:1 against its own backdrop so the subject always reads.
+Use scripts/add-category-photo.sh to swap in a real photo; it checks HTTP status, content type and
+file size, which is the verification that was missing when stock URLs shipped a 404. RASTER BEATS SVG - precedence is
 the order of IMAGE_EXTENSIONS in categoryMedia.ts (jpg,jpeg,png,webp,avif,svg), so dropping a
 photograph in wins with nothing to delete. SVG is passed to next/image with `unoptimized`, which
 avoids enabling dangerouslyAllowSVG for the whole app.

@@ -1,16 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Accessories">
-  <!-- Kanay Store category artwork. Flat vector, colours taken from this department's tint tokens
-       in src/app/globals.css. Committed rather than fetched: hard-coded stock photo URLs produced a
-       404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts). To use a real
-       photograph instead, drop accessories.jpg beside this file - raster files take priority. -->
-  <rect width="800" height="640" fill="#e4dcff"/>
-  <circle cx="400" cy="300" r="212" fill="#a596ea" opacity="0.34"/>
-  <circle cx="612" cy="126" r="78" fill="#a596ea" opacity="0.26"/>
-  <circle cx="176" cy="512" r="104" fill="#a596ea" opacity="0.22"/>
-  <rect x="368" y="176" width="64" height="116" rx="20" fill="#a596ea"/>
-  <rect x="368" y="352" width="64" height="116" rx="20" fill="#a596ea"/>
-  <circle cx="400" cy="322" r="96" fill="#4c3fa8"/>
-  <circle cx="400" cy="322" r="66" fill="#e4dcff"/>
-  <path d="M400 322V274" stroke="#4c3fa8" stroke-width="11" stroke-linecap="round"/>
-  <path d="M400 322l38 18" stroke="#4c3fa8" stroke-width="11" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-label="Wristwatch on a studio backdrop">
+  <!-- Kanay Store category imagery: a rendered product shot on a studio backdrop.
+       Drawn rather than photographed because the build environment has no outbound network, so a
+       photograph can be neither downloaded nor verified - and the previous attempt at stock URLs
+       shipped a 404 and a miscaptioned image (see src/lib/storefront/categoryMedia.ts).
+       Backdrop and product tones derive from this department's tint tokens in globals.css.
+       To use a real photograph instead: ./scripts/add-category-photo.sh accessories <url-or-file>
+       Raster files take priority over this file automatically. -->
+  <defs>
+    <radialGradient id="sweep" cx="50%" cy="34%" r="80%">
+      <stop offset="0" stop-color="#f3efff"/>
+      <stop offset="0.62" stop-color="#e4dcff"/>
+      <stop offset="1" stop-color="#c9c2e0"/>
+    </radialGradient>
+    <linearGradient id="body" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#9a90d6"/>
+      <stop offset="0.45" stop-color="#6f61c4"/>
+      <stop offset="1" stop-color="#2c2461"/>
+    </linearGradient>
+    <linearGradient id="bodyAlt" x1="0" y1="0" x2="1" y2="0.6">
+      <stop offset="0" stop-color="#2c2461"/>
+      <stop offset="0.55" stop-color="#6f61c4"/>
+      <stop offset="1" stop-color="#211b49"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#beb8e4"/>
+      <stop offset="0.28" stop-color="#8074cb"/>
+      <stop offset="0.55" stop-color="#5b50a1"/>
+      <stop offset="0.78" stop-color="#8f84d1"/>
+      <stop offset="1" stop-color="#251f52"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="contact" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#403e47" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#403e47" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="drop" x="-30%" y="-30%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#161230" flood-opacity="0.30"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="640" fill="url(#sweep)"/>
+  <ellipse cx="400" cy="150" rx="300" ry="150" fill="#ffffff" opacity="0.22" filter="url(#blur)"/>
+  <ellipse cx="400" cy="508" rx="120" ry="26" fill="url(#contact)"/>
+  <g filter="url(#drop)">
+    <path d="M368 168h64l-8 130h-48z" fill="url(#bodyAlt)"/>
+    <path d="M368 476h64l-8-130h-48z" fill="url(#bodyAlt)" transform="rotate(180 400 411)"/>
+    <rect x="372" y="172" width="18" height="122" fill="#ffffff" opacity="0.14"/>
+    <circle cx="400" cy="322" r="104" fill="url(#metal)"/>
+    <circle cx="400" cy="322" r="86" fill="#1f1944"/>
+    <circle cx="400" cy="322" r="76" fill="#f5f2ff"/>
+    <path d="M400 322V262" stroke="#1f1944" stroke-width="11" stroke-linecap="round"/>
+    <path d="M400 322l44 22" stroke="#1f1944" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="400" cy="322" r="8" fill="#1f1944"/>
+    <path d="M336 264a90 90 0 0 1 118-14 92 92 0 0 0-118 14z" fill="#ffffff" opacity="0.5"/>
+    <rect x="502" y="306" width="16" height="32" rx="7" fill="url(#metal)"/>
+  </g>
+  <rect width="800" height="640" filter="url(#grain)" opacity="0.05"/>
 </svg>

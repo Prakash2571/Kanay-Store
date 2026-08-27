@@ -19,14 +19,33 @@ around 800px on the long edge is plenty, since the cards render under 300px.
 
 `public/brand-story.jpg` backs the wide trust banner in the same way.
 
-## An illustration ships for every department
+## A rendered product shot ships for every department
 
-`<key>.svg` is committed for all eight, so no card is ever empty. They are flat vector artwork drawn
-from each department's tint tokens, so they match the palette exactly and cannot drift from it.
+`<key>.svg` is committed for all eight, so no card is ever empty. Each is a product on a studio
+backdrop, drawn with gradient shading, specular highlights, a contact shadow and a film-grain
+overlay — the look of a catalogue product shot rather than a flat icon. `../brand-story.svg` does the
+same for the wide trust banner.
+
+Backdrop and product tones are read out of that department's tint tokens in `src/app/globals.css` by
+the generator, so the artwork can never drift from the palette.
+
+**They are drawn, not photographed**, because the environment they were made in has no outbound
+network: a real photograph can be neither downloaded nor verified there. That is not a preference,
+and a genuine photograph is better — see below.
 
 **A raster file beats the SVG.** Drop `electronics.jpg` in and it wins over `electronics.svg`
 automatically — nothing needs deleting. Precedence is the order of `IMAGE_EXTENSIONS` in
 `src/lib/storefront/categoryMedia.ts`: jpg, jpeg, png, webp, avif, then svg last.
+
+The helper checks the things that went wrong before — HTTP status, content type, file size:
+
+```sh
+./scripts/add-category-photo.sh electronics https://example.com/headphones.jpg
+./scripts/add-category-photo.sh tools ~/Pictures/our-wrench-set.jpg
+```
+
+It refuses to write anything that is not a real image, so a 404 or an error page can never land in
+here. What it cannot check is whether the picture shows the right *subject* — that step is yours.
 
 Real product photography from Shopify takes priority over both.
 
