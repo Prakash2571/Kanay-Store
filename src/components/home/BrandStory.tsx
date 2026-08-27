@@ -14,12 +14,11 @@ import { brandStoryMedia, isVectorAsset } from "@/lib/storefront/categoryMedia";
  * what Kanay is for — sourcing confidence, practical minimums, dependable fulfilment — rather
  * than selling a specific product.
  *
- * WHY THE IMAGE IS CARTONS AND NOT A PERSON
- * -----------------------------------------
- * A person as the focus is what turns a trust banner into a lifestyle campaign, which is the
- * failure mode this section has to avoid. Stacked shipping cartons is the most legible shorthand
- * for "a real wholesale operation that dispatches orders", and it reads correctly at a glance and
- * at any crop.
+ * WHY THE IMAGE SHOWS WAREHOUSE OPERATIONS
+ * ----------------------------------------
+ * Workers arranging inventory on warehouse shelves is a direct, legible shorthand for wholesale
+ * sourcing and fulfilment. The people provide scale and credibility without turning the section
+ * into a lifestyle campaign; the operational setting remains the subject at every crop.
  *
  * THE OVERLAY IS SLATE-NAVY, NOT BLACK, AT 52%
  * -------------------------------------------
@@ -31,10 +30,9 @@ import { brandStoryMedia, isVectorAsset } from "@/lib/storefront/categoryMedia";
  *
  * IT DEGRADES INTO A DESIGNED STATE
  * ---------------------------------
- * The navy gradient is painted by the container, not by the image, so the banner is a deep navy
- * panel with readable white text even if the photograph fails to load. No layout shift, no broken
- * image icon, no unreadable text — which matters because the image URL could not be verified from
- * the environment this was built in.
+ * The navy gradient is painted by the container, not by the image, so the banner remains a deep
+ * navy panel with readable white text if the local or reviewed remote photograph fails to load.
+ * There is no layout shift and the content never depends on the image for contrast.
  *
  * NOT FULL-BLEED
  * --------------
@@ -45,9 +43,8 @@ import { brandStoryMedia, isVectorAsset } from "@/lib/storefront/categoryMedia";
  */
 export function BrandStory() {
   /**
-   * Optional. Drop `public/brand-story.jpg` in and it becomes the background; without it the
-   * section is the navy panel it already renders underneath, which is why there is no placeholder
-   * and no broken-image state to design around.
+   * A root-level `public/brand-story.*` owner file wins; otherwise the reviewed warehouse image is
+   * used. The navy container remains the network/decode-failure background.
    */
   const image = brandStoryMedia();
 

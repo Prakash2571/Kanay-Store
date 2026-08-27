@@ -33,21 +33,25 @@ import type { StorefrontImage } from "@/lib/storefront/types";
  * genuinely carry a compare-at saving.
  */
 export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
-  const home = matchTile(tiles, [
-    "home",
-    "kitchen",
-    "furnish",
-    "decor",
-    "appliance",
-  ]);
-  const tech = matchTile(tiles, [
+  const homeKeywords = ["home", "kitchen", "furnish", "decor", "appliance"];
+  const techKeywords = [
     "electronic",
     "tech",
     "mobile",
     "computer",
     "gadget",
     "audio",
-  ]);
+  ];
+  const toolsKeywords = ["tool", "hardware"];
+
+  const home = matchTile(tiles, homeKeywords);
+  const tech = matchTile(tiles, techKeywords);
+  const homeImage =
+    matchTileImage(tiles, homeKeywords) ?? departmentImageFor("home");
+  const techImage =
+    matchTileImage(tiles, techKeywords) ?? departmentImageFor("electronics");
+  const toolsImage =
+    matchTileImage(tiles, toolsKeywords) ?? departmentImageFor("tools");
 
   const feature = {
     eyebrow: "Home & living",
@@ -55,7 +59,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
     text: "Wholesale home and kitchen picks — cookware, storage, decor and small appliances, in the quantities a shop or an office actually orders.",
     cta: "Browse home",
     href: home?.href ?? "/shop",
-    image: home?.image ?? departmentImageFor("home"),
+    image: homeImage,
     tone: "bg-tint-green",
     border: "border-tint-green-mark/25",
   };
@@ -68,7 +72,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       text: "Audio, charging and mobile — the fastest-moving lines in the catalog.",
       cta: "Browse tech",
       href: tech?.href ?? "/shop",
-      image: tech?.image ?? departmentImageFor("electronics"),
+      image: techImage,
       tone: "bg-tint-blue",
       border: "border-tint-blue-mark/25",
     },
@@ -79,7 +83,7 @@ export function PromoCards({ tiles }: { tiles: CategoryTile[] }) {
       text: "Products below their usual price, with minimums shown up front.",
       cta: "View deals",
       href: "/#deals",
-      image: departmentImageFor("tools"),
+      image: toolsImage,
       tone: "bg-tint-orange",
       border: "border-tint-orange-mark/25",
     },
@@ -197,8 +201,21 @@ function matchTile(
   tiles: CategoryTile[],
   keywords: string[],
 ): CategoryTile | undefined {
-  return tiles.find((tile) => {
-    const label = tile.label.toLowerCase();
-    return keywords.some((keyword) => label.includes(keyword));
-  });
+  return tiles.find((tile) => matchesKeywords(tile, keywords));
+}
+
+/** First matching Shopify image, even when an earlier matching destination has no image. */
+function matchTileImage(
+  tiles: CategoryTile[],
+  keywords: string[],
+): StorefrontImage | null {
+  return (
+    tiles.find((tile) => tile.image && matchesKeywords(tile, keywords))
+      ?.image ?? null
+  );
+}
+
+function matchesKeywords(tile: CategoryTile, keywords: string[]): boolean {
+  const label = tile.label.toLowerCase();
+  return keywords.some((keyword) => label.includes(keyword));
 }
