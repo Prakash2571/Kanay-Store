@@ -115,21 +115,48 @@ Approved dials remain, and are NOT to be re-asked:
 Direction (revised — supersedes the earlier "premium fashion/lifestyle" direction, which
 mis-sold a multi-category catalog as an apparel label):
 
-General-purpose retail + wholesale marketplace. Bright off-white page (`#FFFDFC`), white
-cards, soft peach surfaces (`#FFF0E6` / `#FCE4D4`), warm-grey borders, orange accent
-(`#F28C5B`), near-black text. ONE clean sans (Manrope) at compact ecommerce sizes — hero
-40–52px, section headings 24–30px, product titles 14–16px. No editorial serif, no dark page
-background, no dark-mode inversion. Category-neutral imagery: the homepage hero and category
-rail are built from live catalog images rather than stock photography, so the page shows what
-the store actually sells.
+General-purpose WHOLESALE + retail marketplace, blue-led.
 
-Homepage order: service strip → header → hero → category circles → 3 promo cards → best
-sellers → wholesale → new arrivals → deals (only when genuinely discounted) → services →
-newsletter. Max content width 1320px.
+Superseded palette (peach `#FFF0E6` / `#FCE4D4` on cream `#FFFDFC` with an orange `#F28C5B`
+accent) read as a beauty / skincare / women's-lifestyle store. It was clean and it was wrong
+for a catalog of electronics, appliances, tools and office supplies.
+
+Current palette — cool grey page (`#F6F8FB`), white cards, cobalt primary (`#2563EB`), deep
+navy for bands and the header mark (`#163A70`), teal secondary for wholesale signals
+(`#0F766E`), amber (`#F59E0B`) RATIONED to discount labels, offer flags and warnings only,
+dark navy footer (`#0F172A`) in both themes. ONE clean sans (Manrope) at compact ecommerce
+sizes — hero 32–50px, section headings 20–24px, product titles 14–16px. No editorial serif.
+
+FULL DARK MODE, class-driven (`.dark` + pre-paint inline script, toggle in the header).
+Navy-slate surfaces (`#0B1220` canvas, `#111827` cards), never pure black. NO filter, opacity
+or blend mode on product imagery in either theme. Fill and text tokens are split where the
+surface does not invert (`--brand-dark` fill vs `--brand-ink` text); colours inside a
+non-inverting surface are literals.
+
+Category-neutral imagery: the homepage hero and category rail are built from live catalog
+images rather than stock photography, so the page shows what the store actually sells.
+
+Section rhythm: 56px mobile / 80px desktop (`section-y`), inside the 72–96px band, tight
+enough not to leave dead space. Max content width 1320px.
+
+Homepage order: service strip → header → hero → stats strip → category circles → 3 promo
+cards → best sellers → wholesale deals (only when MOQ products exist) → wholesale banner →
+new arrivals → deals (only when genuinely discounted) → why-Kanay benefits → navy brand quote
+→ services → newsletter.
+
+Wholesale MOQ: source of truth is the Shopify product tag `moq:<n>`, parsed by the backend and
+enforced at checkout (`MOQ_NOT_MET`, 409) against freshly read data. Frontend shows the badge,
+the minimum order value, a quantity field that STARTS at the minimum and a cart stepper that
+stops there — presentation only, never the control. Quantity caps are 10,000 at both ends
+(they were 10, which made wholesale impossible and any `moq:>10` product unbuyable).
 
 No fabricated content anywhere: no testimonials (no review backend), no star ratings, no
 wishlist, no payment-method badges, no invented discount percentage, no fake newsletter
-confirmation.
+confirmation, no invented bulk tier pricing, and NO product/buyer/supplier counts in the stats
+strip — the catalog API is cursor-paginated and returns no total, so the only figures printed
+are the store-wide category count and lowest catalog price, both read from live filter facets.
+The navy quote band is the store's own positioning statement, attributed to nobody, which is
+the honest version of a testimonial section on a store with no reviews.
 
 Final Design Audit: STILL PENDING. Must not be marked PASS until rendered responsive pages
 are actually inspected at 375 / 390 / 430 / 768 / 1024 / 1440.

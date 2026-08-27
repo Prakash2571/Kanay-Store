@@ -40,16 +40,17 @@ export default async function AboutPage() {
     <StoreShell collections={collections}>
       <main className="shell section-y">
         <header className="max-w-[62ch]">
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">About</p>
+          <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-brand-ink">About</p>
           <h1 className="mt-3 text-3xl font-extrabold tracking-[-0.02em] sm:text-4xl">
-            A general store for everyday products
+            A wholesale and retail marketplace for everyday products
           </h1>
           <p className="mt-4 text-sm leading-6 text-ink-muted sm:text-base">
             Kanay Store sells across categories — electronics and mobile accessories, home and
             kitchen, appliances, beauty and personal care, bags, watches, toys, sports and
             fitness, office supplies, home decor, tools, automotive accessories, travel goods
-            and fashion. Products, prices and stock come from our live catalog, and every price
-            shown is in INR.
+            and fashion. Some lines carry a minimum order quantity for bulk buyers; the rest can
+            be bought one at a time. Products, prices and stock come from our live catalog, and
+            every price shown is in INR.
           </p>
         </header>
 
@@ -64,6 +65,45 @@ export default async function AboutPage() {
               Quantity-based pricing is not shown on product pages yet. Until it is, this site
               deliberately quotes no bulk rate — the price you see at checkout is the price the
               system has actually approved.
+            </p>
+            <p className="font-semibold text-ink">{contactLine}</p>
+          </Panel>
+
+          {/*
+            The MOQ panel is the reference the badges on product cards point at. It explains
+            the rule precisely, because "MOQ 10" on a card is only useful to someone who knows
+            what happens if they try to order nine.
+          */}
+          <Panel id="moq" title="Minimum order quantities (MOQ)">
+            <p>
+              Some products can only be bought in bulk. Where that applies, the product carries
+              a minimum order quantity and you will see it in three places: an{" "}
+              <span className="font-semibold text-ink">MOQ</span> badge on the product card, the
+              minimum order value beneath the per-unit price, and a quantity selector that
+              starts at the minimum rather than at one.
+            </p>
+            <p>
+              The minimum is checked again by our backend when you check out, against freshly
+              read catalog data. If a line is below its minimum the order is refused before any
+              payment is taken and the message names the product and the quantity needed. That
+              double check is deliberate: a rule enforced only in the browser is not a rule.
+            </p>
+            <p>
+              Products with no badge have no minimum and can be ordered one at a time. A
+              minimum is set by us per product, so it can change — the figure shown when you
+              check out is the one that applies.
+            </p>
+          </Panel>
+
+          <Panel id="support" title="Business support">
+            <p>
+              For bulk quotes, repeat orders, invoicing questions or help choosing between
+              lines, contact us with the product names and the quantities you are planning.
+              Specific quantities get a specific answer faster than a general enquiry.
+            </p>
+            <p>
+              Support covers orders placed on this site. There is no separate reseller portal or
+              account manager tier — one route in, and it is the one below.
             </p>
             <p className="font-semibold text-ink">{contactLine}</p>
           </Panel>
@@ -109,7 +149,7 @@ export default async function AboutPage() {
               link on your confirmation.
             </Question>
             <Question q="How do I track an order?">
-              Open the <Link className="font-semibold text-accent-ink underline" href="/track-order">track order</Link>{" "}
+              Open the <Link className="font-semibold text-brand-ink underline" href="/track-order">track order</Link>{" "}
               page and paste the secure link from your confirmation. The link is what proves the
               order is yours, so treat it like a password.
             </Question>
@@ -134,13 +174,13 @@ export default async function AboutPage() {
 
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
-            className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2"
+            className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline focus-visible:outline-2"
             href="/shop"
           >
             Browse all products
           </Link>
           <Link
-            className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-ink bg-surface px-6 text-sm font-bold transition-colors hover:bg-ink hover:text-white focus-visible:outline focus-visible:outline-2"
+            className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-6 text-sm font-bold transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
             href="/track-order"
           >
             Track an order

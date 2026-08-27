@@ -54,13 +54,13 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
               href="/track-order"
-              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-white"
+              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] bg-brand px-5 text-sm font-semibold text-white"
             >
               Track order
             </Link>
             <Link
               href="/shop"
-              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] border border-ink px-5 text-sm font-semibold"
+              className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] border border-line-strong px-5 text-sm font-semibold"
             >
               Continue shopping
             </Link>

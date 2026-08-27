@@ -56,7 +56,7 @@ export function ProductSection({
             ) : null}
           </div>
           <Link
-            className="inline-flex shrink-0 items-center gap-1.5 rounded text-sm font-bold text-accent-ink transition-colors hover:text-accent-hover focus-visible:outline focus-visible:outline-2"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded text-sm font-bold text-brand-ink transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
             href={viewAllHref}
           >
             {viewAllLabel}

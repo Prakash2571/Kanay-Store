@@ -4,11 +4,24 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { MAX_CART_QUANTITY, type CartLine } from "@/lib/cart";
+import { MAX_CART_QUANTITY, minimumQuantityFor, type CartLine } from "@/lib/cart";
 import { formatPaise } from "@/lib/storefront/money";
 
 import { useCart } from "./CartProvider";
 
+/**
+ * One cart line.
+ *
+ * THE STEPPER RESPECTS THE WHOLESALE MINIMUM
+ * ------------------------------------------
+ * On a `moq:12` product the minus button stops at 12 and is disabled there, with the reason
+ * stated next to it. Previously it stepped down to 1, and the customer discovered the problem
+ * when the checkout refused the entire order — after entering an address.
+ *
+ * The remove button is the way out. A minimum governs how FEW of an item may be ordered, not
+ * whether it may be taken out of the cart, so removal is never blocked (the reducer treats
+ * quantity 0 as removal for the same reason).
+ */
 export function CartItem({ item }: { item: CartLine }) {
   const { removeItem, setQuantity } = useCart();
 
@@ -42,7 +55,11 @@ export function CartItem({ item }: { item: CartLine }) {
             {item.selectedOptions.map((option) => option.value).join(" / ")}
           </p>
         )}
-        <p className="mt-3 text-sm font-semibold">{formatPaise(item.unitPricePaise)}</p>
+        <p className="mt-3 text-sm font-semibold">
+          {formatPaise(item.unitPricePaise)}
+          <span className="ml-1 font-normal text-ink-subtle">/ unit</span>
+        </p>
+        <MinimumNote item={item} />
 
         <div className="mt-4 flex items-center gap-2 sm:hidden">
           <QuantityControls item={item} setQuantity={setQuantity} />
@@ -61,6 +78,18 @@ export function CartItem({ item }: { item: CartLine }) {
   );
 }
 
+/** Teal MOQ note, shown only on lines that carry a real minimum. */
+function MinimumNote({ item }: { item: CartLine }) {
+  const minimum = minimumQuantityFor(item);
+  if (minimum <= 1) return null;
+
+  return (
+    <p className="mt-2 inline-flex items-center rounded-[var(--radius-pill)] bg-surface-teal px-2.5 py-1 text-[0.7rem] font-bold text-accent-ink">
+      Wholesale · minimum {minimum} units
+    </p>
+  );
+}
+
 function QuantityControls({
   item,
   setQuantity,
@@ -68,17 +97,28 @@ function QuantityControls({
   item: CartLine;
   setQuantity: (variantId: string, quantity: number) => void;
 }) {
+  const minimum = minimumQuantityFor(item);
+  const atMinimum = item.quantity <= minimum;
+
   return (
     <div className="flex min-h-10 items-center rounded-[var(--radius-control)] border border-line bg-surface">
       <button
         type="button"
-        aria-label={`Decrease quantity of ${item.title}`}
+        aria-label={
+          atMinimum && minimum > 1
+            ? `${item.title} is already at its minimum order quantity of ${minimum}`
+            : `Decrease quantity of ${item.title}`
+        }
+        // Disabled AT the minimum rather than clamping silently: a button that appears to
+        // work and then does nothing reads as a broken page. The reducer clamps as well, so
+        // this is presentation, not enforcement.
+        disabled={atMinimum && minimum > 1}
         onClick={() => setQuantity(item.shopifyVariantId, item.quantity - 1)}
-        className="grid min-h-10 min-w-10 place-items-center transition-colors hover:bg-surface-muted"
+        className="grid min-h-10 min-w-10 place-items-center transition-colors hover:bg-surface-muted disabled:opacity-35"
       >
         <Minus aria-hidden="true" size={16} strokeWidth={1.75} />
       </button>
-      <span className="min-w-8 text-center text-sm font-semibold" aria-live="polite">
+      <span className="min-w-8 text-center text-sm font-semibold tabular-nums" aria-live="polite">
         {item.quantity}
       </span>
       <button

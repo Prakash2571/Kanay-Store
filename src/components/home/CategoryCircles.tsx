@@ -24,7 +24,7 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
           Shop by category
         </h2>
         <Link
-          className="shrink-0 rounded text-sm font-bold text-accent-ink transition-colors hover:text-accent-hover focus-visible:outline focus-visible:outline-2"
+          className="shrink-0 rounded text-sm font-bold text-brand-ink transition-colors hover:text-brand-ink focus-visible:outline focus-visible:outline-2"
           href="/shop"
         >
           All categories
@@ -38,7 +38,7 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
               className="group grid justify-items-center gap-2 rounded-[var(--radius-card)] py-1 text-center focus-visible:outline focus-visible:outline-2"
               href={tile.href}
             >
-              <span className="relative block aspect-square w-full overflow-hidden rounded-[var(--radius-pill)] border border-line bg-surface-peach-soft transition-colors group-hover:border-accent">
+              <span className="relative block aspect-square w-full overflow-hidden rounded-[var(--radius-pill)] border border-line bg-surface-blue transition-colors group-hover:border-brand">
                 {tile.image ? (
                   <Image
                     alt=""
@@ -48,12 +48,12 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
                     src={tile.image.url}
                   />
                 ) : (
-                  <span aria-hidden="true" className="grid h-full place-items-center text-lg font-extrabold text-accent-ink">
+                  <span aria-hidden="true" className="grid h-full place-items-center text-lg font-extrabold text-brand-ink">
                     {tile.label.charAt(0).toUpperCase()}
                   </span>
                 )}
               </span>
-              <span className="line-clamp-2 text-[0.72rem] font-semibold leading-4 text-ink group-hover:text-accent-ink sm:text-xs">
+              <span className="line-clamp-2 text-[0.72rem] font-semibold leading-4 text-ink group-hover:text-brand-ink sm:text-xs">
                 {tile.label}
               </span>
             </Link>

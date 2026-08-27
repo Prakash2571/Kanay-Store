@@ -2,7 +2,17 @@ import { z } from "zod";
 
 import type { CartProductItem } from "@/lib/storefront/types";
 
-export const MAX_CART_QUANTITY = 10;
+/**
+ * Largest quantity the cart holds for one variant.
+ *
+ * THIS WAS 10, WHICH MADE WHOLESALE IMPOSSIBLE.
+ * It mirrored the backend's old retail cap. Both are now 10,000: enough for any plausible
+ * bulk order, and low enough that quantity x unit price stays a safe integer in paise and a
+ * mistyped 100000 cannot become an order. The backend enforces the same bound
+ * (MAX_LINE_QUANTITY in checkout.validation.ts) - this copy exists so the UI can disable a
+ * control rather than letting the customer discover the limit at checkout.
+ */
+export const MAX_CART_QUANTITY = 10_000;
 
 export type CartLine = CartProductItem & {
   quantity: number;
@@ -43,12 +53,31 @@ const cartLineSchema = z.object({
   unitPricePaise: z.number().int().positive(),
   currencyCode: z.literal("INR"),
   availableForSale: z.boolean(),
+  minimumOrderQuantity: z.number().int().positive().nullable().optional(),
   quantity: z.number().int().min(1).max(MAX_CART_QUANTITY),
 });
 
-function clampQuantity(quantity: number): number {
-  if (!Number.isFinite(quantity)) return 1;
-  return Math.max(1, Math.min(MAX_CART_QUANTITY, Math.trunc(quantity)));
+/**
+ * Constrains a quantity to [floor, MAX_CART_QUANTITY].
+ *
+ * The floor is the product's wholesale minimum where it has one, so a line can never sit
+ * below the quantity the backend will accept. Without this, a shopper could decrement a
+ * `moq:12` item to 11 in the cart and only discover the problem when the checkout refused
+ * the whole order - after they had filled in an address.
+ *
+ * The backend re-checks the same rule against freshly read Shopify data; this is the copy
+ * that keeps the UI honest, never the control.
+ */
+function clampQuantity(quantity: number, minimum?: number | null): number {
+  const floor = minimum !== null && minimum !== undefined && minimum > 0 ? minimum : 1;
+  if (!Number.isFinite(quantity)) return floor;
+  return Math.max(floor, Math.min(MAX_CART_QUANTITY, Math.trunc(quantity)));
+}
+
+/** The smallest quantity a line may hold: its MOQ, or one. */
+export function minimumQuantityFor(item: { minimumOrderQuantity?: number | null }): number {
+  const minimum = item.minimumOrderQuantity;
+  return minimum !== null && minimum !== undefined && minimum > 0 ? minimum : 1;
 }
 
 export function parsePersistedCart(value: string | null): CartLine[] {
@@ -83,7 +112,10 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
           ...state,
           items: [
             ...state.items,
-            { ...action.item, quantity: clampQuantity(action.quantity) },
+            {
+              ...action.item,
+              quantity: clampQuantity(action.quantity, action.item.minimumOrderQuantity),
+            },
           ],
         };
       }
@@ -95,13 +127,18 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
             ? {
                 ...item,
                 ...action.item,
-                quantity: clampQuantity(item.quantity + action.quantity),
+                quantity: clampQuantity(
+                  item.quantity + action.quantity,
+                  action.item.minimumOrderQuantity,
+                ),
               }
             : item,
         ),
       };
     }
     case "setQuantity":
+      // Zero still removes the line. The MOQ floor governs how FEW may be ordered, not
+      // whether the item may be taken out of the cart entirely.
       if (action.quantity <= 0) {
         return {
           ...state,
@@ -114,7 +151,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
         ...state,
         items: state.items.map((item) =>
           item.shopifyVariantId === action.shopifyVariantId
-            ? { ...item, quantity: clampQuantity(action.quantity) }
+            ? { ...item, quantity: clampQuantity(action.quantity, item.minimumOrderQuantity) }
             : item,
         ),
       };

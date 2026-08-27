@@ -177,6 +177,57 @@ describe("checkout creation contract", () => {
     // And turns it into copy a shopper can act on, not the backend's wording.
     expect(result.error.message).toContain("price changed");
   });
+
+  /**
+   * Trademart_B storefront/checkout/checkout.service.ts -> assertMinimumOrderQuantities.
+   *
+   * The backend refuses a checkout whose line is below the product's `moq:<n>` minimum, with
+   * a 409 and this code. It is the one refusal where the backend's own message is shown
+   * verbatim, because it is the only one that names the product and its minimum — so the
+   * shape of that message is a contract, not an implementation detail, and this fixture is
+   * where a change to it has to be noticed.
+   */
+  it("surfaces the backend's minimum-order refusal to the customer intact", async () => {
+    stubFetch(
+      {
+        success: false,
+        code: "MOQ_NOT_MET",
+        message:
+          "Steel Water Bottle is sold in minimum quantities of 12. Increase the quantity to at least 12 to continue.",
+        details: {
+          publicProductId: "prod_9f1c2f52",
+          publicVariantId: "var_2b1e3c4d",
+          requestedQuantity: 4,
+          minimumOrderQuantity: 12,
+          minimumOrderValuePaise: 1798800,
+        },
+        requestId: "req-moq-1",
+        error: {
+          code: "MOQ_NOT_MET",
+          message:
+            "Steel Water Bottle is sold in minimum quantities of 12. Increase the quantity to at least 12 to continue.",
+          requestId: "req-moq-1",
+          details: {
+            publicProductId: "prod_9f1c2f52",
+            publicVariantId: "var_2b1e3c4d",
+            requestedQuantity: 4,
+            minimumOrderQuantity: 12,
+            minimumOrderValuePaise: 1798800,
+          },
+        },
+      },
+      409,
+    );
+
+    const result = await createCheckoutSession(CART, CUSTOMER, "idem-key-contract-moq");
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe("MOQ_NOT_MET");
+    // The product name and the number are what make this fixable in one step.
+    expect(result.error.message).toContain("Steel Water Bottle");
+    expect(result.error.message).toContain("12");
+  });
 });
 
 describe("payment verification contract", () => {

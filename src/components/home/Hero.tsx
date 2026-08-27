@@ -20,9 +20,9 @@ import type { StorefrontProductSummary } from "@/lib/storefront/types";
  * There is no stock photography here. The visual is a collage of real product images from
  * the live catalog, one per category where possible (see heroCollageImages), so the hero
  * shows what the store actually sells and updates itself as the catalog changes. When the
- * catalog is empty or unreachable it falls back to an illustrated peach panel — never to a
- * padded-out stock photo, because that is how a general store drifts back into looking
- * like a fashion brand.
+ * catalog is empty or unreachable it falls back to an illustrated panel of department icons
+ * — never to a padded-out stock photo, because that is how a general store drifts back into
+ * looking like a fashion brand.
  *
  * THE DISCOUNT BADGE IS EARNED
  * ----------------------------
@@ -36,33 +36,34 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
 
   return (
     <section aria-labelledby="hero-heading" className="shell pt-4 lg:pt-6">
-      <div className="grid items-center gap-6 overflow-hidden rounded-[var(--radius-card)] bg-surface-peach-soft p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:p-12">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-blue p-6 sm:p-9 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:p-14">
         <div>
-          <p className="flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
+          <p className="flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-brand-ink">
             <Sparkles aria-hidden="true" size={15} strokeWidth={2} />
-            Wholesale • Retail • Everyday products
+            Wholesale • Bulk orders • Better pricing
           </p>
           <h1
-            className="mt-4 max-w-[18ch] text-[2rem] font-extrabold leading-[1.1] tracking-[-0.02em] sm:text-[2.6rem] lg:text-[3.1rem]"
+            className="mt-4 max-w-[20ch] text-[2rem] font-extrabold leading-[1.1] tracking-[-0.02em] sm:text-[2.6rem] lg:text-[3.1rem]"
             id="hero-heading"
           >
-            Everything you need. Better prices. One store.
+            Everything you need. Better prices. In bulk.
           </h1>
-          <p className="mt-4 max-w-[52ch] text-sm leading-6 text-ink-muted sm:text-base">
-            Electronics, home and kitchen, appliances, beauty, bags, watches, toys, fitness,
-            office supplies, fashion and thousands of everyday products — all in one place.
+          <p className="mt-5 max-w-[52ch] text-sm leading-6 text-ink-muted sm:text-base sm:leading-7">
+            Electronics, home and kitchen, appliances, tools, office supplies, beauty,
+            accessories and thousands of everyday products — sourced in quantity, priced per
+            unit, delivered across India.
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-6 text-sm font-bold text-white transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand px-6 text-sm font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href="/shop"
             >
-              Shop now
+              Browse wholesale
               <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
             </Link>
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-ink bg-surface px-6 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-white focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-6 text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
               href="/#categories"
             >
               Explore categories
@@ -77,8 +78,16 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
             <IllustratedPanel />
           )}
 
+          {/*
+            Amber, and this is one of the three places amber is allowed: a discount claim.
+
+            The text colour is a literal near-black brown rather than a token because the
+            disc keeps the SAME amber fill in both themes, so its text must not follow the
+            theme either. `highlight-ink` inverts to a light amber in dark mode and would
+            vanish; `brand-ink` inverts to a pale blue and would too.
+          */}
           {discount !== null ? (
-            <p className="absolute -top-1 right-1 grid size-[5.5rem] place-items-center rounded-[var(--radius-pill)] bg-accent text-center text-[0.7rem] font-extrabold uppercase leading-tight text-white shadow-[var(--shadow-soft)] sm:size-24 sm:text-xs">
+            <p className="absolute -top-1 right-1 grid size-[5.5rem] place-items-center rounded-[var(--radius-pill)] bg-highlight text-center text-[0.7rem] font-extrabold uppercase leading-tight text-[#3f2a06] shadow-[var(--shadow-soft)] sm:size-24 sm:text-xs">
               <span>
                 Up to
                 <br />
@@ -144,7 +153,7 @@ function IllustratedPanel() {
           className="grid aspect-square place-items-center gap-2 rounded-[var(--radius-card)] border border-line bg-surface p-2 text-center"
           key={label}
         >
-          <Icon aria-hidden="true" className="text-accent" size={26} strokeWidth={1.6} />
+          <Icon aria-hidden="true" className="text-brand-ink" size={26} strokeWidth={1.6} />
           <span className="text-[0.7rem] font-semibold text-ink-muted">{label}</span>
         </li>
       ))}

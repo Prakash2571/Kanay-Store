@@ -11,7 +11,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
       <div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent-ink">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-ink">
           {isPending ? (
             <Clock3 aria-hidden="true" size={24} strokeWidth={1.75} />
           ) : success ? (
@@ -42,7 +42,11 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
                   <span
                     className={`grid h-7 w-7 place-items-center rounded-full border ${
                       entry.completed
-                        ? "border-success bg-success text-white"
+                        ? // `text-canvas`, not `text-white`: --success lightens to #4ade80 in
+                          // dark mode, where a white tick on it is close to unreadable. The
+                          // canvas token inverts with the theme, so the tick stays dark on a
+                          // light green and light on a dark green.
+                          "border-success bg-success text-canvas"
                         : "border-line bg-surface text-ink-muted"
                     }`}
                   >
@@ -83,7 +87,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
             href={trackingUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-control)] border border-ink px-4 text-sm font-semibold"
+            className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-control)] border border-line-strong px-4 text-sm font-semibold"
           >
             Carrier tracking
             <ExternalLink aria-hidden="true" size={15} strokeWidth={1.75} />
@@ -130,7 +134,7 @@ export function OrderStatusView({ order, success = false }: { order: PublicOrder
         </div>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-ink px-5 text-sm font-semibold text-white"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-[var(--radius-control)] bg-brand px-5 text-sm font-semibold text-white"
         >
           Continue shopping
         </Link>

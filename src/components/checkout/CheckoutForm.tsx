@@ -258,7 +258,7 @@ export function CheckoutForm() {
         <p className="mt-3 text-sm text-ink-muted">Choose an available product before checkout.</p>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-ink px-6 font-semibold text-white"
+          className="mt-6 inline-flex min-h-12 items-center rounded-[var(--radius-control)] bg-brand px-6 font-semibold text-white"
         >
           Go to shop
         </Link>
@@ -366,7 +366,7 @@ export function CheckoutForm() {
         </dl>
 
         {errors.form && (
-          <p role="alert" className="mt-5 rounded-[var(--radius-control)] bg-accent-soft px-4 py-3 text-sm text-accent-ink">
+          <p role="alert" className="mt-5 rounded-[var(--radius-control)] bg-brand-soft px-4 py-3 text-sm text-brand-ink">
             {errors.form}
           </p>
         )}
@@ -374,7 +374,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-ink px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
+          className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand px-5 font-semibold whitespace-nowrap text-white transition-transform active:scale-[0.98] disabled:cursor-wait disabled:opacity-60"
         >
           <CreditCard aria-hidden="true" size={18} strokeWidth={1.75} />
           {busy ? "Preparing secure payment" : "Pay securely"}

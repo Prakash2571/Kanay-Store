@@ -46,6 +46,30 @@ describe("guest checkout validation", () => {
     expect(customerCheckoutMessage("PAYMENT_PENDING")).toContain("confirming");
     expect(customerCheckoutMessage("ORDER_CREATION_PENDING")).toContain("preparing your order");
   });
+
+  /**
+   * MOQ_NOT_MET is the one refusal the customer can fix in a single step, so it is the one
+   * code where the backend's own wording is passed through: it names the product and its
+   * minimum, which a generic message cannot.
+   */
+  it("passes through the backend's specific minimum-order message", () => {
+    const message = customerCheckoutMessage(
+      "MOQ_NOT_MET",
+      "Steel Water Bottle is sold in minimum quantities of 12. Increase the quantity to at least 12 to continue.",
+    );
+    expect(message).toContain("Steel Water Bottle");
+    expect(message).toContain("12");
+  });
+
+  it("falls back to actionable wording when the backend message is too long to show", () => {
+    const message = customerCheckoutMessage("MOQ_NOT_MET", "x".repeat(400));
+    expect(message).not.toContain("xxxx");
+    expect(message).toContain("minimum order quantity");
+  });
+
+  it("still says something actionable when the backend sends no message", () => {
+    expect(customerCheckoutMessage("MOQ_NOT_MET")).toContain("minimum order quantity");
+  });
 });
 
 describe("createCheckoutSession", () => {

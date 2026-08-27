@@ -1,89 +1,198 @@
 @import "tailwindcss";
 
 /**
- * Kanay Store design tokens — light warm multi-category marketplace.
+ * Kanay Store design tokens — professional wholesale marketplace.
  *
- * WHY THESE VALUES
- * ----------------
- * Kanay sells electronics, home and kitchen, beauty, toys, fitness, office supplies,
- * automotive accessories, fashion and wholesale lots. The previous palette (near-black
- * page, dark brown surfaces, editorial serif) read as a single-brand fashion label,
- * which mis-sells everything that is not clothing. This palette is bright off-white with
- * white cards and soft peach accents: it stays neutral behind product photography from
- * any category, and reads as a high-trust general store rather than a lookbook.
+ * WHY THE PALETTE CHANGED
+ * -----------------------
+ * The previous system was peach on cream with an orange accent. It was clean, and it read
+ * as a beauty or skincare brand: warm blush surfaces plus a coral CTA is the visual grammar
+ * of cosmetics retail. Kanay is a general-purpose wholesale marketplace selling electronics,
+ * appliances, tools, office supplies and automotive parts alongside beauty and fashion, and
+ * a business buyer sizing up a large order reads that warmth as "consumer lifestyle brand",
+ * not "supplier I can place a 500-unit order with".
  *
- * NO DARK-MODE INVERSION
- * ----------------------
- * There is deliberately no `prefers-color-scheme: dark` block. There used to be one, and
- * it turned the storefront black on any device set to dark mode — which is the single
- * thing this design must never look like. A warm-light identity that silently becomes a
- * dark identity on half of all phones is not one identity, it is two, and only one of
- * them was designed.
+ * So: navy and cobalt carry the brand, cool grey carries the page, teal marks secondary
+ * information, and amber is reserved for discounts and warnings. Blue is the most
+ * conventional trust colour in commerce for a reason - it is what payment, logistics and B2B
+ * platforms use, and conventional is exactly right for the screen where someone commits
+ * money.
+ *
+ * AMBER IS RATIONED ON PURPOSE
+ * ----------------------------
+ * `--highlight` is for a discount badge, an offer flag or a warning. Nothing else. The moment
+ * it becomes a general-purpose accent the page drifts back towards the warm-retail feel this
+ * palette exists to leave behind.
+ *
+ * DARK MODE IS CLASS-DRIVEN, NOT MEDIA-DRIVEN
+ * -------------------------------------------
+ * Tokens are redefined under `.dark`, and the html element gets that class from a tiny
+ * pre-hydration script (see ThemeScript). A `prefers-color-scheme` block alone cannot support
+ * a toggle, and a toggle that only applies after React hydrates flashes the wrong theme on
+ * every page load. The script reads the stored choice, falls back to the OS preference, and
+ * sets the class before first paint.
  *
  * TOKEN NAMES
  * -----------
- * The semantic names (`canvas`, `surface`, `ink`, `line`, `accent`) are kept from the
- * previous system because ~30 files reference them; only the VALUES changed. New names
- * were added for the peach surfaces the reference layout needs.
+ * The semantic names (`canvas`, `surface`, `ink`, `line`, `accent`) are kept because ~30 files
+ * reference them; only their values moved. `accent` is now teal (secondary), `brand` is the
+ * primary blue, and `accent-ink`/`accent-soft` are retained as aliases so existing markup
+ * keeps working while it is migrated.
  */
 :root {
-  /* Page and card surfaces, lightest to warmest. */
-  --canvas: #fffdfc;
+  color-scheme: light;
+
+  /* Page and card surfaces, coolest to most tinted. */
+  --canvas: #f6f8fb;
   --surface: #ffffff;
-  --surface-muted: #fff7f1;
-  --surface-peach-soft: #fff0e6;
-  --surface-peach: #fce4d4;
-  /* Retained alias: `surface-strong` predates the peach scale and is used for disabled
-     fills and image placeholders, where the mid peach is exactly right. */
-  --surface-strong: #fce4d4;
-  --line: #eae5e1;
+  --surface-muted: #eef3f8;
+  --surface-blue: #eaf2ff;
+  --surface-teal: #e8f7f5;
+  /* Retained alias: `surface-strong` is used for disabled fills and image placeholders. */
+  --surface-strong: #dce3ec;
+  --line: #dce3ec;
+  --line-strong: #c8d2df;
 
-  /* Text. Three steps only - a fourth grey always ends up used inconsistently. */
-  --ink: #171717;
-  --ink-muted: #66615d;
-  --ink-subtle: #938c86;
+  /* Text. Three steps; a fourth grey always ends up applied inconsistently. */
+  --ink: #111827;
+  --ink-muted: #4b5563;
+  --ink-subtle: #7b8794;
 
-  /* Accent. `accent` is for fills and icons, `accent-ink` for text ON peach surfaces,
-     where the raw accent would fail contrast. */
-  --accent: #f28c5b;
-  --accent-hover: #e97745;
-  --accent-soft: #fbd8c5;
-  --accent-ink: #8f4318;
+  /* Primary brand: cobalt. Used for CTAs, links, focus and active navigation. */
+  --brand: #2563eb;
+  --brand-hover: #1d4ed8;
+  --brand-soft: #eaf2ff;
+  /**
+   * `brand-dark` is a FILL, `brand-ink` is TEXT. They are separate tokens because they have
+   * to move in opposite directions between themes.
+   *
+   * The deep navy band and the header mark need to stay deep navy in dark mode - a band that
+   * matches the page background is not a band. But navy TEXT on a #0b1220 canvas is
+   * unreadable, so the text token lightens to a pale blue instead. One token doing both jobs
+   * meant every eyebrow and "View all" link on the site failed contrast the moment dark mode
+   * was switched on.
+   */
+  --brand-dark: #163a70;
+  --brand-ink: #1d4ed8;
 
-  --danger: #b23b30;
-  --success: #2f6b45;
-  --star: #f2a93b;
-  --focus: #c8571f;
+  /* Secondary: teal. Bulk/wholesale indicators, "in stock" style affirmations. */
+  --accent: #0f766e;
+  --accent-hover: #0d635c;
+  --accent-soft: #ddf5f1;
+  /* Text weight that reads on a teal or blue tinted surface. */
+  --accent-ink: #115e59;
 
-  --radius-card: 1rem;
-  --radius-control: 0.625rem;
+  /* Rationed. Discounts, offers, warnings - nothing else. */
+  --highlight: #f59e0b;
+  --highlight-soft: #fef3c7;
+  --highlight-ink: #92400e;
+
+  --danger: #b42318;
+  --success: #067647;
+  --star: #f59e0b;
+  --focus: #2563eb;
+
+  --radius-card: 0.875rem;
+  --radius-control: 0.5rem;
   --radius-pill: 999px;
-  --shadow-soft: 0 10px 30px rgba(120, 78, 52, 0.06);
-  --shadow-card: 0 2px 10px rgba(120, 78, 52, 0.05);
+  --shadow-soft: 0 12px 32px rgba(17, 24, 39, 0.07);
+  --shadow-card: 0 1px 3px rgba(17, 24, 39, 0.06);
 
-  /* One place that defines page gutters and the centred content width, so every
-     section lines up. 1320px matches the reference's density at 1440px. */
+  /* Footer is dark in BOTH themes: it anchors the page and is part of the brand. */
+  --footer-bg: #0f172a;
+  --footer-ink: #e2e8f0;
+  --footer-muted: #94a3b8;
+
   --content-width: 1320px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Navy-slate, never pure black: black surfaces make product photography look cut out,
+     and this catalog is mostly photographed-on-white merchandise. */
+  --canvas: #0b1220;
+  --surface: #111827;
+  --surface-muted: #172033;
+  --surface-blue: #15233c;
+  --surface-teal: #102a2a;
+  --surface-strong: #263449;
+  --line: #263449;
+  --line-strong: #34445b;
+
+  --ink: #f8fafc;
+  --ink-muted: #cbd5e1;
+  --ink-subtle: #94a3b8;
+
+  /* Lightened so they carry contrast against a dark surface rather than sinking into it. */
+  /**
+   * `--brand` stays cobalt in dark mode rather than lightening to a pastel blue.
+   *
+   * It is a BUTTON FILL, and every button that uses it carries white text. A #60a5fa fill
+   * with white text is about 2:1 — the label all but disappears. #2563eb keeps white at
+   * roughly 5:1 in both themes, and a cobalt button on a navy-slate canvas is perfectly
+   * legible as a button. Hover lightens instead of darkening, which is the direction that
+   * reads as "raised" on a dark surface.
+   */
+  --brand: #2563eb;
+  --brand-hover: #3b82f6;
+  --brand-soft: #15233c;
+  /* Fill stays deep navy; text lightens. See the note on these two tokens above. */
+  --brand-dark: #16304f;
+  --brand-ink: #a9c9f7;
+
+  --accent: #2dd4bf;
+  --accent-hover: #14b8a6;
+  --accent-soft: #153d39;
+  --accent-ink: #5eead4;
+
+  --highlight: #fbbf24;
+  --highlight-soft: #2a2010;
+  --highlight-ink: #fcd34d;
+
+  --danger: #f87171;
+  --success: #4ade80;
+  --star: #fbbf24;
+  --focus: #60a5fa;
+
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  --footer-bg: #080e1a;
+  --footer-ink: #e2e8f0;
+  --footer-muted: #94a3b8;
 }
 
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
-  --color-surface-peach: var(--surface-peach);
-  --color-surface-peach-soft: var(--surface-peach-soft);
+  --color-surface-blue: var(--surface-blue);
+  --color-surface-teal: var(--surface-teal);
   --color-surface-strong: var(--surface-strong);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-ink-subtle: var(--ink-subtle);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-ink: var(--accent-ink);
+  --color-highlight: var(--highlight);
+  --color-highlight-soft: var(--highlight-soft);
+  --color-highlight-ink: var(--highlight-ink);
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-star: var(--star);
+  --color-footer-bg: var(--footer-bg);
+  --color-footer-ink: var(--footer-ink);
+  --color-footer-muted: var(--footer-muted);
   --font-sans: var(--font-manrope);
 }
 
@@ -94,8 +203,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--canvas);
-  /* Anchor links from the header land below the sticky bar rather than under it. */
-  scroll-padding-top: 6.5rem;
+  scroll-padding-top: 7rem;
 }
 
 body {
@@ -122,12 +230,21 @@ a {
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: var(--accent-ink);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+/**
+ * Product imagery keeps its real colours in dark mode.
+ *
+ * No filter, no opacity, no blend mode on product media. A dimmed photograph
+ * misrepresents the merchandise, and a wholesale buyer is judging the goods from it.
+ */
+.dark img {
+  filter: none;
 }
 
 @utility shell {
-  /* The centred content column. Used by every section so nothing drifts. */
   margin-inline: auto;
   width: 100%;
   max-width: var(--content-width);
@@ -143,17 +260,23 @@ a {
 }
 
 @utility section-y {
-  /* Vertical rhythm: 64px mobile, 88px desktop, per the reference's density. */
-  padding-block: 2.5rem;
+  /**
+   * Vertical rhythm: 56px mobile, 80px desktop.
+   *
+   * It was 40/56, which read as cramped - sections ran into each other and the page felt
+   * like one long list rather than a sequence of decisions. 80px is inside the 72-96px band
+   * that separates sections without leaving the dead space that makes a catalog look empty;
+   * mobile stays tighter because 80px of padding on a 700px-tall viewport is most of a
+   * screen spent on nothing.
+   */
+  padding-block: 3.5rem;
 
   @media (width >= 64rem) {
-    padding-block: 3.5rem;
+    padding-block: 5rem;
   }
 }
 
 @utility no-scrollbar {
-  /* Horizontal category and product rails on mobile: the row still scrolls, the bar
-     just does not sit on top of the content. */
   scrollbar-width: none;
   -ms-overflow-style: none;
 

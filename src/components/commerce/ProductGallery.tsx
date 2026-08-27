@@ -20,7 +20,7 @@ export function ProductGallery({ images, title }: { images: StorefrontImage[]; t
           <button
             aria-label={`View image ${index + 1} of ${images.length}`}
             aria-pressed={selectedIndex === index}
-            className={`relative aspect-[4/5] w-16 shrink-0 overflow-hidden border-2 bg-surface-muted transition-colors focus-visible:outline focus-visible:outline-2 lg:w-full ${selectedIndex === index ? "border-ink" : "border-transparent hover:border-line"}`}
+            className={`relative aspect-[4/5] w-16 shrink-0 overflow-hidden border-2 bg-surface-muted transition-colors focus-visible:outline focus-visible:outline-2 lg:w-full ${selectedIndex === index ? "border-brand" : "border-transparent hover:border-line"}`}
             key={`${image.url}-${index}`}
             onClick={() => setSelectedIndex(index)}
             type="button"

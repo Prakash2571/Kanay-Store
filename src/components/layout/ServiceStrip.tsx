@@ -26,15 +26,17 @@ export function ServiceStrip() {
       : { icon: Truck, text: "Delivery across India" },
     { icon: RotateCcw, text: "Returns supported" },
     { icon: ShieldCheck, text: "Secure payments" },
-    { icon: BadgeIndianRupee, text: "Wholesale enquiries welcome" },
+    // Not "wholesale discounts": what the system genuinely does is publish and enforce a
+    // minimum, and quantity pricing is still confirmed by a person.
+    { icon: BadgeIndianRupee, text: "Bulk minimums shown per product" },
   ];
 
   return (
-    <aside aria-label="Store services" className="border-b border-line bg-surface-peach-soft">
+    <aside aria-label="Store services" className="border-b border-line bg-surface-blue">
       <div className="shell flex min-h-9 items-center justify-start gap-6 overflow-x-auto py-1.5 text-[0.72rem] font-semibold text-ink-muted no-scrollbar sm:justify-center sm:gap-8 lg:justify-between">
         {items.map(({ icon: Icon, text }) => (
           <span className="flex shrink-0 items-center gap-1.5" key={text}>
-            <Icon aria-hidden="true" className="text-accent-ink" size={14} strokeWidth={2} />
+            <Icon aria-hidden="true" className="text-brand-ink" size={14} strokeWidth={2} />
             {text}
           </span>
         ))}
