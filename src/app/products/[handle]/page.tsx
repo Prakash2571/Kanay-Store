@@ -7,6 +7,12 @@ import { ProductCard } from "@/components/commerce/ProductCard";
 import { ProductGallery } from "@/components/commerce/ProductGallery";
 import { ProductPrice } from "@/components/commerce/ProductPrice";
 import { StoreShell } from "@/components/layout/StoreShell";
+import {
+  buildBreadcrumbJsonLd,
+  buildProductJsonLd,
+  serializeJsonLd,
+} from "@/lib/seo/structured-data";
+import { siteOrigin } from "@/lib/seo/site";
 import { getCatalog } from "@/lib/storefront/catalog";
 import { getCollections } from "@/lib/storefront/collections";
 import { getProduct } from "@/lib/storefront/products";
@@ -95,24 +101,42 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   );
 }
 
+/**
+ * Product and breadcrumb JSON-LD.
+ *
+ * The builders live in lib/seo/structured-data.ts so what they emit can be asserted.
+ * This previously hardcoded priceCurrency to "INR" while every variant price already
+ * carries a real currencyCode - a machine-readable price contradicting the checkout.
+ */
 function ProductStructuredData({ product }: { product: StorefrontProduct }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    description: product.descriptionExcerpt || product.description,
-    image: product.images.map((image) => image.url),
-    brand: product.vendorPublicName ? { "@type": "Brand", name: product.vendorPublicName } : undefined,
-    url: `${siteUrl.replace(/\/$/, "")}/products/${product.handle}`,
-    offers: product.variants.map((variant) => ({
-      "@type": "Offer",
-      price: variant.price.amount,
-      priceCurrency: "INR",
-      availability: variant.availableForSale ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      sku: variant.skuPublic || undefined,
-      url: `${siteUrl.replace(/\/$/, "")}/products/${product.handle}`,
-    })),
-  };
-  return <script dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} type="application/ld+json" />;
+  const origin = siteOrigin();
+
+  const trail = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    // The first collection the product belongs to, when it has one, so the trail
+    // matches the navigation a customer actually sees.
+    ...(product.collections[0]
+      ? [
+          {
+            name: product.collections[0].title,
+            path: `/collections/${encodeURIComponent(product.collections[0].handle)}`,
+          },
+        ]
+      : []),
+    { name: product.title, path: `/products/${encodeURIComponent(product.handle)}` },
+  ];
+
+  return (
+    <>
+      <script
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(buildProductJsonLd(product, origin)) }}
+        type="application/ld+json"
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(buildBreadcrumbJsonLd(trail, origin)) }}
+        type="application/ld+json"
+      />
+    </>
+  );
 }

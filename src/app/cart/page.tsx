@@ -5,6 +5,10 @@ import { CartPageClient } from "@/components/cart/CartPageClient";
 export const metadata: Metadata = {
   title: "Cart",
   description: "Review the items in your Kanay Store cart.",
+  // Every other private route already declared this; the cart did not. A cart is
+  // per-visitor and empty for a crawler, so an indexed copy is useless at best and
+  // spends crawl budget that belongs to product pages.
+  robots: { index: false, follow: true },
 };
 
 export default function CartPage() {
