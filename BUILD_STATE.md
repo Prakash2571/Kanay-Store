@@ -150,7 +150,19 @@ ONE THEME, LIGHT. No .dark block, no prefers-color-scheme inversion, no toggle, 
 script. A dark variant was built and removed at the client's request; NOT to be re-added. NO
 filter/opacity/blend on product imagery.
 
-Content width 1360px. Section rhythm 56px mobile / 80px desktop.
+Content width 1680px (was 1320 -> 1360; 1360 left ~280px dead each side on the 1920px displays
+this is viewed on). Shell padding 1/1.5/2/2.5rem. Section rhythm 56px mobile / 80px desktop /
+88px at 2xl.
+
+FLUID TYPE SCALE in globals.css, not per-breakpoint classes: display-1 (hero,
+clamp 2.1-4.15rem), display-2 (banner/statement, 1.75-3.1rem), display-3 (section headings,
+1.3-1.95rem), stat-figure (1.7-2.7rem), lead (0.95-1.15rem). Defined as @utility rather than
+text-[clamp(...)] so the scale is tunable in one place and cannot silently fail to parse.
+
+GRID DIVISIBILITY RULE: product/category grids are 2 / 3 / 4 / 6 columns and rows are capped at
+12 items, because 12 divides by all of them and no breakpoint ends in a half-empty row. The old
+xl:grid-cols-5 step was REMOVED for this reason - nothing sensible divides by both 5 and 6. Change
+a column count and you must re-check the item cap.
 
 PHOTOGRAPHY: hero is an asymmetric 4-photo collage (featured tile spanning 2 rows + 3 supporting;
 tiles exactly at both breakpoints). Category rail is image-backed tinted cards, 2/4/6 across. Live

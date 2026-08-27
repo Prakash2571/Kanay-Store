@@ -49,7 +49,7 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
             Shop by department
           </p>
           <h2
-            className="mt-2 text-xl font-extrabold tracking-[-0.015em] sm:text-2xl"
+            className="display-3 mt-2 font-extrabold"
             id="categories-heading"
           >
             Source across every category
@@ -65,10 +65,11 @@ export function CategoryCircles({ tiles }: { tiles: CategoryTile[] }) {
       </div>
 
       {/*
-        Four across on tablet, six on desktop. Ten tiles on a 1360px row is about 120px each,
-        too small for a photograph to register — and "lots of tiny tiles" reads as filler.
+        Two / four / six across, capped at twelve tiles. Twelve divides by all three counts, so the
+        rail never ends in a half-empty row. Not eight across even at 1680px: that puts each tile
+        under 200px, and "lots of tiny tiles" reads as filler rather than as navigation.
       */}
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6 lg:gap-5">
         {cards.slice(0, 12).map((tile) => (
           <li key={tile.key}>
             <CategoryCard tile={tile} />

@@ -38,11 +38,11 @@ export function WholesaleBanner() {
 
   return (
     <section aria-labelledby="wholesale-heading" className="shell section-y" id="wholesale">
-      <div className="grid gap-8 rounded-[var(--radius-card)] border border-line bg-surface-blue p-6 sm:p-9 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:p-12">
+      <div className="grid gap-8 rounded-[var(--radius-card)] border border-line bg-surface-blue p-6 sm:p-9 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:p-14 2xl:p-16">
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-accent-ink">Wholesale</p>
           <h2
-            className="mt-3 max-w-[22ch] text-2xl font-extrabold leading-tight tracking-[-0.015em] sm:text-[1.75rem]"
+            className="display-3 mt-3 max-w-[24ch] font-extrabold"
             id="wholesale-heading"
           >
             Buying in quantity? Here is how it works.

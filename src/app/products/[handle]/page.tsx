@@ -61,7 +61,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       <main>
         <div className="shell px-5 py-6 sm:px-8 lg:px-12 lg:py-10">
           <nav aria-label="Breadcrumb" className="mb-6 text-xs text-ink-muted"><Link className="hover:text-ink" href="/shop">Shop</Link> / {product.title}</nav>
-          <div className="grid gap-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-14">
+          <div className="grid gap-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-14 2xl:grid-cols-[minmax(0,1.25fr)_minmax(26rem,0.75fr)] 2xl:gap-20">
             <ProductGallery images={product.images} title={product.title} />
             <div className="lg:sticky lg:top-28 lg:self-start">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -104,7 +104,9 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
           <section aria-labelledby="recommended-heading" className="border-t border-line bg-surface py-14 lg:py-20">
             <div className="shell">
               <h2 className="mb-7 text-xl font-extrabold tracking-[-0.01em] sm:text-2xl" id="recommended-heading">You may also like</h2>
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">{recommendations.map((item) => <ProductCard key={item.id} product={item} />)}</div>
+              {/* Four columns and no more: `recommendations` is capped at 4, so a 5- or 6-column
+                  grid here would always end in an empty cell. */}
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6 2xl:gap-8">{recommendations.map((item) => <ProductCard key={item.id} product={item} />)}</div>
             </div>
           </section>
         ) : null}

@@ -43,22 +43,22 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
 
   return (
     <section aria-labelledby="hero-heading" className="shell pt-5 lg:pt-8">
-      <div className="grid items-center gap-8 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-blue px-6 py-9 sm:px-10 sm:py-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:px-14 lg:py-16">
+      <div className="grid items-center gap-8 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-blue px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:px-16 lg:py-20 2xl:gap-20 2xl:px-20 2xl:py-24">
         <div>
           {/* Orange eyebrow: the one "notice this" mark above the fold. */}
-          <p className="flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-accent-ink">
+          <p className="flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.14em] text-accent-ink 2xl:text-[0.8rem]">
             <Sparkles aria-hidden="true" size={15} strokeWidth={2} />
             Wholesale • Bulk orders • Better pricing
           </p>
           <h1
-            className="mt-4 text-[2.1rem] font-extrabold leading-[1.08] tracking-[-0.025em] sm:text-[2.7rem] lg:text-[3.25rem]"
+            className="display-1 mt-5 font-extrabold"
             id="hero-heading"
           >
             Everything you need.
             <br />
             Better prices in bulk.
           </h1>
-          <p className="mt-5 max-w-[46ch] text-sm leading-7 text-ink-muted sm:text-base">
+          <p className="lead mt-6 max-w-[46ch] text-ink-muted">
             Source electronics, home essentials, accessories, tools, beauty, lifestyle products
             and more with practical wholesale minimums.
           </p>
@@ -69,21 +69,21 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
               carries structure; this one action is the thing the page is for.
             */}
             <Link
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-8 text-sm font-bold text-ink transition-colors hover:bg-accent-hover 2xl:min-h-[3.25rem] 2xl:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px"
               href="/shop"
             >
               Browse wholesale
               <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
             </Link>
             <Link
-              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-7 text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-line-strong bg-surface px-8 text-sm font-bold text-ink transition-colors hover:border-brand hover:text-brand-ink focus-visible:outline focus-visible:outline-2 active:translate-y-px 2xl:min-h-[3.25rem] 2xl:text-base"
               href="/#categories"
             >
               Explore categories
             </Link>
           </div>
 
-          <p className="mt-7 flex items-center gap-2 text-xs font-semibold text-ink-muted">
+          <p className="mt-8 flex items-center gap-2 text-xs font-semibold text-ink-muted 2xl:text-sm">
             <PackageCheck aria-hidden="true" className="text-brand" size={16} strokeWidth={1.9} />
             Minimum order quantities shown on every bulk item
           </p>
@@ -97,7 +97,7 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
             white on the saturated yellow is 2.07:1, the worst pairing in the whole palette.
           */}
           {discount !== null ? (
-            <p className="absolute -left-2 -top-3 grid size-[4.75rem] place-items-center rounded-[var(--radius-pill)] border border-tint-yellow-mark/30 bg-tint-yellow text-center text-[0.65rem] font-extrabold uppercase leading-tight text-tint-yellow-ink shadow-[var(--shadow-soft)] sm:size-[5.25rem] sm:text-[0.7rem]">
+            <p className="absolute -left-2 -top-3 grid size-[4.75rem] place-items-center rounded-[var(--radius-pill)] border border-tint-yellow-mark/30 bg-tint-yellow text-center text-[0.65rem] font-extrabold uppercase leading-tight text-tint-yellow-ink shadow-[var(--shadow-soft)] sm:size-[5.25rem] sm:text-[0.7rem] 2xl:size-24">
               <span>
                 Up to
                 <br />
@@ -148,7 +148,7 @@ function ProductCollage({
   if (!featured) return null;
 
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:min-h-[24rem] sm:grid-cols-4 sm:grid-rows-2 sm:gap-4 lg:min-h-[27rem]">
+    <ul className="grid grid-cols-2 gap-3 sm:min-h-[24rem] sm:grid-cols-4 sm:grid-rows-2 sm:gap-4 lg:min-h-[31rem] 2xl:min-h-[36rem]">
       <li className="relative col-span-2 aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-card)] sm:row-span-2 sm:aspect-auto">
         <Image
           alt={featured.image.alt || featured.title}

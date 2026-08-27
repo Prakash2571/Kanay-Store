@@ -6,7 +6,7 @@ It is a **general-purpose retail and wholesale marketplace**, not a single-categ
 
 ## Design system
 
-White carries the page, blue carries structure and trust, orange is the action accent, and six soft tint families give categories and badges individual personality. One clean sans (Manrope). Tokens live in `src/app/globals.css`; `shell`, `section-y` and `no-scrollbar` set the 1360px centred column and the section rhythm.
+White carries the page, blue carries structure and trust, orange is the action accent, and six soft tint families give categories and badges individual personality. One clean sans (Manrope). Tokens live in `src/app/globals.css`; `shell`, `section-y` and `no-scrollbar` set the 1680px centred column and the section rhythm, and `display-1/2/3`, `stat-figure` and `lead` set the fluid type scale.
 
 Target balance: ~55–60% white, 15–20% light blue, 8–10% soft orange, 5–8% soft teal/green, small amounts of yellow and lavender, and the rest product photography. **Colour through details, not through large solid blocks.**
 
@@ -34,6 +34,14 @@ Electronics blue · Home & Kitchen green · Accessories lavender · Beauty rose 
 The mapping lives in **one** table (`categoryTintFor` in `src/lib/storefront/showcase.ts`) because the entire value of colour coding is consistency — two components disagreeing about the colour of "Home" would destroy it. Colour lands on the card body and a 2px bar; typography stays dark. That is the line between colour-coded and childish.
 
 > **Tailwind gotcha:** tint classes are written out in full (`bg-tint-blue`, not `` bg-tint-${name} ``). Tailwind v4 generates utilities by scanning source text, so a composed class name produces **no CSS at all**, renders unstyled, and throws nothing. `showcase.test.ts` asserts the class shapes for exactly this reason.
+
+### Width and type scale
+
+The content column is **1680px**. It went 1320 → 1360 → 1680 because on the 1920px displays this store is actually viewed on, 1360 left roughly 280px of empty page down each side and the column read as a document floating on a desktop. Paragraphs are capped in `ch` units, which is what lets the container grow without line length growing with it.
+
+Display type is **fluid** (`clamp`) rather than stepped at breakpoints, defined once in `globals.css` as `display-1` (hero), `display-2` (banner/statement), `display-3` (section headings), `stat-figure` and `lead`. Two reasons it lives there instead of as `text-[clamp(...)]` classes: the scale is tunable in one place, and an arbitrary value Tailwind fails to parse renders at the default font size **with no error**.
+
+**Grid counts are 2 / 3 / 4 / 6 and rows are capped at 12 items.** 12 divides by all four, so no breakpoint ends in a half-empty row. The old 5-column step was removed for exactly that reason — nothing sensible divides by both 5 and 6. If you change a column count, check the item cap with it.
 
 ### Other load-bearing rules
 

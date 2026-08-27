@@ -71,8 +71,8 @@ export function BrandStory() {
           className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--overlay-strong)] via-transparent to-[var(--overlay-strong)] lg:bg-gradient-to-r lg:from-[var(--overlay-strong)] lg:via-[var(--overlay)] lg:to-transparent"
         />
 
-        <div className="flex min-h-[22rem] flex-col justify-center px-6 py-14 sm:min-h-[25rem] sm:px-10 sm:py-16 lg:min-h-[28rem] lg:px-14 lg:py-20">
-          <div className="max-w-[46ch]">
+        <div className="flex min-h-[24rem] flex-col justify-center px-6 py-16 sm:min-h-[28rem] sm:px-10 sm:py-20 lg:min-h-[34rem] lg:px-16 lg:py-24 2xl:min-h-[38rem] 2xl:px-20">
+          <div className="max-w-[46ch] 2xl:max-w-[52ch]">
             {/* Orange eyebrow — the small warm accent that ties this to the rest of the page. */}
             <p className="flex items-center gap-2 text-[0.7rem] font-bold uppercase tracking-[0.16em] text-[#ffb185]">
               <Boxes aria-hidden="true" size={15} strokeWidth={2} />
@@ -80,13 +80,13 @@ export function BrandStory() {
             </p>
 
             <h2
-              className="mt-4 text-[1.75rem] font-extrabold leading-[1.15] tracking-[-0.025em] text-white sm:text-[2.15rem] lg:text-[2.5rem]"
+              className="display-2 mt-5 font-extrabold text-white"
               id="brand-story-heading"
             >
               Built for better bulk buying
             </h2>
 
-            <p className="mt-4 max-w-[52ch] text-sm leading-7 text-white/85 sm:text-base">
+            <p className="lead mt-5 max-w-[54ch] text-white/85">
               Kanay helps businesses source products across categories with practical minimum order
               quantities, reliable fulfilment support, and a marketplace designed for smarter
               wholesale buying.
@@ -113,14 +113,14 @@ export function BrandStory() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-7 text-sm font-bold text-ink transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] bg-accent px-8 text-sm font-bold text-ink transition-colors hover:bg-accent-hover 2xl:min-h-[3.25rem] 2xl:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
                 href="/shop"
               >
                 Explore wholesale
                 <ArrowRight aria-hidden="true" size={17} strokeWidth={2} />
               </Link>
               <Link
-                className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-white/35 px-7 text-sm font-bold text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
+                className="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-control)] border border-white/35 px-8 text-sm font-bold text-white 2xl:min-h-[3.25rem] 2xl:text-base transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white active:translate-y-px"
                 href="/#categories"
               >
                 Browse categories
