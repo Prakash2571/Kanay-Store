@@ -51,11 +51,9 @@ const contentSecurityPolicyReportOnly = [
   // Razorpay Checkout is loaded from their CDN at runtime.
   "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com",
   "style-src 'self' 'unsafe-inline'",
-  // Shopify CDN serves product imagery; data: covers inlined placeholders. Category and banner
-  // imagery is served from `public/`, so it is covered by 'self' and needs no third-party origin -
-  // images.unsplash.com was removed from both here and remotePatterns when the hard-coded stock
-  // URLs went (one 404'd, one showed the wrong subject; see lib/storefront/categoryMedia.ts).
-  "img-src 'self' data: blob: https://cdn.shopify.com https://*.razorpay.com",
+  // Shopify serves live catalog imagery. The reviewed Pexels records are category fallbacks whose
+  // permanent photo IDs and source pages are documented in public/categories/README.md.
+  "img-src 'self' data: blob: https://cdn.shopify.com https://images.pexels.com https://*.razorpay.com",
   "font-src 'self' data:",
   // The Trademart backend origin is not known at build time, so it cannot be listed
   // here. That is the main reason this policy is not yet enforced: connect-src has to
@@ -85,7 +83,10 @@ const securityHeaders = [
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
   // Evaluated by the browser, enforced by nobody. See the comment above.
-  { key: "Content-Security-Policy-Report-Only", value: contentSecurityPolicyReportOnly },
+  {
+    key: "Content-Security-Policy-Report-Only",
+    value: contentSecurityPolicyReportOnly,
+  },
 ];
 
 const nextConfig: NextConfig = {
@@ -96,6 +97,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.shopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        pathname: "/photos/**",
       },
     ],
   },

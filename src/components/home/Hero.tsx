@@ -2,7 +2,7 @@ import { ArrowRight, PackageCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { DepartmentVisual } from "@/components/commerce/DepartmentVisual";
-import { departmentMedia } from "@/lib/storefront/categoryMedia";
+import { departmentImageFor } from "@/lib/storefront/categoryMedia";
 import { heroCollageImages, maxDiscountPercent } from "@/lib/storefront/merchandising";
 import { TINTS, categoryTintFor, showcaseCollage, type Tint } from "@/lib/storefront/showcase";
 import type { StorefrontImage, StorefrontProductSummary } from "@/lib/storefront/types";
@@ -53,19 +53,16 @@ export function Hero({ products }: { products: StorefrontProductSummary[] }) {
    * Top up rather than replace: a store with two product photos shows both, plus two department
    * tiles, instead of discarding its own imagery.
    *
-   * A department tile uses a file from `public/categories/` if the owner supplied one and otherwise
-   * renders as a colour-coded card. There is no stock-photo path any more - see categoryMedia.ts.
+   * A department tile uses an owner file from `public/categories/`, then a reviewed remote photo,
+   * then the colour-coded studio fallback. See categoryMedia.ts for the shared precedence rule.
    */
-  const departments: HeroTile[] = showcaseCollage(4 - fromCatalog.length).map((department) => {
-    const url = departmentMedia(department.key);
-    return {
-      key: `department:${department.key}`,
-      label: department.label,
-      tint: categoryTintFor(department.label),
-      departmentKey: department.key,
-      image: url ? { url, alt: department.label, width: null, height: null } : null,
-    };
-  });
+  const departments: HeroTile[] = showcaseCollage(4 - fromCatalog.length).map((department) => ({
+    key: `department:${department.key}`,
+    label: department.label,
+    tint: categoryTintFor(department.label),
+    departmentKey: department.key,
+    image: departmentImageFor(department.label),
+  }));
 
   const collage = [...fromCatalog, ...departments].slice(0, 4);
   const discount = maxDiscountPercent(products);

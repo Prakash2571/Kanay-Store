@@ -209,25 +209,27 @@ the order of IMAGE_EXTENSIONS in categoryMedia.ts (jpg,jpeg,png,webp,avif,svg), 
 photograph in wins with nothing to delete. SVG is passed to next/image with `unoptimized`, which
 avoids enabling dangerouslyAllowSVG for the whole app.
 
-NO HARD-CODED THIRD-PARTY IMAGE URLS, EVER. The previous version shipped eight images.unsplash.com
-IDs. The build environment has no outbound network so none could be verified, and two failed in
-production: photo-1581147036324 404'd, and photo-1517668808822 rendered COFFEE BEANS under alt text
-reading "small kitchen appliance on a worktop". The broken one was obvious; the plausible-but-wrong
-one silently mislabelled a category and lied to screen readers. images.unsplash.com was removed from
-next.config remotePatterns AND the CSP img-src, since nothing uses it.
+REVIEWED REMOTE CATEGORY PHOTOS. The storefront now uses pinned `images.pexels.com/photos/<id>`
+records for all eight showcase departments when Shopify and owner-supplied local files are absent.
+Each permanent source page, subject and Pexels commercial-use licence link is recorded in
+public/categories/README.md. These are deterministic photo IDs, never random/search endpoints.
+`images.pexels.com` is allowed only over HTTPS under `/photos/**` in Next remotePatterns and is
+listed in the report-only CSP. The old unverifiable Unsplash IDs remain removed: one 404'd and one
+showed coffee beans under a kitchen-appliance alt. Subject-specific alt text is preserved across
+hero, category and promo surfaces.
 
 Directory is re-read per render in development (drop a file in, refresh) and cached once in
 production. A missing directory is the normal fresh-checkout case, not an error.
 
-public/brand-story.<ext> optionally backs the trust banner; without it the banner is the navy panel
-it already renders underneath, so there is no placeholder state to design.
+`public/brand-story.<ext>` overrides the reviewed worker/warehouse banner. The navy container remains
+underneath as the network/decode-failure state, so text stays readable if remote delivery fails.
 
-BRAND STORY BANNER (BrandStory.tsx): full-width-in-shell photographic trust section, stacked
-shipping cartons, navy overlay (--overlay 52% flat + a directional --overlay-strong gradient on the
-content side only, so the far side of the photo stays bright). min-h 22/25/28rem. Navy gradient is
-painted by the CONTAINER, so a failed image leaves a readable navy panel. Deliberately NOT
-edge-to-edge - wider than header/footer/product rows would read as an embedded advert. No person as
-focus: that is what turns a trust banner into a lifestyle campaign.
+BRAND STORY BANNER (BrandStory.tsx): full-width-in-shell photographic trust section, warehouse
+workers arranging inventory, navy overlay (--overlay 52% flat + a directional --overlay-strong
+gradient on the content side only, so the far side of the photo stays bright). min-h 22/25/28rem.
+Navy gradient is painted by the CONTAINER, so a failed image leaves a readable navy panel.
+Deliberately NOT edge-to-edge - wider than header/footer/product rows would read as an embedded
+advert. People provide operational scale; warehouse sourcing and fulfilment remain the subject.
 
 NO "BEST SELLER" BADGE. Shopify FEATURED is manual merchandising order and nothing records units
 sold. The featured row badge says "Featured" (yellow); the newest row says "New" (lavender). Both
